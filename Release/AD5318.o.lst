@@ -1,0 +1,98 @@
+   1              		.file	"AD5318.c"
+   2              		.option nopic
+   3              		.text
+   4              		.section	.text.AD5318_write,"ax",@progbits
+   5              		.align	1
+   6              		.globl	AD5318_write
+   8              	AD5318_write:
+   9 0000 17030000 		call	t0,__riscv_save_2
+   9      E7020300 
+  10 0008 3206     		slli	a2,a2,12
+  11 000a 8A06     		slli	a3,a3,2
+  12 000c D18E     		or	a3,a2,a3
+  13 000e 93978600 		slli	a5,a3,8
+  14 0012 C206     		slli	a3,a3,16
+  15 0014 C182     		srli	a3,a3,16
+  16 0016 A182     		srli	a3,a3,8
+  17 0018 4111     		addi	sp,sp,-16
+  18 001a DD8E     		or	a3,a5,a3
+  19 001c 2A84     		mv	s0,a0
+  20 001e AE84     		mv	s1,a1
+  21 0020 2316D100 		sh	a3,12(sp)
+  22 0024 97000000 		call	SPI_set_slave_select
+  22      E7800000 
+  23 002c 0147     		li	a4,0
+  24 002e 8146     		li	a3,0
+  25 0030 0946     		li	a2,2
+  26 0032 6C00     		addi	a1,sp,12
+  27 0034 2285     		mv	a0,s0
+  28 0036 97000000 		call	SPI_transfer_block
+  28      E7800000 
+  29 003e A685     		mv	a1,s1
+  30 0040 2285     		mv	a0,s0
+  31 0042 97000000 		call	SPI_clear_slave_select
+  31      E7800000 
+  32 004a 4101     		addi	sp,sp,16
+  33 004c 17030000 		tail	__riscv_restore_2
+  33      67000300 
+  35              		.comm	DS28,8,4
+  36              		.comm	slowamps,384,4
+  37              		.comm	i2c_slowamps,576,4
+  38              		.comm	i2c_sensor,24,4
+  39              		.comm	I2CserialHV,12,4
+  40              		.comm	I2CserialCal,12,4
+  41              		.comm	strawsHV,768,4
+  42              		.comm	strawsCal,768,4
+  43              		.comm	caldac1,16,4
+  44              		.comm	caldac0,16,4
+  45              		.comm	dacs,1536,4
+  46              		.comm	spi_ambtemp_hv,20,4
+  47              		.comm	spi_ambtemp_cal,20,4
+  48              		.comm	spi_sensor,20,4
+  49              		.comm	sensorMCP,104,4
+  50              		.comm	preampMCP,1248,4
+  51              		.comm	pulserOdd,1,1
+  52              		.comm	dutyCycle,2,2
+  53              		.comm	pulserDelay,4,4
+  54              		.comm	pulserOn,1,1
+  55              		.comm	current_thresholds,64,4
+  56              		.comm	current_gains,64,4
+  57              		.comm	registers_0_addr,4,4
+  58              		.comm	mapped_channel_mask,12,4
+  59              		.comm	channel_mask,12,4
+  60              		.ident	"GCC: (Microchip SoftConsole GNU RISC-V Embedded GCC, 64-bit) 8.2.0"
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 AD5318.c
+C:\Users\tecchio\AppData\Local\Temp\cciu43eJ.s:8      .text.AD5318_write:0000000000000000 AD5318_write
+                            *COM*:0000000000000008 DS28
+                            *COM*:0000000000000180 slowamps
+                            *COM*:0000000000000240 i2c_slowamps
+                            *COM*:0000000000000018 i2c_sensor
+                            *COM*:000000000000000c I2CserialHV
+                            *COM*:000000000000000c I2CserialCal
+                            *COM*:0000000000000300 strawsHV
+                            *COM*:0000000000000300 strawsCal
+                            *COM*:0000000000000010 caldac1
+                            *COM*:0000000000000010 caldac0
+                            *COM*:0000000000000600 dacs
+                            *COM*:0000000000000014 spi_ambtemp_hv
+                            *COM*:0000000000000014 spi_ambtemp_cal
+                            *COM*:0000000000000014 spi_sensor
+                            *COM*:0000000000000068 sensorMCP
+                            *COM*:00000000000004e0 preampMCP
+                            *COM*:0000000000000001 pulserOdd
+                            *COM*:0000000000000002 dutyCycle
+                            *COM*:0000000000000004 pulserDelay
+                            *COM*:0000000000000001 pulserOn
+                            *COM*:0000000000000040 current_thresholds
+                            *COM*:0000000000000040 current_gains
+                            *COM*:0000000000000004 registers_0_addr
+                            *COM*:000000000000000c mapped_channel_mask
+                            *COM*:000000000000000c channel_mask
+
+UNDEFINED SYMBOLS
+__riscv_save_2
+SPI_set_slave_select
+SPI_transfer_block
+SPI_clear_slave_select
+__riscv_restore_2

@@ -1,0 +1,958 @@
+   1              		.file	"core_pwm.c"
+   2              		.option nopic
+   3              		.text
+   4              		.section	.text.PWM_init,"ax",@progbits
+   5              		.align	1
+   6              		.globl	PWM_init
+   8              	PWM_init:
+   9 0000 17030000 		call	t0,__riscv_save_1
+   9      E7020300 
+  10 0008 2A84     		mv	s0,a0
+  11 000a 2E85     		mv	a0,a1
+  12 000c 4111     		addi	sp,sp,-16
+  13 000e 0CC0     		sw	a1,0(s0)
+  14 0010 2105     		addi	a0,a0,8
+  15 0012 8145     		li	a1,0
+  16 0014 36C4     		sw	a3,8(sp)
+  17 0016 32C6     		sw	a2,12(sp)
+  18 0018 97000000 		call	HW_set_8bit_reg
+  18      E7800000 
+  19 0020 0840     		lw	a0,0(s0)
+  20 0022 8145     		li	a1,0
+  21 0024 3105     		addi	a0,a0,12
+  22 0026 97000000 		call	HW_set_8bit_reg
+  22      E7800000 
+  23 002e 3246     		lw	a2,12(sp)
+  24 0030 0840     		lw	a0,0(s0)
+  25 0032 B285     		mv	a1,a2
+  26 0034 97000000 		call	HW_set_32bit_reg
+  26      E7800000 
+  27 003c A246     		lw	a3,8(sp)
+  28 003e 0840     		lw	a0,0(s0)
+  29 0040 B685     		mv	a1,a3
+  30 0042 1105     		addi	a0,a0,4
+  31 0044 97000000 		call	HW_set_32bit_reg
+  31      E7800000 
+  32 004c 0840     		lw	a0,0(s0)
+  33 004e 8145     		li	a1,0
+  34 0050 4105     		addi	a0,a0,16
+  35 0052 97000000 		call	HW_set_32bit_reg
+  35      E7800000 
+  36 005a 0840     		lw	a0,0(s0)
+  37 005c 8145     		li	a1,0
+  38 005e 6105     		addi	a0,a0,24
+  39 0060 97000000 		call	HW_set_32bit_reg
+  39      E7800000 
+  40 0068 0840     		lw	a0,0(s0)
+  41 006a 8145     		li	a1,0
+  42 006c 13050502 		addi	a0,a0,32
+  43 0070 97000000 		call	HW_set_32bit_reg
+  43      E7800000 
+  44 0078 0840     		lw	a0,0(s0)
+  45 007a 8145     		li	a1,0
+  46 007c 13058502 		addi	a0,a0,40
+  47 0080 97000000 		call	HW_set_32bit_reg
+  47      E7800000 
+  48 0088 0840     		lw	a0,0(s0)
+  49 008a 8145     		li	a1,0
+  50 008c 13050503 		addi	a0,a0,48
+  51 0090 97000000 		call	HW_set_32bit_reg
+  51      E7800000 
+  52 0098 0840     		lw	a0,0(s0)
+  53 009a 8145     		li	a1,0
+  54 009c 13058503 		addi	a0,a0,56
+  55 00a0 97000000 		call	HW_set_32bit_reg
+  55      E7800000 
+  56 00a8 0840     		lw	a0,0(s0)
+  57 00aa 8145     		li	a1,0
+  58 00ac 13050504 		addi	a0,a0,64
+  59 00b0 97000000 		call	HW_set_32bit_reg
+  59      E7800000 
+  60 00b8 0840     		lw	a0,0(s0)
+  61 00ba 8145     		li	a1,0
+  62 00bc 13058504 		addi	a0,a0,72
+  63 00c0 97000000 		call	HW_set_32bit_reg
+  63      E7800000 
+  64 00c8 0840     		lw	a0,0(s0)
+  65 00ca 8145     		li	a1,0
+  66 00cc 13050505 		addi	a0,a0,80
+  67 00d0 97000000 		call	HW_set_32bit_reg
+  67      E7800000 
+  68 00d8 0840     		lw	a0,0(s0)
+  69 00da 8145     		li	a1,0
+  70 00dc 13058505 		addi	a0,a0,88
+  71 00e0 97000000 		call	HW_set_32bit_reg
+  71      E7800000 
+  72 00e8 0840     		lw	a0,0(s0)
+  73 00ea 8145     		li	a1,0
+  74 00ec 13050506 		addi	a0,a0,96
+  75 00f0 97000000 		call	HW_set_32bit_reg
+  75      E7800000 
+  76 00f8 0840     		lw	a0,0(s0)
+  77 00fa 8145     		li	a1,0
+  78 00fc 13058506 		addi	a0,a0,104
+  79 0100 97000000 		call	HW_set_32bit_reg
+  79      E7800000 
+  80 0108 0840     		lw	a0,0(s0)
+  81 010a 8145     		li	a1,0
+  82 010c 13050507 		addi	a0,a0,112
+  83 0110 97000000 		call	HW_set_32bit_reg
+  83      E7800000 
+  84 0118 0840     		lw	a0,0(s0)
+  85 011a 8145     		li	a1,0
+  86 011c 13058507 		addi	a0,a0,120
+  87 0120 97000000 		call	HW_set_32bit_reg
+  87      E7800000 
+  88 0128 0840     		lw	a0,0(s0)
+  89 012a 8145     		li	a1,0
+  90 012c 13050508 		addi	a0,a0,128
+  91 0130 97000000 		call	HW_set_32bit_reg
+  91      E7800000 
+  92 0138 0840     		lw	a0,0(s0)
+  93 013a 8145     		li	a1,0
+  94 013c 13058508 		addi	a0,a0,136
+  95 0140 97000000 		call	HW_set_32bit_reg
+  95      E7800000 
+  96 0148 4101     		addi	sp,sp,16
+  97 014a 17030000 		tail	__riscv_restore_1
+  97      67000300 
+  99              		.section	.text.PWM_enable,"ax",@progbits
+ 100              		.align	1
+ 101              		.globl	PWM_enable
+ 103              	PWM_enable:
+ 104 0000 1387F5FF 		addi	a4,a1,-1
+ 105 0004 BD47     		li	a5,15
+ 106 0006 63E1E706 		bgtu	a4,a5,.L7
+ 107 000a 17030000 		call	t0,__riscv_save_2
+ 107      E7020300 
+ 108 0012 B7070000 		lui	a5,%hi(.LANCHOR0)
+ 109 0016 93870700 		addi	a5,a5,%lo(.LANCHOR0)
+ 110 001a AE97     		add	a5,a5,a1
+ 111 001c 03C40700 		lbu	s0,0(a5)
+ 112 0020 A147     		li	a5,8
+ 113 0022 AA84     		mv	s1,a0
+ 114 0024 0841     		lw	a0,0(a0)
+ 115 0026 63E5B702 		bgtu	a1,a5,.L5
+ 116 002a 2105     		addi	a0,a0,8
+ 117 002c 97000000 		call	HW_get_8bit_reg
+ 117      E7800000 
+ 118 0034 B365A400 		or	a1,s0,a0
+ 119 0038 8840     		lw	a0,0(s1)
+ 120 003a 93F5F50F 		andi	a1,a1,0xff
+ 121 003e 2105     		addi	a0,a0,8
+ 122              	.L10:
+ 123 0040 97000000 		call	HW_set_8bit_reg
+ 123      E7800000 
+ 124 0048 17030000 		tail	__riscv_restore_2
+ 124      67000300 
+ 125              	.L5:
+ 126 0050 3105     		addi	a0,a0,12
+ 127 0052 97000000 		call	HW_get_8bit_reg
+ 127      E7800000 
+ 128 005a B365A400 		or	a1,s0,a0
+ 129 005e 8840     		lw	a0,0(s1)
+ 130 0060 93F5F50F 		andi	a1,a1,0xff
+ 131 0064 3105     		addi	a0,a0,12
+ 132 0066 E9BF     		j	.L10
+ 133              	.L7:
+ 134 0068 8280     		ret
+ 136              		.section	.text.PWM_disable,"ax",@progbits
+ 137              		.align	1
+ 138              		.globl	PWM_disable
+ 140              	PWM_disable:
+ 141 0000 1387F5FF 		addi	a4,a1,-1
+ 142 0004 BD47     		li	a5,15
+ 143 0006 63E3E706 		bgtu	a4,a5,.L15
+ 144 000a 17030000 		call	t0,__riscv_save_2
+ 144      E7020300 
+ 145 0012 B7070000 		lui	a5,%hi(.LANCHOR0)
+ 146 0016 93870700 		addi	a5,a5,%lo(.LANCHOR0)
+ 147 001a AE97     		add	a5,a5,a1
+ 148 001c 03C40700 		lbu	s0,0(a5)
+ 149 0020 A147     		li	a5,8
+ 150 0022 AA84     		mv	s1,a0
+ 151 0024 1344F4FF 		not	s0,s0
+ 152 0028 0841     		lw	a0,0(a0)
+ 153 002a 1374F40F 		andi	s0,s0,0xff
+ 154 002e 63E4B702 		bgtu	a1,a5,.L13
+ 155 0032 2105     		addi	a0,a0,8
+ 156 0034 97000000 		call	HW_get_8bit_reg
+ 156      E7800000 
+ 157 003c 9C40     		lw	a5,0(s1)
+ 158 003e B3758500 		and	a1,a0,s0
+ 159 0042 13858700 		addi	a0,a5,8
+ 160              	.L18:
+ 161 0046 97000000 		call	HW_set_8bit_reg
+ 161      E7800000 
+ 162 004e 17030000 		tail	__riscv_restore_2
+ 162      67000300 
+ 163              	.L13:
+ 164 0056 3105     		addi	a0,a0,12
+ 165 0058 97000000 		call	HW_get_8bit_reg
+ 165      E7800000 
+ 166 0060 9C40     		lw	a5,0(s1)
+ 167 0062 B3758500 		and	a1,a0,s0
+ 168 0066 1385C700 		addi	a0,a5,12
+ 169 006a F1BF     		j	.L18
+ 170              	.L15:
+ 171 006c 8280     		ret
+ 173              		.section	.text.PWM_enable_synch_update,"ax",@progbits
+ 174              		.align	1
+ 175              		.globl	PWM_enable_synch_update
+ 177              	PWM_enable_synch_update:
+ 178 0000 17030000 		call	t0,__riscv_save_0
+ 178      E7020300 
+ 179 0008 0841     		lw	a0,0(a0)
+ 180 000a 8545     		li	a1,1
+ 181 000c 1305450E 		addi	a0,a0,228
+ 182 0010 97000000 		call	HW_set_16bit_reg
+ 182      E7800000 
+ 183 0018 17030000 		tail	__riscv_restore_0
+ 183      67000300 
+ 185              		.section	.text.PWM_disable_synch_update,"ax",@progbits
+ 186              		.align	1
+ 187              		.globl	PWM_disable_synch_update
+ 189              	PWM_disable_synch_update:
+ 190 0000 17030000 		call	t0,__riscv_save_0
+ 190      E7020300 
+ 191 0008 0841     		lw	a0,0(a0)
+ 192 000a 8145     		li	a1,0
+ 193 000c 1305450E 		addi	a0,a0,228
+ 194 0010 97000000 		call	HW_set_16bit_reg
+ 194      E7800000 
+ 195 0018 17030000 		tail	__riscv_restore_0
+ 195      67000300 
+ 197              		.section	.text.PWM_set_duty_cycle,"ax",@progbits
+ 198              		.align	1
+ 199              		.globl	PWM_set_duty_cycle
+ 201              	PWM_set_duty_cycle:
+ 202 0000 9386F5FF 		addi	a3,a1,-1
+ 203 0004 3D47     		li	a4,15
+ 204 0006 6365D706 		bgtu	a3,a4,.L27
+ 205 000a 17030000 		call	t0,__riscv_save_4
+ 205      E7020300 
+ 206 0012 3289     		mv	s2,a2
+ 207 0014 09EA     		bnez	a2,.L25
+ 208 0016 97000000 		call	PWM_disable
+ 208      E7800000 
+ 209              	.L23:
+ 210 001e 17030000 		tail	__riscv_restore_4
+ 210      67000300 
+ 211              	.L25:
+ 212 0026 37070000 		lui	a4,%hi(.LANCHOR1)
+ 213 002a 93992500 		slli	s3,a1,2
+ 214 002e 13070700 		addi	a4,a4,%lo(.LANCHOR1)
+ 215 0032 4E97     		add	a4,a4,s3
+ 216 0034 1C43     		lw	a5,0(a4)
+ 217 0036 2A84     		mv	s0,a0
+ 218 0038 0841     		lw	a0,0(a0)
+ 219 003a AE84     		mv	s1,a1
+ 220 003c 8145     		li	a1,0
+ 221 003e 3E95     		add	a0,a0,a5
+ 222 0040 97000000 		call	HW_set_32bit_reg
+ 222      E7800000 
+ 223 0048 B7070000 		lui	a5,%hi(.LANCHOR2)
+ 224 004c 93870700 		addi	a5,a5,%lo(.LANCHOR2)
+ 225 0050 CE97     		add	a5,a5,s3
+ 226 0052 0840     		lw	a0,0(s0)
+ 227 0054 9C43     		lw	a5,0(a5)
+ 228 0056 CA85     		mv	a1,s2
+ 229 0058 3E95     		add	a0,a0,a5
+ 230 005a 97000000 		call	HW_set_32bit_reg
+ 230      E7800000 
+ 231 0062 A685     		mv	a1,s1
+ 232 0064 2285     		mv	a0,s0
+ 233 0066 97000000 		call	PWM_enable
+ 233      E7800000 
+ 234 006e 45BF     		j	.L23
+ 235              	.L27:
+ 236 0070 8280     		ret
+ 238              		.section	.text.PWM_set_edges,"ax",@progbits
+ 239              		.align	1
+ 240              		.globl	PWM_set_edges
+ 242              	PWM_set_edges:
+ 243 0000 AE87     		mv	a5,a1
+ 244 0002 3D47     		li	a4,15
+ 245 0004 FD15     		addi	a1,a1,-1
+ 246 0006 6368B704 		bgtu	a1,a4,.L33
+ 247 000a 17030000 		call	t0,__riscv_save_3
+ 247      E7020300 
+ 248 0012 13942700 		slli	s0,a5,2
+ 249 0016 B7070000 		lui	a5,%hi(.LANCHOR1)
+ 250 001a 93870700 		addi	a5,a5,%lo(.LANCHOR1)
+ 251 001e A297     		add	a5,a5,s0
+ 252 0020 AA84     		mv	s1,a0
+ 253 0022 9C43     		lw	a5,0(a5)
+ 254 0024 0841     		lw	a0,0(a0)
+ 255 0026 B285     		mv	a1,a2
+ 256 0028 3689     		mv	s2,a3
+ 257 002a 3E95     		add	a0,a0,a5
+ 258 002c 97000000 		call	HW_set_32bit_reg
+ 258      E7800000 
+ 259 0034 B7070000 		lui	a5,%hi(.LANCHOR2)
+ 260 0038 93870700 		addi	a5,a5,%lo(.LANCHOR2)
+ 261 003c 3E94     		add	s0,a5,s0
+ 262 003e 8840     		lw	a0,0(s1)
+ 263 0040 1C40     		lw	a5,0(s0)
+ 264 0042 CA85     		mv	a1,s2
+ 265 0044 3E95     		add	a0,a0,a5
+ 266 0046 97000000 		call	HW_set_32bit_reg
+ 266      E7800000 
+ 267 004e 17030000 		tail	__riscv_restore_3
+ 267      67000300 
+ 268              	.L33:
+ 269 0056 8280     		ret
+ 271              		.section	.text.PWM_get_duty_cycle,"ax",@progbits
+ 272              		.align	1
+ 273              		.globl	PWM_get_duty_cycle
+ 275              	PWM_get_duty_cycle:
+ 276 0000 1387F5FF 		addi	a4,a1,-1
+ 277 0004 BD47     		li	a5,15
+ 278 0006 63F9E700 		bleu	a4,a5,.L37
+ 279 000a 0145     		li	a0,0
+ 280 000c 8280     		ret
+ 281              	.L41:
+ 282 000e 0145     		li	a0,0
+ 283              	.L36:
+ 284 0010 17030000 		tail	__riscv_restore_3
+ 284      67000300 
+ 285              	.L37:
+ 286 0018 17030000 		call	t0,__riscv_save_3
+ 286      E7020300 
+ 287 0020 B7070000 		lui	a5,%hi(.LANCHOR0)
+ 288 0024 93870700 		addi	a5,a5,%lo(.LANCHOR0)
+ 289 0028 AE97     		add	a5,a5,a1
+ 290 002a 83C40700 		lbu	s1,0(a5)
+ 291 002e A147     		li	a5,8
+ 292 0030 2A89     		mv	s2,a0
+ 293 0032 2E84     		mv	s0,a1
+ 294 0034 0841     		lw	a0,0(a0)
+ 295 0036 63E2B706 		bgtu	a1,a5,.L39
+ 296 003a 2105     		addi	a0,a0,8
+ 297              	.L49:
+ 298 003c 97000000 		call	HW_get_8bit_reg
+ 298      E7800000 
+ 299 0044 658D     		and	a0,s1,a0
+ 300 0046 61D5     		beqz	a0,.L41
+ 301 0048 B7070000 		lui	a5,%hi(.LANCHOR1)
+ 302 004c 0A04     		slli	s0,s0,2
+ 303 004e 93870700 		addi	a5,a5,%lo(.LANCHOR1)
+ 304 0052 A297     		add	a5,a5,s0
+ 305 0054 9C43     		lw	a5,0(a5)
+ 306 0056 03250900 		lw	a0,0(s2)
+ 307 005a 3E95     		add	a0,a0,a5
+ 308 005c 97000000 		call	HW_get_32bit_reg
+ 308      E7800000 
+ 309 0064 B7050000 		lui	a1,%hi(.LANCHOR2)
+ 310 0068 93850500 		addi	a1,a1,%lo(.LANCHOR2)
+ 311 006c 2E94     		add	s0,a1,s0
+ 312 006e 1C40     		lw	a5,0(s0)
+ 313 0070 AA84     		mv	s1,a0
+ 314 0072 03250900 		lw	a0,0(s2)
+ 315 0076 3E95     		add	a0,a0,a5
+ 316 0078 97000000 		call	HW_get_32bit_reg
+ 316      E7800000 
+ 317 0080 2A84     		mv	s0,a0
+ 318 0082 03250900 		lw	a0,0(s2)
+ 319 0086 1105     		addi	a0,a0,4
+ 320 0088 97000000 		call	HW_get_32bit_reg
+ 320      E7800000 
+ 321 0090 63679400 		bgtu	s1,s0,.L42
+ 322 0094 33059440 		sub	a0,s0,s1
+ 323 0098 A5BF     		j	.L36
+ 324              	.L39:
+ 325 009a 3105     		addi	a0,a0,12
+ 326 009c 45B7     		j	.L49
+ 327              	.L42:
+ 328 009e 2295     		add	a0,s0,a0
+ 329 00a0 0505     		addi	a0,a0,1
+ 330 00a2 058D     		sub	a0,a0,s1
+ 331 00a4 B5B7     		j	.L36
+ 333              		.section	.text.PWM_generate_aligned_wave,"ax",@progbits
+ 334              		.align	1
+ 335              		.globl	PWM_generate_aligned_wave
+ 337              	PWM_generate_aligned_wave:
+ 338 0000 1387F5FF 		addi	a4,a1,-1
+ 339 0004 BD47     		li	a5,15
+ 340 0006 63EBE70A 		bgtu	a4,a5,.L59
+ 341 000a 17030000 		call	t0,__riscv_save_4
+ 341      E7020300 
+ 342 0012 AA84     		mv	s1,a0
+ 343 0014 0841     		lw	a0,0(a0)
+ 344 0016 4111     		addi	sp,sp,-16
+ 345 0018 36C6     		sw	a3,12(sp)
+ 346 001a 1105     		addi	a0,a0,4
+ 347 001c 2E89     		mv	s2,a1
+ 348 001e 3284     		mv	s0,a2
+ 349 0020 97000000 		call	HW_get_32bit_reg
+ 349      E7800000 
+ 350 0028 B246     		lw	a3,12(sp)
+ 351 002a 01EC     		bnez	s0,.L52
+ 352 002c CA85     		mv	a1,s2
+ 353 002e 2685     		mv	a0,s1
+ 354 0030 97000000 		call	PWM_disable
+ 354      E7800000 
+ 355              	.L50:
+ 356 0038 4101     		addi	sp,sp,16
+ 357 003a 17030000 		tail	__riscv_restore_4
+ 357      67000300 
+ 358              	.L52:
+ 359 0042 0546     		li	a2,1
+ 360 0044 6389C600 		beq	a3,a2,.L53
+ 361 0048 8145     		li	a1,0
+ 362 004a 99CE     		beqz	a3,.L54
+ 363 004c 8947     		li	a5,2
+ 364 004e 6382F606 		beq	a3,a5,.L55
+ 365              	.L63:
+ 366 0052 0144     		li	s0,0
+ 367 0054 11A8     		j	.L54
+ 368              	.L53:
+ 369 0056 B3478500 		xor	a5,a0,s0
+ 370 005a 858B     		andi	a5,a5,1
+ 371 005c A1CB     		beqz	a5,.L56
+ 372 005e 818E     		sub	a3,a3,s0
+ 373 0060 AA96     		add	a3,a3,a0
+ 374              	.L62:
+ 375 0062 93D51600 		srli	a1,a3,1
+ 376 0066 2E94     		add	s0,s0,a1
+ 377              	.L54:
+ 378 0068 37070000 		lui	a4,%hi(.LANCHOR1)
+ 379 006c 93192900 		slli	s3,s2,2
+ 380 0070 13070700 		addi	a4,a4,%lo(.LANCHOR1)
+ 381 0074 4E97     		add	a4,a4,s3
+ 382 0076 1C43     		lw	a5,0(a4)
+ 383 0078 8840     		lw	a0,0(s1)
+ 384 007a 3E95     		add	a0,a0,a5
+ 385 007c 97000000 		call	HW_set_32bit_reg
+ 385      E7800000 
+ 386 0084 B7070000 		lui	a5,%hi(.LANCHOR2)
+ 387 0088 93870700 		addi	a5,a5,%lo(.LANCHOR2)
+ 388 008c CE97     		add	a5,a5,s3
+ 389 008e 8840     		lw	a0,0(s1)
+ 390 0090 9C43     		lw	a5,0(a5)
+ 391 0092 A285     		mv	a1,s0
+ 392 0094 3E95     		add	a0,a0,a5
+ 393 0096 97000000 		call	HW_set_32bit_reg
+ 393      E7800000 
+ 394 009e CA85     		mv	a1,s2
+ 395 00a0 2685     		mv	a0,s1
+ 396 00a2 97000000 		call	PWM_enable
+ 396      E7800000 
+ 397 00aa 79B7     		j	.L50
+ 398              	.L56:
+ 399 00ac B3068540 		sub	a3,a0,s0
+ 400 00b0 4DBF     		j	.L62
+ 401              	.L55:
+ 402 00b2 B3068640 		sub	a3,a2,s0
+ 403 00b6 B385A600 		add	a1,a3,a0
+ 404 00ba 61BF     		j	.L63
+ 405              	.L59:
+ 406 00bc 8280     		ret
+ 408              		.section	.text.PWM_enable_stretch_pulse,"ax",@progbits
+ 409              		.align	1
+ 410              		.globl	PWM_enable_stretch_pulse
+ 412              	PWM_enable_stretch_pulse:
+ 413 0000 1387F5FF 		addi	a4,a1,-1
+ 414 0004 BD47     		li	a5,15
+ 415 0006 63E5E704 		bgtu	a4,a5,.L67
+ 416 000a 17030000 		call	t0,__riscv_save_2
+ 416      E7020300 
+ 417 0012 B7070000 		lui	a5,%hi(.LANCHOR3)
+ 418 0016 2A84     		mv	s0,a0
+ 419 0018 93870700 		addi	a5,a5,%lo(.LANCHOR3)
+ 420 001c 0841     		lw	a0,0(a0)
+ 421 001e 8605     		slli	a1,a1,1
+ 422 0020 BE95     		add	a1,a5,a1
+ 423 0022 83D40500 		lhu	s1,0(a1)
+ 424 0026 13050509 		addi	a0,a0,144
+ 425 002a 97000000 		call	HW_get_16bit_reg
+ 425      E7800000 
+ 426 0032 B3E5A400 		or	a1,s1,a0
+ 427 0036 0840     		lw	a0,0(s0)
+ 428 0038 C205     		slli	a1,a1,16
+ 429 003a C181     		srli	a1,a1,16
+ 430 003c 13050509 		addi	a0,a0,144
+ 431 0040 97000000 		call	HW_set_16bit_reg
+ 431      E7800000 
+ 432 0048 17030000 		tail	__riscv_restore_2
+ 432      67000300 
+ 433              	.L67:
+ 434 0050 8280     		ret
+ 436              		.section	.text.PWM_disable_stretch_pulse,"ax",@progbits
+ 437              		.align	1
+ 438              		.globl	PWM_disable_stretch_pulse
+ 440              	PWM_disable_stretch_pulse:
+ 441 0000 1387F5FF 		addi	a4,a1,-1
+ 442 0004 BD47     		li	a5,15
+ 443 0006 63E7E704 		bgtu	a4,a5,.L73
+ 444 000a 17030000 		call	t0,__riscv_save_2
+ 444      E7020300 
+ 445 0012 B7070000 		lui	a5,%hi(.LANCHOR3)
+ 446 0016 93870700 		addi	a5,a5,%lo(.LANCHOR3)
+ 447 001a 8605     		slli	a1,a1,1
+ 448 001c BE95     		add	a1,a5,a1
+ 449 001e AA84     		mv	s1,a0
+ 450 0020 0841     		lw	a0,0(a0)
+ 451 0022 03D40500 		lhu	s0,0(a1)
+ 452 0026 13050509 		addi	a0,a0,144
+ 453 002a 97000000 		call	HW_get_16bit_reg
+ 453      E7800000 
+ 454 0032 1344F4FF 		not	s0,s0
+ 455 0036 698C     		and	s0,a0,s0
+ 456 0038 8840     		lw	a0,0(s1)
+ 457 003a 93150401 		slli	a1,s0,16
+ 458 003e C181     		srli	a1,a1,16
+ 459 0040 13050509 		addi	a0,a0,144
+ 460 0044 97000000 		call	HW_set_16bit_reg
+ 460      E7800000 
+ 461 004c 17030000 		tail	__riscv_restore_2
+ 461      67000300 
+ 462              	.L73:
+ 463 0054 8280     		ret
+ 465              		.section	.text.PWM_tach_init,"ax",@progbits
+ 466              		.align	1
+ 467              		.globl	PWM_tach_init
+ 469              	PWM_tach_init:
+ 470 0000 17030000 		call	t0,__riscv_save_1
+ 470      E7020300 
+ 471 0008 2A84     		mv	s0,a0
+ 472 000a 0841     		lw	a0,0(a0)
+ 473 000c 13054509 		addi	a0,a0,148
+ 474 0010 97000000 		call	HW_set_16bit_reg
+ 474      E7800000 
+ 475 0018 0840     		lw	a0,0(s0)
+ 476 001a 8145     		li	a1,0
+ 477 001c 1305050A 		addi	a0,a0,160
+ 478 0020 97000000 		call	HW_set_16bit_reg
+ 478      E7800000 
+ 479 0028 0840     		lw	a0,0(s0)
+ 480 002a 8145     		li	a1,0
+ 481 002c 1305C509 		addi	a0,a0,156
+ 482 0030 97000000 		call	HW_set_16bit_reg
+ 482      E7800000 
+ 483 0038 0840     		lw	a0,0(s0)
+ 484 003a C165     		li	a1,65536
+ 485 003c FD15     		addi	a1,a1,-1
+ 486 003e 13058509 		addi	a0,a0,152
+ 487 0042 97000000 		call	HW_set_16bit_reg
+ 487      E7800000 
+ 488 004a 17030000 		tail	__riscv_restore_1
+ 488      67000300 
+ 490              		.section	.text.PWM_tach_set_mode,"ax",@progbits
+ 491              		.align	1
+ 492              		.globl	PWM_tach_set_mode
+ 494              	PWM_tach_set_mode:
+ 495 0000 1387F5FF 		addi	a4,a1,-1
+ 496 0004 BD47     		li	a5,15
+ 497 0006 63EBE704 		bgtu	a4,a5,.L83
+ 498 000a 17030000 		call	t0,__riscv_save_3
+ 498      E7020300 
+ 499 0012 B7070000 		lui	a5,%hi(.LANCHOR3)
+ 500 0016 93870700 		addi	a5,a5,%lo(.LANCHOR3)
+ 501 001a AA84     		mv	s1,a0
+ 502 001c 8605     		slli	a1,a1,1
+ 503 001e 0841     		lw	a0,0(a0)
+ 504 0020 BE95     		add	a1,a5,a1
+ 505 0022 03D40500 		lhu	s0,0(a1)
+ 506 0026 1305050A 		addi	a0,a0,160
+ 507 002a 3289     		mv	s2,a2
+ 508 002c 97000000 		call	HW_get_16bit_reg
+ 508      E7800000 
+ 509 0034 B365A400 		or	a1,s0,a0
+ 510 0038 63150900 		bnez	s2,.L86
+ 511 003c 9345F4FF 		not	a1,s0
+ 512 0040 E98D     		and	a1,a0,a1
+ 513              	.L86:
+ 514 0042 8840     		lw	a0,0(s1)
+ 515 0044 C205     		slli	a1,a1,16
+ 516 0046 C181     		srli	a1,a1,16
+ 517 0048 1305050A 		addi	a0,a0,160
+ 518 004c 97000000 		call	HW_set_16bit_reg
+ 518      E7800000 
+ 519 0054 17030000 		tail	__riscv_restore_3
+ 519      67000300 
+ 520              	.L83:
+ 521 005c 8280     		ret
+ 523              		.section	.text.PWM_tach_read_value,"ax",@progbits
+ 524              		.align	1
+ 525              		.globl	PWM_tach_read_value
+ 527              	PWM_tach_read_value:
+ 528 0000 1387F5FF 		addi	a4,a1,-1
+ 529 0004 BD47     		li	a5,15
+ 530 0006 63E7E702 		bgtu	a4,a5,.L89
+ 531 000a 17030000 		call	t0,__riscv_save_0
+ 531      E7020300 
+ 532 0012 B7070000 		lui	a5,%hi(.LANCHOR4)
+ 533 0016 93870700 		addi	a5,a5,%lo(.LANCHOR4)
+ 534 001a 8A05     		slli	a1,a1,2
+ 535 001c BE95     		add	a1,a5,a1
+ 536 001e 9C41     		lw	a5,0(a1)
+ 537 0020 0841     		lw	a0,0(a0)
+ 538 0022 3E95     		add	a0,a0,a5
+ 539 0024 97000000 		call	HW_get_16bit_reg
+ 539      E7800000 
+ 540 002c 17030000 		tail	__riscv_restore_0
+ 540      67000300 
+ 541              	.L89:
+ 542 0034 0145     		li	a0,0
+ 543 0036 8280     		ret
+ 545              		.section	.text.PWM_tach_clear_status,"ax",@progbits
+ 546              		.align	1
+ 547              		.globl	PWM_tach_clear_status
+ 549              	PWM_tach_clear_status:
+ 550 0000 1387F5FF 		addi	a4,a1,-1
+ 551 0004 BD47     		li	a5,15
+ 552 0006 63E9E702 		bgtu	a4,a5,.L97
+ 553 000a 17030000 		call	t0,__riscv_save_0
+ 553      E7020300 
+ 554 0012 B7070000 		lui	a5,%hi(.LANCHOR3)
+ 555 0016 93870700 		addi	a5,a5,%lo(.LANCHOR3)
+ 556 001a 8605     		slli	a1,a1,1
+ 557 001c BE95     		add	a1,a5,a1
+ 558 001e 0841     		lw	a0,0(a0)
+ 559 0020 83D50500 		lhu	a1,0(a1)
+ 560 0024 13058509 		addi	a0,a0,152
+ 561 0028 97000000 		call	HW_set_16bit_reg
+ 561      E7800000 
+ 562 0030 17030000 		tail	__riscv_restore_0
+ 562      67000300 
+ 563              	.L97:
+ 564 0038 8280     		ret
+ 566              		.section	.text.PWM_tach_read_status,"ax",@progbits
+ 567              		.align	1
+ 568              		.globl	PWM_tach_read_status
+ 570              	PWM_tach_read_status:
+ 571 0000 1387F5FF 		addi	a4,a1,-1
+ 572 0004 BD47     		li	a5,15
+ 573 0006 63EAE702 		bgtu	a4,a5,.L102
+ 574 000a 17030000 		call	t0,__riscv_save_1
+ 574      E7020300 
+ 575 0012 B7070000 		lui	a5,%hi(.LANCHOR3)
+ 576 0016 93870700 		addi	a5,a5,%lo(.LANCHOR3)
+ 577 001a 0841     		lw	a0,0(a0)
+ 578 001c 8605     		slli	a1,a1,1
+ 579 001e BE95     		add	a1,a5,a1
+ 580 0020 03D40500 		lhu	s0,0(a1)
+ 581 0024 13058509 		addi	a0,a0,152
+ 582 0028 97000000 		call	HW_get_16bit_reg
+ 582      E7800000 
+ 583 0030 618D     		and	a0,s0,a0
+ 584 0032 17030000 		tail	__riscv_restore_1
+ 584      67000300 
+ 585              	.L102:
+ 586 003a 0145     		li	a0,0
+ 587 003c 8280     		ret
+ 589              		.section	.text.PWM_tach_get_irq_source,"ax",@progbits
+ 590              		.align	1
+ 591              		.globl	PWM_tach_get_irq_source
+ 593              	PWM_tach_get_irq_source:
+ 594 0000 17030000 		call	t0,__riscv_save_2
+ 594      E7020300 
+ 595 0008 AA84     		mv	s1,a0
+ 596 000a 0841     		lw	a0,0(a0)
+ 597 000c 1305C509 		addi	a0,a0,156
+ 598 0010 97000000 		call	HW_get_16bit_reg
+ 598      E7800000 
+ 599 0018 2A84     		mv	s0,a0
+ 600 001a 8840     		lw	a0,0(s1)
+ 601 001c 13058509 		addi	a0,a0,152
+ 602 0020 97000000 		call	HW_get_16bit_reg
+ 602      E7800000 
+ 603 0028 618D     		and	a0,s0,a0
+ 604 002a 93170501 		slli	a5,a0,16
+ 605 002e C183     		srli	a5,a5,16
+ 606 0030 0145     		li	a0,0
+ 607 0032 95CB     		beqz	a5,.L107
+ 608 0034 13F7F70F 		andi	a4,a5,0xff
+ 609 0038 0545     		li	a0,1
+ 610 003a 19E3     		bnez	a4,.L109
+ 611 003c A183     		srli	a5,a5,8
+ 612 003e 2545     		li	a0,9
+ 613              	.L109:
+ 614 0040 13F7F700 		andi	a4,a5,15
+ 615 0044 09E7     		bnez	a4,.L110
+ 616 0046 1105     		addi	a0,a0,4
+ 617 0048 4205     		slli	a0,a0,16
+ 618 004a 4181     		srli	a0,a0,16
+ 619 004c 9183     		srli	a5,a5,4
+ 620              	.L110:
+ 621 004e 13F73700 		andi	a4,a5,3
+ 622 0052 09E7     		bnez	a4,.L111
+ 623 0054 0905     		addi	a0,a0,2
+ 624 0056 4205     		slli	a0,a0,16
+ 625 0058 4181     		srli	a0,a0,16
+ 626 005a 8983     		srli	a5,a5,2
+ 627              	.L111:
+ 628 005c 858B     		andi	a5,a5,1
+ 629 005e 81E7     		bnez	a5,.L107
+ 630 0060 0505     		addi	a0,a0,1
+ 631 0062 4205     		slli	a0,a0,16
+ 632 0064 4181     		srli	a0,a0,16
+ 633              	.L107:
+ 634 0066 17030000 		tail	__riscv_restore_2
+ 634      67000300 
+ 636              		.section	.text.PWM_tach_enable_irq,"ax",@progbits
+ 637              		.align	1
+ 638              		.globl	PWM_tach_enable_irq
+ 640              	PWM_tach_enable_irq:
+ 641 0000 1387F5FF 		addi	a4,a1,-1
+ 642 0004 BD47     		li	a5,15
+ 643 0006 63E5E704 		bgtu	a4,a5,.L119
+ 644 000a 17030000 		call	t0,__riscv_save_2
+ 644      E7020300 
+ 645 0012 B7070000 		lui	a5,%hi(.LANCHOR3)
+ 646 0016 2A84     		mv	s0,a0
+ 647 0018 93870700 		addi	a5,a5,%lo(.LANCHOR3)
+ 648 001c 0841     		lw	a0,0(a0)
+ 649 001e 8605     		slli	a1,a1,1
+ 650 0020 BE95     		add	a1,a5,a1
+ 651 0022 83D40500 		lhu	s1,0(a1)
+ 652 0026 1305C509 		addi	a0,a0,156
+ 653 002a 97000000 		call	HW_get_16bit_reg
+ 653      E7800000 
+ 654 0032 B3E5A400 		or	a1,s1,a0
+ 655 0036 0840     		lw	a0,0(s0)
+ 656 0038 C205     		slli	a1,a1,16
+ 657 003a C181     		srli	a1,a1,16
+ 658 003c 1305C509 		addi	a0,a0,156
+ 659 0040 97000000 		call	HW_set_16bit_reg
+ 659      E7800000 
+ 660 0048 17030000 		tail	__riscv_restore_2
+ 660      67000300 
+ 661              	.L119:
+ 662 0050 8280     		ret
+ 664              		.section	.text.PWM_tach_disable_irq,"ax",@progbits
+ 665              		.align	1
+ 666              		.globl	PWM_tach_disable_irq
+ 668              	PWM_tach_disable_irq:
+ 669 0000 1387F5FF 		addi	a4,a1,-1
+ 670 0004 BD47     		li	a5,15
+ 671 0006 63E7E704 		bgtu	a4,a5,.L125
+ 672 000a 17030000 		call	t0,__riscv_save_2
+ 672      E7020300 
+ 673 0012 B7070000 		lui	a5,%hi(.LANCHOR3)
+ 674 0016 93870700 		addi	a5,a5,%lo(.LANCHOR3)
+ 675 001a 8605     		slli	a1,a1,1
+ 676 001c BE95     		add	a1,a5,a1
+ 677 001e AA84     		mv	s1,a0
+ 678 0020 0841     		lw	a0,0(a0)
+ 679 0022 03D40500 		lhu	s0,0(a1)
+ 680 0026 1305C509 		addi	a0,a0,156
+ 681 002a 97000000 		call	HW_get_16bit_reg
+ 681      E7800000 
+ 682 0032 1344F4FF 		not	s0,s0
+ 683 0036 698C     		and	s0,a0,s0
+ 684 0038 8840     		lw	a0,0(s1)
+ 685 003a 93150401 		slli	a1,s0,16
+ 686 003e C181     		srli	a1,a1,16
+ 687 0040 1305C509 		addi	a0,a0,156
+ 688 0044 97000000 		call	HW_set_16bit_reg
+ 688      E7800000 
+ 689 004c 17030000 		tail	__riscv_restore_2
+ 689      67000300 
+ 690              	.L125:
+ 691 0054 8280     		ret
+ 693              		.section	.text.PWM_tach_clear_irq,"ax",@progbits
+ 694              		.align	1
+ 695              		.globl	PWM_tach_clear_irq
+ 697              	PWM_tach_clear_irq:
+ 698 0000 17030000 		call	t0,__riscv_save_0
+ 698      E7020300 
+ 699 0008 97000000 		call	PWM_tach_clear_status
+ 699      E7800000 
+ 700 0010 17030000 		tail	__riscv_restore_0
+ 700      67000300 
+ 702              		.section	.rodata.g_pwm_id_mask_lut,"a"
+ 703              		.align	2
+ 704              		.set	.LANCHOR0,. + 0
+ 707              	g_pwm_id_mask_lut:
+ 708 0000 00       		.byte	0
+ 709 0001 01       		.byte	1
+ 710 0002 02       		.byte	2
+ 711 0003 04       		.byte	4
+ 712 0004 08       		.byte	8
+ 713 0005 10       		.byte	16
+ 714 0006 20       		.byte	32
+ 715 0007 40       		.byte	64
+ 716 0008 80       		.byte	-128
+ 717 0009 01       		.byte	1
+ 718 000a 02       		.byte	2
+ 719 000b 04       		.byte	4
+ 720 000c 08       		.byte	8
+ 721 000d 10       		.byte	16
+ 722 000e 20       		.byte	32
+ 723 000f 40       		.byte	64
+ 724 0010 80       		.byte	-128
+ 725              		.section	.rodata.g_pwm_negedge_offset_lut,"a"
+ 726              		.align	2
+ 727              		.set	.LANCHOR2,. + 0
+ 730              	g_pwm_negedge_offset_lut:
+ 731 0000 00000000 		.word	0
+ 732 0004 14000000 		.word	20
+ 733 0008 1C000000 		.word	28
+ 734 000c 24000000 		.word	36
+ 735 0010 2C000000 		.word	44
+ 736 0014 34000000 		.word	52
+ 737 0018 3C000000 		.word	60
+ 738 001c 44000000 		.word	68
+ 739 0020 4C000000 		.word	76
+ 740 0024 54000000 		.word	84
+ 741 0028 5C000000 		.word	92
+ 742 002c 64000000 		.word	100
+ 743 0030 6C000000 		.word	108
+ 744 0034 74000000 		.word	116
+ 745 0038 7C000000 		.word	124
+ 746 003c 84000000 		.word	132
+ 747 0040 8C000000 		.word	140
+ 748              		.section	.rodata.g_pwm_posedge_offset_lut,"a"
+ 749              		.align	2
+ 750              		.set	.LANCHOR1,. + 0
+ 753              	g_pwm_posedge_offset_lut:
+ 754 0000 00000000 		.word	0
+ 755 0004 10000000 		.word	16
+ 756 0008 18000000 		.word	24
+ 757 000c 20000000 		.word	32
+ 758 0010 28000000 		.word	40
+ 759 0014 30000000 		.word	48
+ 760 0018 38000000 		.word	56
+ 761 001c 40000000 		.word	64
+ 762 0020 48000000 		.word	72
+ 763 0024 50000000 		.word	80
+ 764 0028 58000000 		.word	88
+ 765 002c 60000000 		.word	96
+ 766 0030 68000000 		.word	104
+ 767 0034 70000000 		.word	112
+ 768 0038 78000000 		.word	120
+ 769 003c 80000000 		.word	128
+ 770 0040 88000000 		.word	136
+ 771              		.section	.rodata.g_pwm_tach_id_mask_lut,"a"
+ 772              		.align	2
+ 773              		.set	.LANCHOR3,. + 0
+ 776              	g_pwm_tach_id_mask_lut:
+ 777 0000 0000     		.half	0
+ 778 0002 0100     		.half	1
+ 779 0004 0200     		.half	2
+ 780 0006 0400     		.half	4
+ 781 0008 0800     		.half	8
+ 782 000a 1000     		.half	16
+ 783 000c 2000     		.half	32
+ 784 000e 4000     		.half	64
+ 785 0010 8000     		.half	128
+ 786 0012 0001     		.half	256
+ 787 0014 0002     		.half	512
+ 788 0016 0004     		.half	1024
+ 789 0018 0008     		.half	2048
+ 790 001a 0010     		.half	4096
+ 791 001c 0020     		.half	8192
+ 792 001e 0040     		.half	16384
+ 793 0020 0080     		.half	-32768
+ 794              		.section	.rodata.g_tachpulsedur_offset_lut,"a"
+ 795              		.align	2
+ 796              		.set	.LANCHOR4,. + 0
+ 799              	g_tachpulsedur_offset_lut:
+ 800 0000 00000000 		.word	0
+ 801 0004 A4000000 		.word	164
+ 802 0008 A8000000 		.word	168
+ 803 000c AC000000 		.word	172
+ 804 0010 B0000000 		.word	176
+ 805 0014 B4000000 		.word	180
+ 806 0018 B8000000 		.word	184
+ 807 001c BC000000 		.word	188
+ 808 0020 C0000000 		.word	192
+ 809 0024 C4000000 		.word	196
+ 810 0028 C8000000 		.word	200
+ 811 002c CC000000 		.word	204
+ 812 0030 D0000000 		.word	208
+ 813 0034 D4000000 		.word	212
+ 814 0038 D8000000 		.word	216
+ 815 003c DC000000 		.word	220
+ 816 0040 E0000000 		.word	224
+ 817              		.ident	"GCC: (Microchip SoftConsole GNU RISC-V Embedded GCC, 64-bit) 8.2.0"
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 core_pwm.c
+C:\Users\tecchio\AppData\Local\Temp\cc7aWOhg.s:8      .text.PWM_init:0000000000000000 PWM_init
+C:\Users\tecchio\AppData\Local\Temp\cc7aWOhg.s:103    .text.PWM_enable:0000000000000000 PWM_enable
+C:\Users\tecchio\AppData\Local\Temp\cc7aWOhg.s:140    .text.PWM_disable:0000000000000000 PWM_disable
+C:\Users\tecchio\AppData\Local\Temp\cc7aWOhg.s:177    .text.PWM_enable_synch_update:0000000000000000 PWM_enable_synch_update
+C:\Users\tecchio\AppData\Local\Temp\cc7aWOhg.s:189    .text.PWM_disable_synch_update:0000000000000000 PWM_disable_synch_update
+C:\Users\tecchio\AppData\Local\Temp\cc7aWOhg.s:201    .text.PWM_set_duty_cycle:0000000000000000 PWM_set_duty_cycle
+C:\Users\tecchio\AppData\Local\Temp\cc7aWOhg.s:242    .text.PWM_set_edges:0000000000000000 PWM_set_edges
+C:\Users\tecchio\AppData\Local\Temp\cc7aWOhg.s:275    .text.PWM_get_duty_cycle:0000000000000000 PWM_get_duty_cycle
+C:\Users\tecchio\AppData\Local\Temp\cc7aWOhg.s:337    .text.PWM_generate_aligned_wave:0000000000000000 PWM_generate_aligned_wave
+C:\Users\tecchio\AppData\Local\Temp\cc7aWOhg.s:412    .text.PWM_enable_stretch_pulse:0000000000000000 PWM_enable_stretch_pulse
+C:\Users\tecchio\AppData\Local\Temp\cc7aWOhg.s:440    .text.PWM_disable_stretch_pulse:0000000000000000 PWM_disable_stretch_pulse
+C:\Users\tecchio\AppData\Local\Temp\cc7aWOhg.s:469    .text.PWM_tach_init:0000000000000000 PWM_tach_init
+C:\Users\tecchio\AppData\Local\Temp\cc7aWOhg.s:494    .text.PWM_tach_set_mode:0000000000000000 PWM_tach_set_mode
+C:\Users\tecchio\AppData\Local\Temp\cc7aWOhg.s:527    .text.PWM_tach_read_value:0000000000000000 PWM_tach_read_value
+C:\Users\tecchio\AppData\Local\Temp\cc7aWOhg.s:549    .text.PWM_tach_clear_status:0000000000000000 PWM_tach_clear_status
+C:\Users\tecchio\AppData\Local\Temp\cc7aWOhg.s:570    .text.PWM_tach_read_status:0000000000000000 PWM_tach_read_status
+C:\Users\tecchio\AppData\Local\Temp\cc7aWOhg.s:593    .text.PWM_tach_get_irq_source:0000000000000000 PWM_tach_get_irq_source
+C:\Users\tecchio\AppData\Local\Temp\cc7aWOhg.s:640    .text.PWM_tach_enable_irq:0000000000000000 PWM_tach_enable_irq
+C:\Users\tecchio\AppData\Local\Temp\cc7aWOhg.s:668    .text.PWM_tach_disable_irq:0000000000000000 PWM_tach_disable_irq
+C:\Users\tecchio\AppData\Local\Temp\cc7aWOhg.s:697    .text.PWM_tach_clear_irq:0000000000000000 PWM_tach_clear_irq
+C:\Users\tecchio\AppData\Local\Temp\cc7aWOhg.s:704    .rodata.g_pwm_id_mask_lut:0000000000000000 .LANCHOR0
+C:\Users\tecchio\AppData\Local\Temp\cc7aWOhg.s:707    .rodata.g_pwm_id_mask_lut:0000000000000000 g_pwm_id_mask_lut
+C:\Users\tecchio\AppData\Local\Temp\cc7aWOhg.s:727    .rodata.g_pwm_negedge_offset_lut:0000000000000000 .LANCHOR2
+C:\Users\tecchio\AppData\Local\Temp\cc7aWOhg.s:730    .rodata.g_pwm_negedge_offset_lut:0000000000000000 g_pwm_negedge_offset_lut
+C:\Users\tecchio\AppData\Local\Temp\cc7aWOhg.s:750    .rodata.g_pwm_posedge_offset_lut:0000000000000000 .LANCHOR1
+C:\Users\tecchio\AppData\Local\Temp\cc7aWOhg.s:753    .rodata.g_pwm_posedge_offset_lut:0000000000000000 g_pwm_posedge_offset_lut
+C:\Users\tecchio\AppData\Local\Temp\cc7aWOhg.s:773    .rodata.g_pwm_tach_id_mask_lut:0000000000000000 .LANCHOR3
+C:\Users\tecchio\AppData\Local\Temp\cc7aWOhg.s:776    .rodata.g_pwm_tach_id_mask_lut:0000000000000000 g_pwm_tach_id_mask_lut
+C:\Users\tecchio\AppData\Local\Temp\cc7aWOhg.s:796    .rodata.g_tachpulsedur_offset_lut:0000000000000000 .LANCHOR4
+C:\Users\tecchio\AppData\Local\Temp\cc7aWOhg.s:799    .rodata.g_tachpulsedur_offset_lut:0000000000000000 g_tachpulsedur_offset_lut
+C:\Users\tecchio\AppData\Local\Temp\cc7aWOhg.s:133    .text.PWM_enable:0000000000000068 .L7
+C:\Users\tecchio\AppData\Local\Temp\cc7aWOhg.s:125    .text.PWM_enable:0000000000000050 .L5
+C:\Users\tecchio\AppData\Local\Temp\cc7aWOhg.s:122    .text.PWM_enable:0000000000000040 .L10
+C:\Users\tecchio\AppData\Local\Temp\cc7aWOhg.s:170    .text.PWM_disable:000000000000006c .L15
+C:\Users\tecchio\AppData\Local\Temp\cc7aWOhg.s:163    .text.PWM_disable:0000000000000056 .L13
+C:\Users\tecchio\AppData\Local\Temp\cc7aWOhg.s:160    .text.PWM_disable:0000000000000046 .L18
+C:\Users\tecchio\AppData\Local\Temp\cc7aWOhg.s:235    .text.PWM_set_duty_cycle:0000000000000070 .L27
+C:\Users\tecchio\AppData\Local\Temp\cc7aWOhg.s:211    .text.PWM_set_duty_cycle:0000000000000026 .L25
+C:\Users\tecchio\AppData\Local\Temp\cc7aWOhg.s:209    .text.PWM_set_duty_cycle:000000000000001e .L23
+C:\Users\tecchio\AppData\Local\Temp\cc7aWOhg.s:268    .text.PWM_set_edges:0000000000000056 .L33
+C:\Users\tecchio\AppData\Local\Temp\cc7aWOhg.s:285    .text.PWM_get_duty_cycle:0000000000000018 .L37
+C:\Users\tecchio\AppData\Local\Temp\cc7aWOhg.s:324    .text.PWM_get_duty_cycle:000000000000009a .L39
+C:\Users\tecchio\AppData\Local\Temp\cc7aWOhg.s:281    .text.PWM_get_duty_cycle:000000000000000e .L41
+C:\Users\tecchio\AppData\Local\Temp\cc7aWOhg.s:327    .text.PWM_get_duty_cycle:000000000000009e .L42
+C:\Users\tecchio\AppData\Local\Temp\cc7aWOhg.s:283    .text.PWM_get_duty_cycle:0000000000000010 .L36
+C:\Users\tecchio\AppData\Local\Temp\cc7aWOhg.s:297    .text.PWM_get_duty_cycle:000000000000003c .L49
+C:\Users\tecchio\AppData\Local\Temp\cc7aWOhg.s:405    .text.PWM_generate_aligned_wave:00000000000000bc .L59
+C:\Users\tecchio\AppData\Local\Temp\cc7aWOhg.s:358    .text.PWM_generate_aligned_wave:0000000000000042 .L52
+C:\Users\tecchio\AppData\Local\Temp\cc7aWOhg.s:368    .text.PWM_generate_aligned_wave:0000000000000056 .L53
+C:\Users\tecchio\AppData\Local\Temp\cc7aWOhg.s:377    .text.PWM_generate_aligned_wave:0000000000000068 .L54
+C:\Users\tecchio\AppData\Local\Temp\cc7aWOhg.s:401    .text.PWM_generate_aligned_wave:00000000000000b2 .L55
+C:\Users\tecchio\AppData\Local\Temp\cc7aWOhg.s:398    .text.PWM_generate_aligned_wave:00000000000000ac .L56
+C:\Users\tecchio\AppData\Local\Temp\cc7aWOhg.s:355    .text.PWM_generate_aligned_wave:0000000000000038 .L50
+C:\Users\tecchio\AppData\Local\Temp\cc7aWOhg.s:374    .text.PWM_generate_aligned_wave:0000000000000062 .L62
+C:\Users\tecchio\AppData\Local\Temp\cc7aWOhg.s:365    .text.PWM_generate_aligned_wave:0000000000000052 .L63
+C:\Users\tecchio\AppData\Local\Temp\cc7aWOhg.s:433    .text.PWM_enable_stretch_pulse:0000000000000050 .L67
+C:\Users\tecchio\AppData\Local\Temp\cc7aWOhg.s:462    .text.PWM_disable_stretch_pulse:0000000000000054 .L73
+C:\Users\tecchio\AppData\Local\Temp\cc7aWOhg.s:520    .text.PWM_tach_set_mode:000000000000005c .L83
+C:\Users\tecchio\AppData\Local\Temp\cc7aWOhg.s:513    .text.PWM_tach_set_mode:0000000000000042 .L86
+C:\Users\tecchio\AppData\Local\Temp\cc7aWOhg.s:541    .text.PWM_tach_read_value:0000000000000034 .L89
+C:\Users\tecchio\AppData\Local\Temp\cc7aWOhg.s:563    .text.PWM_tach_clear_status:0000000000000038 .L97
+C:\Users\tecchio\AppData\Local\Temp\cc7aWOhg.s:585    .text.PWM_tach_read_status:000000000000003a .L102
+C:\Users\tecchio\AppData\Local\Temp\cc7aWOhg.s:633    .text.PWM_tach_get_irq_source:0000000000000066 .L107
+C:\Users\tecchio\AppData\Local\Temp\cc7aWOhg.s:613    .text.PWM_tach_get_irq_source:0000000000000040 .L109
+C:\Users\tecchio\AppData\Local\Temp\cc7aWOhg.s:620    .text.PWM_tach_get_irq_source:000000000000004e .L110
+C:\Users\tecchio\AppData\Local\Temp\cc7aWOhg.s:627    .text.PWM_tach_get_irq_source:000000000000005c .L111
+C:\Users\tecchio\AppData\Local\Temp\cc7aWOhg.s:661    .text.PWM_tach_enable_irq:0000000000000050 .L119
+C:\Users\tecchio\AppData\Local\Temp\cc7aWOhg.s:690    .text.PWM_tach_disable_irq:0000000000000054 .L125
+
+UNDEFINED SYMBOLS
+__riscv_save_1
+HW_set_8bit_reg
+HW_set_32bit_reg
+__riscv_restore_1
+__riscv_save_2
+HW_get_8bit_reg
+__riscv_restore_2
+__riscv_save_0
+HW_set_16bit_reg
+__riscv_restore_0
+__riscv_save_4
+__riscv_restore_4
+__riscv_save_3
+__riscv_restore_3
+HW_get_32bit_reg
+HW_get_16bit_reg

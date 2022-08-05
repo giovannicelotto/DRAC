@@ -1,0 +1,773 @@
+   1              		.file	"riscv_hal.c"
+   2              		.option nopic
+   3              		.text
+   4              		.section	.text.__disable_irq,"ax",@progbits
+   5              		.align	1
+   6              		.globl	__disable_irq
+   8              	__disable_irq:
+   9 0000 93070008 		li	a5,128
+  10              	 #APP
+  11              	# 78 "../riscv_hal/riscv_hal.c" 1
+   1              	/*******************************************************************************
+   2              	 * (c) Copyright 2016-2018 Microsemi SoC Products Group. All rights reserved.
+   3              	 *
+   4              	 * @file riscv_hal.c
+   5              	 * @author Microsemi SoC Products Group
+   6              	 * @brief Implementation of Hardware Abstraction Layer for Mi-V soft processors
+   7              	 *
+   8              	 * SVN $Revision: 9835 $
+   9              	 * SVN $Date: 2018-03-19 19:11:35 +0530 (Mon, 19 Mar 2018) $
+  10              	 */
+  11              	#include <stdlib.h>
+  12              	#include <stdint.h>
+  13              	#include <unistd.h>
+  14              	
+  15              	#include "riscv_hal.h"
+  16              	
+  17              	#ifdef __cplusplus
+  18              	extern "C" {
+  19              	#endif
+  20              	
+  21              	#define RTC_PRESCALER 100UL
+  22              	
+  23              	#define SUCCESS 0U
+  24              	#define ERROR   1U
+  25              	
+  26              	/*------------------------------------------------------------------------------
+  27              	 *
+  28              	 */
+  29              	uint8_t Invalid_IRQHandler(void);
+  30              	uint8_t External_1_IRQHandler(void);
+  31              	uint8_t External_2_IRQHandler(void);
+  32              	uint8_t External_3_IRQHandler(void);
+  33              	uint8_t External_4_IRQHandler(void);
+  34              	uint8_t External_5_IRQHandler(void);
+  35              	uint8_t External_6_IRQHandler(void);
+  36              	uint8_t External_7_IRQHandler(void);
+  37              	uint8_t External_8_IRQHandler(void);
+  38              	uint8_t External_9_IRQHandler(void);
+  39              	uint8_t External_10_IRQHandler(void);
+  40              	uint8_t External_11_IRQHandler(void);
+  41              	uint8_t External_12_IRQHandler(void);
+  42              	uint8_t External_13_IRQHandler(void);
+  43              	uint8_t External_14_IRQHandler(void);
+  44              	uint8_t External_15_IRQHandler(void);
+  45              	uint8_t External_16_IRQHandler(void);
+  46              	uint8_t External_17_IRQHandler(void);
+  47              	uint8_t External_18_IRQHandler(void);
+  48              	uint8_t External_19_IRQHandler(void);
+  49              	uint8_t External_20_IRQHandler(void);
+  50              	uint8_t External_21_IRQHandler(void);
+  51              	uint8_t External_22_IRQHandler(void);
+  52              	uint8_t External_23_IRQHandler(void);
+  53              	uint8_t External_24_IRQHandler(void);
+  54              	uint8_t External_25_IRQHandler(void);
+  55              	uint8_t External_26_IRQHandler(void);
+  56              	uint8_t External_27_IRQHandler(void);
+  57              	uint8_t External_28_IRQHandler(void);
+  58              	uint8_t External_29_IRQHandler(void);
+  59              	uint8_t External_30_IRQHandler(void);
+  60              	uint8_t External_31_IRQHandler(void);
+  61              	
+  62              	/*------------------------------------------------------------------------------
+  63              	 *
+  64              	 */
+  65              	extern void Software_IRQHandler(void);
+  66              	
+  67              	/*------------------------------------------------------------------------------
+  68              	 * Increment value for the mtimecmp register in order to achieve a system tick
+  69              	 * interrupt as specified through the SysTick_Config() function.
+  70              	 */
+  71              	static uint64_t g_systick_increment = 0U;
+  72              	
+  73              	/*------------------------------------------------------------------------------
+  74              	 * Disable all interrupts.
+  75              	 */
+  76              	void __disable_irq(void)
+  77              	{
+  78 0004 F3B70730 	    clear_csr(mstatus, MSTATUS_MPIE);
+  79              	    clear_csr(mstatus, MSTATUS_MIE);
+  12              		csrrc a5, mstatus, a5
+  13              	# 0 "" 2
+  14              	# 79 "../riscv_hal/riscv_hal.c" 1
+  80              	}
+  15              		csrrc a5, mstatus, 8
+  16              	# 0 "" 2
+  17              	 #NO_APP
+  18 000c 8280     		ret
+  20              		.section	.text.__enable_irq,"ax",@progbits
+  21              		.align	1
+  22              		.globl	__enable_irq
+  24              	__enable_irq:
+  25              	 #APP
+  26              	# 87 "../riscv_hal/riscv_hal.c" 1
+  81              	
+  82              	/*------------------------------------------------------------------------------
+  83              	 * Enabler all interrupts.
+  84              	 */
+  85              	void __enable_irq(void)
+  86              	{
+  87 0000 F3670430 	    set_csr(mstatus, MSTATUS_MIE);
+  88              	}
+  27              		csrrs a5, mstatus, 8
+  28              	# 0 "" 2
+  29              	 #NO_APP
+  30 0004 8280     		ret
+  32              		.globl	__udivsi3
+  33              		.section	.text.SysTick_Config,"ax",@progbits
+  34              		.align	1
+  35              		.globl	SysTick_Config
+  37              	SysTick_Config:
+  38 0000 17030000 		call	t0,__riscv_save_1
+  38      E7020300 
+  39 0008 93054006 		li	a1,100
+  40 000c 2A84     		mv	s0,a0
+  41 000e 97000000 		call	__udivsi3
+  41      E7800000 
+  42 0016 B7070000 		lui	a5,%hi(.LANCHOR0)
+  43 001a 93870700 		addi	a5,a5,%lo(.LANCHOR0)
+  44 001e 88C3     		sw	a0,0(a5)
+  45 0020 23A20700 		sw	zero,4(a5)
+  46 0024 93073006 		li	a5,99
+  47 0028 63F68704 		bleu	s0,a5,.L5
+  48              	 #APP
+  49              	# 101 "../riscv_hal/riscv_hal.c" 1
+  89              	
+  90              	/*------------------------------------------------------------------------------
+  91              	 * Configure the machine timer to generate an interrupt.
+  92              	 */
+  93              	uint32_t SysTick_Config(uint32_t ticks)
+  94              	{
+  95              	    uint32_t ret_val = ERROR;
+  96              	
+  97              	    g_systick_increment = (uint64_t)(ticks) / RTC_PRESCALER;
+  98              	
+  99              	    if (g_systick_increment > 0U)
+ 100              	    {
+ 101 002c F32740F1 	        uint32_t mhart_id = read_csr(mhartid);
+ 102              	
+  50              		csrr a5, mhartid
+  51              	# 0 "" 2
+  52              	 #NO_APP
+  53 0030 37C70044 		li	a4,1140899840
+  54 0034 032887FF 		lw	a6,-8(a4)
+  55 0038 8328C7FF 		lw	a7,-4(a4)
+  56 003c 33070501 		add	a4,a0,a6
+  57 0040 3335A700 		sltu	a0,a4,a0
+  58 0044 3A86     		mv	a2,a4
+  59 0046 0567     		li	a4,4096
+  60 0048 13070780 		addi	a4,a4,-2048
+  61 004c BA97     		add	a5,a5,a4
+  62 004e 8E07     		slli	a5,a5,3
+  63 0050 37070044 		li	a4,1140850688
+  64 0054 BA97     		add	a5,a4,a5
+  65 0056 90C3     		sw	a2,0(a5)
+  66 0058 B3061501 		add	a3,a0,a7
+  67 005c D4C3     		sw	a3,4(a5)
+  68 005e 93070008 		li	a5,128
+  69              	 #APP
+  70              	# 105 "../riscv_hal/riscv_hal.c" 1
+ 103              	        PRCI->MTIMECMP[mhart_id] = PRCI->MTIME + g_systick_increment;
+ 104              	
+ 105 0062 F3A74730 	        set_csr(mie, MIP_MTIP);
+ 106              	
+  71              		csrrs a5, mie, a5
+  72              	# 0 "" 2
+  73              	# 87 "../riscv_hal/riscv_hal.c" 1
+  74              		csrrs a5, mstatus, 8
+  75              	# 0 "" 2
+  76              	 #NO_APP
+  77 006a 0145     		li	a0,0
+  78              	.L3:
+  79 006c 17030000 		tail	__riscv_restore_1
+  79      67000300 
+  80              	.L5:
+  81 0074 0545     		li	a0,1
+  82 0076 DDBF     		j	.L3
+  84              		.section	.text.handle_trap,"ax",@progbits
+  85              		.align	1
+  86              		.globl	handle_trap
+  88              	handle_trap:
+  89 0000 17030000 		call	t0,__riscv_save_3
+  89      E7020300 
+  90 0008 AE84     		mv	s1,a1
+  91 000a 6354050E 		bgez	a0,.L8
+  92 000e 0605     		slli	a0,a0,1
+  93 0010 0581     		srli	a0,a0,1
+  94 0012 AD47     		li	a5,11
+  95 0014 6316F506 		bne	a0,a5,.L9
+  96              	 #APP
+  97              	# 206 "../riscv_hal/riscv_plic.h" 1
+   1              	/*******************************************************************************
+   2              	 * (c) Copyright 2016-2018 Microsemi SoC Products Group.  All rights reserved.
+   3              	 *
+   4              	 * @file riscv_plic.h
+   5              	 * @author Microsemi SoC Products Group
+   6              	 * @brief Mi-V soft processor PLIC and PRCI access data structures and functions.
+   7              	 *
+   8              	 * SVN $Revision: 9838 $
+   9              	 * SVN $Date: 2018-03-19 19:22:54 +0530 (Mon, 19 Mar 2018) $
+  10              	 */
+  11              	#ifndef RISCV_PLIC_H
+  12              	#define RISCV_PLIC_H
+  13              	
+  14              	#include <stdint.h>
+  15              	
+  16              	#include "encoding.h"
+  17              	
+  18              	#ifdef __cplusplus
+  19              	extern "C" {
+  20              	#endif
+  21              	
+  22              	#define PLIC_NUM_SOURCES 31
+  23              	#define PLIC_NUM_PRIORITIES 0
+  24              	
+  25              	/*==============================================================================
+  26              	 * Interrupt numbers:
+  27              	 */
+  28              	typedef enum
+  29              	{
+  30              	    NoInterrupt_IRQn = 0,
+  31              	    External_1_IRQn  = 1,
+  32              	    External_2_IRQn  = 2,
+  33              	    External_3_IRQn  = 3, 
+  34              	    External_4_IRQn  = 4,
+  35              	    External_5_IRQn  = 5,
+  36              	    External_6_IRQn  = 6,
+  37              	    External_7_IRQn  = 7,
+  38              	    External_8_IRQn  = 8,
+  39              	    External_9_IRQn  = 9,
+  40              	    External_10_IRQn = 10,
+  41              	    External_11_IRQn = 11,
+  42              	    External_12_IRQn = 12,
+  43              	    External_13_IRQn = 13,
+  44              	    External_14_IRQn = 14,
+  45              	    External_15_IRQn = 15,
+  46              	    External_16_IRQn = 16,
+  47              	    External_17_IRQn = 17,
+  48              	    External_18_IRQn = 18,
+  49              	    External_19_IRQn = 19,
+  50              	    External_20_IRQn = 20,
+  51              	    External_21_IRQn = 21,
+  52              	    External_22_IRQn = 22,
+  53              	    External_23_IRQn = 23,
+  54              	    External_24_IRQn = 24,
+  55              	    External_25_IRQn = 25,
+  56              	    External_26_IRQn = 26,
+  57              	    External_27_IRQn = 27,
+  58              	    External_28_IRQn = 28,
+  59              	    External_29_IRQn = 29,
+  60              	    External_30_IRQn = 30,
+  61              	    External_31_IRQn = 31
+  62              	} IRQn_Type;
+  63              	
+  64              	
+  65              	/*==============================================================================
+  66              	 * PLIC: Platform Level Interrupt Controller
+  67              	 */
+  68              	#define PLIC_BASE_ADDR 0x40000000UL
+  69              	
+  70              	typedef struct
+  71              	{
+  72              	    volatile uint32_t PRIORITY_THRESHOLD;
+  73              	    volatile uint32_t CLAIM_COMPLETE;
+  74              	    volatile uint32_t reserved[1022];
+  75              	} IRQ_Target_Type;
+  76              	
+  77              	typedef struct
+  78              	{
+  79              	    volatile uint32_t ENABLES[32];
+  80              	} Target_Enables_Type;
+  81              	
+  82              	typedef struct
+  83              	{
+  84              	    /*-------------------- Source Priority --------------------*/
+  85              	    volatile uint32_t SOURCE_PRIORITY[1024];
+  86              	    
+  87              	    /*-------------------- Pending array --------------------*/
+  88              	    volatile const uint32_t PENDING_ARRAY[32];
+  89              	    volatile uint32_t RESERVED1[992];
+  90              	    
+  91              	    /*-------------------- Target enables --------------------*/
+  92              	    volatile Target_Enables_Type TARGET_ENABLES[15808];
+  93              	
+  94              	    volatile uint32_t RESERVED2[16384];
+  95              	    
+  96              	    /*--- Target Priority threshold and claim/complete---------*/
+  97              	    IRQ_Target_Type TARGET[15872];
+  98              	    
+  99              	} PLIC_Type;
+ 100              	
+ 101              	
+ 102              	#define PLIC    ((PLIC_Type *)PLIC_BASE_ADDR)
+ 103              	
+ 104              	/*==============================================================================
+ 105              	 * PRCI: Power, Reset, Clock, Interrupt
+ 106              	 */
+ 107              	#define PRCI_BASE   0x44000000UL
+ 108              	
+ 109              	typedef struct
+ 110              	{
+ 111              	    volatile uint32_t MSIP[4095];
+ 112              	    volatile uint32_t reserved;
+ 113              	    volatile uint64_t MTIMECMP[4095];
+ 114              	    volatile const uint64_t MTIME;
+ 115              	} PRCI_Type;
+ 116              	
+ 117              	#define PRCI    ((PRCI_Type *)PRCI_BASE) 
+ 118              	
+ 119              	/*==============================================================================
+ 120              	 * The function PLIC_init() initializes the PLIC controller and enables the 
+ 121              	 * global external interrupt bit.
+ 122              	 */
+ 123              	static inline void PLIC_init(void)
+ 124              	{
+ 125              	    uint32_t inc;
+ 126              	    unsigned long hart_id = read_csr(mhartid);
+ 127              	
+ 128              	    /* Disable all interrupts for the current hart. */
+ 129              	    for(inc = 0; inc < ((PLIC_NUM_SOURCES + 32u) / 32u); ++inc)
+ 130              	    {
+ 131              	        PLIC->TARGET_ENABLES[hart_id].ENABLES[inc] = 0;
+ 132              	    }
+ 133              	
+ 134              	    /* Set priorities to zero. */
+ 135              	    /* Should this really be done??? Calling PLIC_init() on one hart will cause
+ 136              	    * the priorities previously set by other harts to be messed up. */
+ 137              	    for(inc = 0; inc < PLIC_NUM_SOURCES; ++inc)
+ 138              	    {
+ 139              	        PLIC->SOURCE_PRIORITY[inc] = 0;
+ 140              	    }
+ 141              	
+ 142              	    /* Set the threshold to zero. */
+ 143              	    PLIC->TARGET[hart_id].PRIORITY_THRESHOLD = 0;
+ 144              	
+ 145              	    /* Enable machine external interrupts. */
+ 146              	    set_csr(mie, MIP_MEIP);
+ 147              	}
+ 148              	
+ 149              	/*==============================================================================
+ 150              	 * The function PLIC_EnableIRQ() enables the external interrupt for the interrupt
+ 151              	 * number indicated by the parameter IRQn.
+ 152              	 */
+ 153              	static inline void PLIC_EnableIRQ(IRQn_Type IRQn)
+ 154              	{
+ 155              	    unsigned long hart_id = read_csr(mhartid);
+ 156              	    uint32_t current = PLIC->TARGET_ENABLES[hart_id].ENABLES[IRQn / 32];
+ 157              	    current |= (uint32_t)1 << (IRQn % 32);
+ 158              	    PLIC->TARGET_ENABLES[hart_id].ENABLES[IRQn / 32] = current;
+ 159              	}
+ 160              	
+ 161              	/*==============================================================================
+ 162              	 * The function PLIC_DisableIRQ() disables the external interrupt for the interrupt
+ 163              	 * number indicated by the parameter IRQn.
+ 164              	
+ 165              	 * NOTE:
+ 166              	 * 	This function can be used to disable the external interrupt from outside
+ 167              	 * 	external interrupt handler function.
+ 168              	 * 	This function MUST NOT be used from within the External Interrupt handler.
+ 169              	 * 	If you wish to disable the external interrupt while the interrupt handler
+ 170              	 * 	for that external interrupt is executing then you must use the return value
+ 171              	 * 	EXT_IRQ_DISABLE to return from the extern interrupt handler.
+ 172              	 */
+ 173              	static inline void PLIC_DisableIRQ(IRQn_Type IRQn)
+ 174              	{
+ 175              	    unsigned long hart_id = read_csr(mhartid);
+ 176              	    uint32_t current = PLIC->TARGET_ENABLES[hart_id].ENABLES[IRQn / 32];
+ 177              	
+ 178              	    current &= ~((uint32_t)1 << (IRQn % 32));
+ 179              	
+ 180              	    PLIC->TARGET_ENABLES[hart_id].ENABLES[IRQn / 32] = current;
+ 181              	}
+ 182              	
+ 183              	/*==============================================================================
+ 184              	 * The function PLIC_SetPriority() sets the priority for the external interrupt 
+ 185              	 * for the interrupt number indicated by the parameter IRQn.
+ 186              	 */
+ 187              	static inline void PLIC_SetPriority(IRQn_Type IRQn, uint32_t priority) 
+ 188              	{
+ 189              	    PLIC->SOURCE_PRIORITY[IRQn] = priority;
+ 190              	}
+ 191              	
+ 192              	/*==============================================================================
+ 193              	 * The function PLIC_GetPriority() returns the priority for the external interrupt 
+ 194              	 * for the interrupt number indicated by the parameter IRQn.
+ 195              	 */
+ 196              	static inline uint32_t PLIC_GetPriority(IRQn_Type IRQn)
+ 197              	{
+ 198              	    return PLIC->SOURCE_PRIORITY[IRQn];
+ 199              	}
+ 200              	
+ 201              	/*==============================================================================
+ 202              	 * The function PLIC_ClaimIRQ() claims the interrupt from the PLIC controller.
+ 203              	 */
+ 204              	static inline uint32_t PLIC_ClaimIRQ(void)
+ 205              	{
+ 206 0018 F32740F1 	    unsigned long hart_id = read_csr(mhartid);
+ 207              	
+  98              		csrr a5, mhartid
+  99              	# 0 "" 2
+ 100              	 #NO_APP
+ 101 001c 93870720 		addi	a5,a5,512
+ 102 0020 37040040 		li	s0,1073741824
+ 103 0024 B207     		slli	a5,a5,12
+ 104 0026 A297     		add	a5,s0,a5
+ 105 0028 03A94700 		lw	s2,4(a5)
+ 106 002c B7070000 		lui	a5,%hi(.LANCHOR1)
+ 107 0030 93870700 		addi	a5,a5,%lo(.LANCHOR1)
+ 108 0034 13172900 		slli	a4,s2,2
+ 109 0038 BA97     		add	a5,a5,a4
+ 110 003a 9C43     		lw	a5,0(a5)
+ 111 003c 8297     		jalr	a5
+ 112              	 #APP
+ 113              	# 217 "../riscv_hal/riscv_plic.h" 1
+ 208              	    return PLIC->TARGET[hart_id].CLAIM_COMPLETE;
+ 209              	}
+ 210              	
+ 211              	/*==============================================================================
+ 212              	 * The function PLIC_CompleteIRQ() indicates to the PLIC controller the interrupt
+ 213              	 * is processed and claim is complete.
+ 214              	 */
+ 215              	static inline void PLIC_CompleteIRQ(uint32_t source)
+ 216              	{
+ 217 003e F32740F1 	    unsigned long hart_id = read_csr(mhartid);
+ 218              	
+ 114              		csrr a5, mhartid
+ 115              	# 0 "" 2
+ 116              	 #NO_APP
+ 117 0042 93870720 		addi	a5,a5,512
+ 118 0046 B207     		slli	a5,a5,12
+ 119 0048 A297     		add	a5,s0,a5
+ 120 004a 23A22701 		sw	s2,4(a5)
+ 121 004e 8547     		li	a5,1
+ 122 0050 6313F502 		bne	a0,a5,.L10
+ 123              	 #APP
+ 124              	# 175 "../riscv_hal/riscv_plic.h" 1
+ 125              		csrr a5, mhartid
+ 126              	# 0 "" 2
+ 127              	 #NO_APP
+ 128 0058 9607     		slli	a5,a5,5
+ 129 005a 13575900 		srli	a4,s2,5
+ 130 005e BA97     		add	a5,a5,a4
+ 131 0060 8A07     		slli	a5,a5,2
+ 132 0062 3E94     		add	s0,s0,a5
+ 133 0064 8967     		li	a5,8192
+ 134 0066 3E94     		add	s0,s0,a5
+ 135 0068 1C40     		lw	a5,0(s0)
+ 136 006a 33152501 		sll	a0,a0,s2
+ 137 006e 1345F5FF 		not	a0,a0
+ 138 0072 7D8D     		and	a0,a0,a5
+ 139 0074 08C0     		sw	a0,0(s0)
+ 140              	.L10:
+ 141 0076 2685     		mv	a0,s1
+ 142 0078 17030000 		tail	__riscv_restore_3
+ 142      67000300 
+ 143              	.L9:
+ 144 0080 9D47     		li	a5,7
+ 145 0082 631CF504 		bne	a0,a5,.L11
+ 146 0086 13040008 		li	s0,128
+ 147              	 #APP
+ 148              	# 120 "../riscv_hal/riscv_hal.c" 1
+ 107              	        __enable_irq();
+ 108              	
+ 109              	        ret_val = SUCCESS;
+ 110              	    }
+ 111              	
+ 112              	    return ret_val;
+ 113              	}
+ 114              	
+ 115              	/*------------------------------------------------------------------------------
+ 116              	 * RISC-V interrupt handler for machine timer interrupts.
+ 117              	 */
+ 118              	static void handle_m_timer_interrupt(void)
+ 119              	{
+ 120 008a F3374430 	    clear_csr(mie, MIP_MTIP);
+ 121              	
+ 149              		csrrc a5, mie, s0
+ 150              	# 0 "" 2
+ 151              	 #NO_APP
+ 152 008e 97000000 		call	SysTick_Handler
+ 152      E7800000 
+ 153 0096 B7C70044 		li	a5,1140899840
+ 154 009a 03A887FF 		lw	a6,-8(a5)
+ 155 009e 83A8C7FF 		lw	a7,-4(a5)
+ 156              	 #APP
+ 157              	# 124 "../riscv_hal/riscv_hal.c" 1
+ 122              	    SysTick_Handler();
+ 123              	
+ 124 00a2 F32740F1 	    PRCI->MTIMECMP[read_csr(mhartid)] = PRCI->MTIME + g_systick_increment;
+ 125              	
+ 158              		csrr a5, mhartid
+ 159              	# 0 "" 2
+ 160              	 #NO_APP
+ 161 00a6 B7060000 		lui	a3,%hi(.LANCHOR0)
+ 162 00aa 93860600 		addi	a3,a3,%lo(.LANCHOR0)
+ 163 00ae 9842     		lw	a4,0(a3)
+ 164 00b0 CC42     		lw	a1,4(a3)
+ 165 00b2 4297     		add	a4,a6,a4
+ 166 00b4 33350701 		sltu	a0,a4,a6
+ 167 00b8 3A86     		mv	a2,a4
+ 168 00ba 0567     		li	a4,4096
+ 169 00bc 13070780 		addi	a4,a4,-2048
+ 170 00c0 BA97     		add	a5,a5,a4
+ 171 00c2 8E07     		slli	a5,a5,3
+ 172 00c4 37070044 		li	a4,1140850688
+ 173 00c8 BA97     		add	a5,a4,a5
+ 174 00ca C695     		add	a1,a7,a1
+ 175 00cc B306B500 		add	a3,a0,a1
+ 176 00d0 90C3     		sw	a2,0(a5)
+ 177 00d2 D4C3     		sw	a3,4(a5)
+ 178              	 #APP
+ 179              	# 126 "../riscv_hal/riscv_hal.c" 1
+ 126 00d4 73244430 	    set_csr(mie, MIP_MTIP);
+ 127              	}
+ 180              		csrrs s0, mie, s0
+ 181              	# 0 "" 2
+ 182              	 #NO_APP
+ 183 00d8 79BF     		j	.L10
+ 184              	.L11:
+ 185 00da 8D47     		li	a5,3
+ 186 00dc 631BF500 		bne	a0,a5,.L8
+ 187 00e0 97000000 		call	Software_IRQHandler
+ 187      E7800000 
+ 188 00e8 B7070044 		li	a5,1140850688
+ 189 00ec 23A00700 		sw	zero,0(a5)
+ 190 00f0 59B7     		j	.L10
+ 191              	.L8:
+ 192              	 #APP
+ 193              	# 234 "../riscv_hal/riscv_hal.c" 1
+ 128              	
+ 129              	/*------------------------------------------------------------------------------
+ 130              	 * RISC-V interrupt handler for external interrupts.
+ 131              	 */
+ 132              	uint8_t (*ext_irq_handler_table[32])(void) =
+ 133              	{
+ 134              	    Invalid_IRQHandler,
+ 135              	    External_1_IRQHandler,
+ 136              	    External_2_IRQHandler,
+ 137              	    External_3_IRQHandler,
+ 138              	    External_4_IRQHandler,
+ 139              	    External_5_IRQHandler,
+ 140              	    External_6_IRQHandler,
+ 141              	    External_7_IRQHandler,
+ 142              	    External_8_IRQHandler,
+ 143              	    External_9_IRQHandler,
+ 144              	    External_10_IRQHandler,
+ 145              	    External_11_IRQHandler,
+ 146              	    External_12_IRQHandler,
+ 147              	    External_13_IRQHandler,
+ 148              	    External_14_IRQHandler,
+ 149              	    External_15_IRQHandler,
+ 150              	    External_16_IRQHandler,
+ 151              	    External_17_IRQHandler,
+ 152              	    External_18_IRQHandler,
+ 153              	    External_19_IRQHandler,
+ 154              	    External_20_IRQHandler,
+ 155              	    External_21_IRQHandler,
+ 156              	    External_22_IRQHandler,
+ 157              	    External_23_IRQHandler,
+ 158              	    External_24_IRQHandler,
+ 159              	    External_25_IRQHandler,
+ 160              	    External_26_IRQHandler,
+ 161              	    External_27_IRQHandler,
+ 162              	    External_28_IRQHandler,
+ 163              	    External_29_IRQHandler,
+ 164              	    External_30_IRQHandler,
+ 165              	    External_31_IRQHandler
+ 166              	};
+ 167              	
+ 168              	/*------------------------------------------------------------------------------
+ 169              	 *
+ 170              	 */
+ 171              	static void handle_m_ext_interrupt(void)
+ 172              	{
+ 173              	    uint32_t int_num  = PLIC_ClaimIRQ();
+ 174              	    uint8_t disable = EXT_IRQ_KEEP_ENABLED;
+ 175              	
+ 176              	    disable = ext_irq_handler_table[int_num]();
+ 177              	
+ 178              	    PLIC_CompleteIRQ(int_num);
+ 179              	
+ 180              	    if(EXT_IRQ_DISABLE == disable)
+ 181              	    {
+ 182              	        PLIC_DisableIRQ((IRQn_Type)int_num);
+ 183              	    }
+ 184              	}
+ 185              	
+ 186              	static void handle_m_soft_interrupt(void)
+ 187              	{
+ 188              	    Software_IRQHandler();
+ 189              	
+ 190              	    /*Clear software interrupt*/
+ 191              	    PRCI->MSIP[0] = 0x00U;
+ 192              	}
+ 193              	
+ 194              	/*------------------------------------------------------------------------------
+ 195              	 * Trap/Interrupt handler
+ 196              	 */
+ 197              	uintptr_t handle_trap(uintptr_t mcause, uintptr_t mepc)
+ 198              	{
+ 199              	    if ((mcause & MCAUSE_INT) && ((mcause & MCAUSE_CAUSE)  == IRQ_M_EXT))
+ 200              	    {
+ 201              	        handle_m_ext_interrupt();
+ 202              	    }
+ 203              	    else if ((mcause & MCAUSE_INT) && ((mcause & MCAUSE_CAUSE)  == IRQ_M_TIMER))
+ 204              	    {
+ 205              	        handle_m_timer_interrupt();
+ 206              	    }
+ 207              	    else if ( (mcause & MCAUSE_INT) && ((mcause & MCAUSE_CAUSE)  == IRQ_M_SOFT))
+ 208              	    {
+ 209              	        handle_m_soft_interrupt();
+ 210              	    }
+ 211              	    else
+ 212              	    {
+ 213              	#ifndef NDEBUG
+ 214              	        /*
+ 215              	         Arguments supplied to this function are mcause, mepc (exception PC) and stack pointer
+ 216              	         based onprivileged-isa specification
+ 217              	         mcause values and meanings are:
+ 218              	         0 Instruction address misaligned (mtval/mbadaddr is the address)
+ 219              	         1 Instruction access fault       (mtval/mbadaddr is the address)
+ 220              	         2 Illegal instruction            (mtval/mbadaddr contains the offending instruction opcode
+ 221              	         3 Breakpoint
+ 222              	         4 Load address misaligned        (mtval/mbadaddr is the address)
+ 223              	         5 Load address fault             (mtval/mbadaddr is the address)
+ 224              	         6 Store/AMO address fault        (mtval/mbadaddr is the address)
+ 225              	         7 Store/AMO access fault         (mtval/mbadaddr is the address)
+ 226              	         8 Environment call from U-mode
+ 227              	         9 Environment call from S-mode
+ 228              	         A Environment call from M-mode
+ 229              	         B Instruction page fault
+ 230              	         C Load page fault                (mtval/mbadaddr is the address)
+ 231              	         E Store page fault               (mtval/mbadaddr is the address)
+ 232              	        */
+ 233              	
+ 234 00f2 F3274034 	         uintptr_t mip      = read_csr(mip);      /* interrupt pending */
+ 235              	         uintptr_t mbadaddr = read_csr(mbadaddr); /* additional info and meaning depends on mcause 
+ 194              		csrr a5, mip
+ 195              	# 0 "" 2
+ 196              	# 235 "../riscv_hal/riscv_hal.c" 1
+ 236              	         uintptr_t mtvec    = read_csr(mtvec);    /* trap vector */
+ 197              		csrr a5, mbadaddr
+ 198              	# 0 "" 2
+ 199              	# 236 "../riscv_hal/riscv_hal.c" 1
+ 237              	         uintptr_t mscratch = read_csr(mscratch); /* temporary, sometimes might hold temporary valu
+ 200              		csrr a5, mtvec
+ 201              	# 0 "" 2
+ 202              	# 237 "../riscv_hal/riscv_hal.c" 1
+ 238              	         uintptr_t mstatus  = read_csr(mstatus);  /* status contains many smaller fields: */
+ 203              		csrr a5, mscratch
+ 204              	# 0 "" 2
+ 205              	# 238 "../riscv_hal/riscv_hal.c" 1
+ 239              	
+ 206              		csrr a5, mstatus
+ 207              	# 0 "" 2
+ 208              	# 241 "../riscv_hal/riscv_hal.c" 1
+ 240              			/* breakpoint*/
+ 241 0106 0290     	        __asm("ebreak");
+ 242              	#else
+ 209              		ebreak
+ 210              	# 0 "" 2
+ 211              	 #NO_APP
+ 212 0108 BDB7     		j	.L10
+ 214              		.globl	ext_irq_handler_table
+ 215              		.section	.data.ext_irq_handler_table,"aw"
+ 216              		.align	2
+ 217              		.set	.LANCHOR1,. + 0
+ 220              	ext_irq_handler_table:
+ 221 0000 00000000 		.word	Invalid_IRQHandler
+ 222 0004 00000000 		.word	External_1_IRQHandler
+ 223 0008 00000000 		.word	External_2_IRQHandler
+ 224 000c 00000000 		.word	External_3_IRQHandler
+ 225 0010 00000000 		.word	External_4_IRQHandler
+ 226 0014 00000000 		.word	External_5_IRQHandler
+ 227 0018 00000000 		.word	External_6_IRQHandler
+ 228 001c 00000000 		.word	External_7_IRQHandler
+ 229 0020 00000000 		.word	External_8_IRQHandler
+ 230 0024 00000000 		.word	External_9_IRQHandler
+ 231 0028 00000000 		.word	External_10_IRQHandler
+ 232 002c 00000000 		.word	External_11_IRQHandler
+ 233 0030 00000000 		.word	External_12_IRQHandler
+ 234 0034 00000000 		.word	External_13_IRQHandler
+ 235 0038 00000000 		.word	External_14_IRQHandler
+ 236 003c 00000000 		.word	External_15_IRQHandler
+ 237 0040 00000000 		.word	External_16_IRQHandler
+ 238 0044 00000000 		.word	External_17_IRQHandler
+ 239 0048 00000000 		.word	External_18_IRQHandler
+ 240 004c 00000000 		.word	External_19_IRQHandler
+ 241 0050 00000000 		.word	External_20_IRQHandler
+ 242 0054 00000000 		.word	External_21_IRQHandler
+ 243 0058 00000000 		.word	External_22_IRQHandler
+ 244 005c 00000000 		.word	External_23_IRQHandler
+ 245 0060 00000000 		.word	External_24_IRQHandler
+ 246 0064 00000000 		.word	External_25_IRQHandler
+ 247 0068 00000000 		.word	External_26_IRQHandler
+ 248 006c 00000000 		.word	External_27_IRQHandler
+ 249 0070 00000000 		.word	External_28_IRQHandler
+ 250 0074 00000000 		.word	External_29_IRQHandler
+ 251 0078 00000000 		.word	External_30_IRQHandler
+ 252 007c 00000000 		.word	External_31_IRQHandler
+ 253              		.section	.sbss.g_systick_increment,"aw",@nobits
+ 254              		.align	3
+ 255              		.set	.LANCHOR0,. + 0
+ 258              	g_systick_increment:
+ 259 0000 00000000 		.zero	8
+ 259      00000000 
+ 260              		.ident	"GCC: (Microchip SoftConsole GNU RISC-V Embedded GCC, 64-bit) 8.2.0"
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 riscv_hal.c
+C:\Users\tecchio\AppData\Local\Temp\1\ccANYoPc.s:8      .text.__disable_irq:0000000000000000 __disable_irq
+C:\Users\tecchio\AppData\Local\Temp\1\ccANYoPc.s:24     .text.__enable_irq:0000000000000000 __enable_irq
+C:\Users\tecchio\AppData\Local\Temp\1\ccANYoPc.s:37     .text.SysTick_Config:0000000000000000 SysTick_Config
+C:\Users\tecchio\AppData\Local\Temp\1\ccANYoPc.s:88     .text.handle_trap:0000000000000000 handle_trap
+C:\Users\tecchio\AppData\Local\Temp\1\ccANYoPc.s:220    .data.ext_irq_handler_table:0000000000000000 ext_irq_handler_table
+C:\Users\tecchio\AppData\Local\Temp\1\ccANYoPc.s:217    .data.ext_irq_handler_table:0000000000000000 .LANCHOR1
+C:\Users\tecchio\AppData\Local\Temp\1\ccANYoPc.s:255    .sbss.g_systick_increment:0000000000000000 .LANCHOR0
+C:\Users\tecchio\AppData\Local\Temp\1\ccANYoPc.s:258    .sbss.g_systick_increment:0000000000000000 g_systick_increment
+C:\Users\tecchio\AppData\Local\Temp\1\ccANYoPc.s:80     .text.SysTick_Config:0000000000000074 .L5
+C:\Users\tecchio\AppData\Local\Temp\1\ccANYoPc.s:78     .text.SysTick_Config:000000000000006c .L3
+C:\Users\tecchio\AppData\Local\Temp\1\ccANYoPc.s:191    .text.handle_trap:00000000000000f2 .L8
+C:\Users\tecchio\AppData\Local\Temp\1\ccANYoPc.s:143    .text.handle_trap:0000000000000080 .L9
+C:\Users\tecchio\AppData\Local\Temp\1\ccANYoPc.s:140    .text.handle_trap:0000000000000076 .L10
+C:\Users\tecchio\AppData\Local\Temp\1\ccANYoPc.s:184    .text.handle_trap:00000000000000da .L11
+
+UNDEFINED SYMBOLS
+__udivsi3
+__riscv_save_1
+__riscv_restore_1
+__riscv_save_3
+__riscv_restore_3
+SysTick_Handler
+Software_IRQHandler
+Invalid_IRQHandler
+External_1_IRQHandler
+External_2_IRQHandler
+External_3_IRQHandler
+External_4_IRQHandler
+External_5_IRQHandler
+External_6_IRQHandler
+External_7_IRQHandler
+External_8_IRQHandler
+External_9_IRQHandler
+External_10_IRQHandler
+External_11_IRQHandler
+External_12_IRQHandler
+External_13_IRQHandler
+External_14_IRQHandler
+External_15_IRQHandler
+External_16_IRQHandler
+External_17_IRQHandler
+External_18_IRQHandler
+External_19_IRQHandler
+External_20_IRQHandler
+External_21_IRQHandler
+External_22_IRQHandler
+External_23_IRQHandler
+External_24_IRQHandler
+External_25_IRQHandler
+External_26_IRQHandler
+External_27_IRQHandler
+External_28_IRQHandler
+External_29_IRQHandler
+External_30_IRQHandler
+External_31_IRQHandler

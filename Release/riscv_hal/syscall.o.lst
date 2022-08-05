@@ -1,0 +1,324 @@
+   1              		.file	"syscall.c"
+   2              		.option nopic
+   3              		.text
+   4              		.section	.text.write_hex,"ax",@progbits
+   5              		.align	1
+   6              		.globl	write_hex
+   8              	write_hex:
+   9 0000 17030000 		call	t0,__riscv_save_6
+   9      E7020300 
+  10 0008 AE89     		mv	s3,a1
+  11 000a B7050000 		lui	a1,%hi(.LC0)
+  12 000e 4111     		addi	sp,sp,-16
+  13 0010 0946     		li	a2,2
+  14 0012 93850500 		addi	a1,a1,%lo(.LC0)
+  15 0016 2A89     		mv	s2,a0
+  16 0018 7144     		li	s0,28
+  17 001a 97000000 		call	write
+  17      E7800000 
+  18 0022 3D4A     		li	s4,15
+  19 0024 A54A     		li	s5,9
+  20 0026 F154     		li	s1,-4
+  21              	.L4:
+  22 0028 B3178A00 		sll	a5,s4,s0
+  23 002c B3F73701 		and	a5,a5,s3
+  24 0030 B3D78700 		srl	a5,a5,s0
+  25 0034 93F7F70F 		andi	a5,a5,0xff
+  26 0038 63E8FA02 		bgtu	a5,s5,.L2
+  27 003c 93870703 		addi	a5,a5,48
+  28              	.L7:
+  29 0040 E207     		slli	a5,a5,24
+  30 0042 E187     		srai	a5,a5,24
+  31 0044 0546     		li	a2,1
+  32 0046 9305F100 		addi	a1,sp,15
+  33 004a 4A85     		mv	a0,s2
+  34 004c 7114     		addi	s0,s0,-4
+  35 004e A307F100 		sb	a5,15(sp)
+  36 0052 97000000 		call	write
+  36      E7800000 
+  37 005a E31794FC 		bne	s0,s1,.L4
+  38 005e 4101     		addi	sp,sp,16
+  39 0060 17030000 		tail	__riscv_restore_6
+  39      67000300 
+  40              	.L2:
+  41 0068 93877703 		addi	a5,a5,55
+  42 006c D1BF     		j	.L7
+  44              		.section	.text._exit,"ax",@progbits
+  45              		.align	1
+  46              		.globl	_exit
+  48              	_exit:
+  49              	.L9:
+  50 0000 01A0     		j	.L9
+  52              		.section	.text._sbrk,"ax",@progbits
+  53              		.align	1
+  54              		.globl	_sbrk
+  56              	_sbrk:
+  57 0000 37070000 		lui	a4,%hi(.LANCHOR0)
+  58 0004 13070700 		addi	a4,a4,%lo(.LANCHOR0)
+  59 0008 1C43     		lw	a5,0(a4)
+  60 000a B7060000 		lui	a3,%hi(_end)
+  61 000e 93860600 		addi	a3,a3,%lo(_end)
+  62 0012 3E95     		add	a0,a5,a0
+  63 0014 636BD500 		bltu	a0,a3,.L13
+  64 0018 B7060000 		lui	a3,%hi(_heap_end)
+  65 001c 93860600 		addi	a3,a3,%lo(_heap_end)
+  66 0020 63E5A600 		bgtu	a0,a3,.L13
+  67 0024 08C3     		sw	a0,0(a4)
+  68              	.L10:
+  69 0026 3E85     		mv	a0,a5
+  70 0028 8280     		ret
+  71              	.L13:
+  72 002a FD57     		li	a5,-1
+  73 002c EDBF     		j	.L10
+  75              		.section	.text._isatty,"ax",@progbits
+  76              		.align	1
+  77              		.globl	_isatty
+  79              	_isatty:
+  80 0000 7D15     		addi	a0,a0,-1
+  81 0002 8547     		li	a5,1
+  82 0004 63F9A700 		bleu	a0,a5,.L16
+  83 0008 B7070000 		lui	a5,%hi(errno)
+  84 000c 2547     		li	a4,9
+  85 000e 23A0E700 		sw	a4,%lo(errno)(a5)
+  86 0012 0145     		li	a0,0
+  87 0014 8280     		ret
+  88              	.L16:
+  89 0016 0545     		li	a0,1
+  90 0018 8280     		ret
+  92              		.section	.text._open,"ax",@progbits
+  93              		.align	1
+  94              		.globl	_open
+  96              	_open:
+  97 0000 B7070000 		lui	a5,%hi(errno)
+  98 0004 0947     		li	a4,2
+  99 0006 23A0E700 		sw	a4,%lo(errno)(a5)
+ 100 000a 7D55     		li	a0,-1
+ 101 000c 8280     		ret
+ 103              		.section	.text._openat,"ax",@progbits
+ 104              		.align	1
+ 105              		.globl	_openat
+ 107              	_openat:
+ 108 0000 B7070000 		lui	a5,%hi(errno)
+ 109 0004 0947     		li	a4,2
+ 110 0006 23A0E700 		sw	a4,%lo(errno)(a5)
+ 111 000a 7D55     		li	a0,-1
+ 112 000c 8280     		ret
+ 114              		.section	.text._close,"ax",@progbits
+ 115              		.align	1
+ 116              		.globl	_close
+ 118              	_close:
+ 119 0000 B7070000 		lui	a5,%hi(errno)
+ 120 0004 2547     		li	a4,9
+ 121 0006 23A0E700 		sw	a4,%lo(errno)(a5)
+ 122 000a 7D55     		li	a0,-1
+ 123 000c 8280     		ret
+ 125              		.section	.text._execve,"ax",@progbits
+ 126              		.align	1
+ 127              		.globl	_execve
+ 129              	_execve:
+ 130 0000 B7070000 		lui	a5,%hi(errno)
+ 131 0004 3147     		li	a4,12
+ 132 0006 23A0E700 		sw	a4,%lo(errno)(a5)
+ 133 000a 7D55     		li	a0,-1
+ 134 000c 8280     		ret
+ 136              		.section	.text._fork,"ax",@progbits
+ 137              		.align	1
+ 138              		.globl	_fork
+ 140              	_fork:
+ 141 0000 B7070000 		lui	a5,%hi(errno)
+ 142 0004 2D47     		li	a4,11
+ 143 0006 23A0E700 		sw	a4,%lo(errno)(a5)
+ 144 000a 7D55     		li	a0,-1
+ 145 000c 8280     		ret
+ 147              		.section	.text._fstat,"ax",@progbits
+ 148              		.align	1
+ 149              		.globl	_fstat
+ 151              	_fstat:
+ 152 0000 17030000 		call	t0,__riscv_save_0
+ 152      E7020300 
+ 153 0008 4111     		addi	sp,sp,-16
+ 154 000a 2EC6     		sw	a1,12(sp)
+ 155 000c 97000000 		call	isatty
+ 155      E7800000 
+ 156 0014 11C9     		beqz	a0,.L23
+ 157 0016 B245     		lw	a1,12(sp)
+ 158 0018 8967     		li	a5,8192
+ 159 001a 0145     		li	a0,0
+ 160 001c DCC1     		sw	a5,4(a1)
+ 161              	.L22:
+ 162 001e 4101     		addi	sp,sp,16
+ 163 0020 17030000 		tail	__riscv_restore_0
+ 163      67000300 
+ 164              	.L23:
+ 165 0028 B7070000 		lui	a5,%hi(errno)
+ 166 002c 2547     		li	a4,9
+ 167 002e 23A0E700 		sw	a4,%lo(errno)(a5)
+ 168 0032 7D55     		li	a0,-1
+ 169 0034 EDB7     		j	.L22
+ 171              		.section	.text._getpid,"ax",@progbits
+ 172              		.align	1
+ 173              		.globl	_getpid
+ 175              	_getpid:
+ 176 0000 0545     		li	a0,1
+ 177 0002 8280     		ret
+ 179              		.section	.text._kill,"ax",@progbits
+ 180              		.align	1
+ 181              		.globl	_kill
+ 183              	_kill:
+ 184 0000 B7070000 		lui	a5,%hi(errno)
+ 185 0004 5947     		li	a4,22
+ 186 0006 23A0E700 		sw	a4,%lo(errno)(a5)
+ 187 000a 7D55     		li	a0,-1
+ 188 000c 8280     		ret
+ 190              		.section	.text._link,"ax",@progbits
+ 191              		.align	1
+ 192              		.globl	_link
+ 194              	_link:
+ 195 0000 B7070000 		lui	a5,%hi(errno)
+ 196 0004 7D47     		li	a4,31
+ 197 0006 23A0E700 		sw	a4,%lo(errno)(a5)
+ 198 000a 7D55     		li	a0,-1
+ 199 000c 8280     		ret
+ 201              		.section	.text._lseek,"ax",@progbits
+ 202              		.align	1
+ 203              		.globl	_lseek
+ 205              	_lseek:
+ 206 0000 17030000 		call	t0,__riscv_save_0
+ 206      E7020300 
+ 207 0008 97000000 		call	_isatty
+ 207      E7800000 
+ 208 0010 19E9     		bnez	a0,.L31
+ 209 0012 B7070000 		lui	a5,%hi(errno)
+ 210 0016 2547     		li	a4,9
+ 211 0018 23A0E700 		sw	a4,%lo(errno)(a5)
+ 212 001c 7D55     		li	a0,-1
+ 213              	.L29:
+ 214 001e 17030000 		tail	__riscv_restore_0
+ 214      67000300 
+ 215              	.L31:
+ 216 0026 0145     		li	a0,0
+ 217 0028 DDBF     		j	.L29
+ 219              		.section	.text._read,"ax",@progbits
+ 220              		.align	1
+ 221              		.globl	_read
+ 223              	_read:
+ 224 0000 B7070000 		lui	a5,%hi(errno)
+ 225 0004 2547     		li	a4,9
+ 226 0006 23A0E700 		sw	a4,%lo(errno)(a5)
+ 227 000a 7D55     		li	a0,-1
+ 228 000c 8280     		ret
+ 230              		.section	.text._stat,"ax",@progbits
+ 231              		.align	1
+ 232              		.globl	_stat
+ 234              	_stat:
+ 235 0000 B7070000 		lui	a5,%hi(errno)
+ 236 0004 3547     		li	a4,13
+ 237 0006 23A0E700 		sw	a4,%lo(errno)(a5)
+ 238 000a 7D55     		li	a0,-1
+ 239 000c 8280     		ret
+ 241              		.section	.text._times,"ax",@progbits
+ 242              		.align	1
+ 243              		.globl	_times
+ 245              	_times:
+ 246 0000 B7070000 		lui	a5,%hi(errno)
+ 247 0004 3547     		li	a4,13
+ 248 0006 23A0E700 		sw	a4,%lo(errno)(a5)
+ 249 000a 7D55     		li	a0,-1
+ 250 000c 8280     		ret
+ 252              		.section	.text._unlink,"ax",@progbits
+ 253              		.align	1
+ 254              		.globl	_unlink
+ 256              	_unlink:
+ 257 0000 B7070000 		lui	a5,%hi(errno)
+ 258 0004 0947     		li	a4,2
+ 259 0006 23A0E700 		sw	a4,%lo(errno)(a5)
+ 260 000a 7D55     		li	a0,-1
+ 261 000c 8280     		ret
+ 263              		.section	.text._wait,"ax",@progbits
+ 264              		.align	1
+ 265              		.globl	_wait
+ 267              	_wait:
+ 268 0000 B7070000 		lui	a5,%hi(errno)
+ 269 0004 2947     		li	a4,10
+ 270 0006 23A0E700 		sw	a4,%lo(errno)(a5)
+ 271 000a 7D55     		li	a0,-1
+ 272 000c 8280     		ret
+ 274              		.section	.text._write,"ax",@progbits
+ 275              		.align	1
+ 276              		.globl	_write
+ 278              	_write:
+ 279 0000 B7070000 		lui	a5,%hi(errno)
+ 280 0004 2547     		li	a4,9
+ 281 0006 23A0E700 		sw	a4,%lo(errno)(a5)
+ 282 000a 7D55     		li	a0,-1
+ 283 000c 8280     		ret
+ 285              		.globl	environ
+ 286              		.globl	__env
+ 287              		.comm	errno,4,4
+ 288              		.section	.rodata.write_hex.str1.4,"aMS",@progbits,1
+ 289              		.align	2
+ 290              	.LC0:
+ 291 0000 307800   		.string	"0x"
+ 292              		.section	.sbss.__env,"aw",@nobits
+ 293              		.align	2
+ 296              	__env:
+ 297 0000 00000000 		.zero	4
+ 298              		.section	.sdata.curbrk.3697,"aw"
+ 299              		.align	2
+ 300              		.set	.LANCHOR0,. + 0
+ 303              	curbrk.3697:
+ 304 0000 00000000 		.word	_end
+ 305              		.section	.sdata.environ,"aw"
+ 306              		.align	2
+ 309              	environ:
+ 310 0000 00000000 		.word	__env
+ 311              		.ident	"GCC: (Microchip SoftConsole GNU RISC-V Embedded GCC, 64-bit) 8.2.0"
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 syscall.c
+C:\Users\tecchio\AppData\Local\Temp\1\cckdLZDd.s:8      .text.write_hex:0000000000000000 write_hex
+C:\Users\tecchio\AppData\Local\Temp\1\cckdLZDd.s:48     .text._exit:0000000000000000 _exit
+C:\Users\tecchio\AppData\Local\Temp\1\cckdLZDd.s:56     .text._sbrk:0000000000000000 _sbrk
+C:\Users\tecchio\AppData\Local\Temp\1\cckdLZDd.s:79     .text._isatty:0000000000000000 _isatty
+                            *COM*:0000000000000004 errno
+C:\Users\tecchio\AppData\Local\Temp\1\cckdLZDd.s:96     .text._open:0000000000000000 _open
+C:\Users\tecchio\AppData\Local\Temp\1\cckdLZDd.s:107    .text._openat:0000000000000000 _openat
+C:\Users\tecchio\AppData\Local\Temp\1\cckdLZDd.s:118    .text._close:0000000000000000 _close
+C:\Users\tecchio\AppData\Local\Temp\1\cckdLZDd.s:129    .text._execve:0000000000000000 _execve
+C:\Users\tecchio\AppData\Local\Temp\1\cckdLZDd.s:140    .text._fork:0000000000000000 _fork
+C:\Users\tecchio\AppData\Local\Temp\1\cckdLZDd.s:151    .text._fstat:0000000000000000 _fstat
+C:\Users\tecchio\AppData\Local\Temp\1\cckdLZDd.s:175    .text._getpid:0000000000000000 _getpid
+C:\Users\tecchio\AppData\Local\Temp\1\cckdLZDd.s:183    .text._kill:0000000000000000 _kill
+C:\Users\tecchio\AppData\Local\Temp\1\cckdLZDd.s:194    .text._link:0000000000000000 _link
+C:\Users\tecchio\AppData\Local\Temp\1\cckdLZDd.s:205    .text._lseek:0000000000000000 _lseek
+C:\Users\tecchio\AppData\Local\Temp\1\cckdLZDd.s:223    .text._read:0000000000000000 _read
+C:\Users\tecchio\AppData\Local\Temp\1\cckdLZDd.s:234    .text._stat:0000000000000000 _stat
+C:\Users\tecchio\AppData\Local\Temp\1\cckdLZDd.s:245    .text._times:0000000000000000 _times
+C:\Users\tecchio\AppData\Local\Temp\1\cckdLZDd.s:256    .text._unlink:0000000000000000 _unlink
+C:\Users\tecchio\AppData\Local\Temp\1\cckdLZDd.s:267    .text._wait:0000000000000000 _wait
+C:\Users\tecchio\AppData\Local\Temp\1\cckdLZDd.s:278    .text._write:0000000000000000 _write
+C:\Users\tecchio\AppData\Local\Temp\1\cckdLZDd.s:309    .sdata.environ:0000000000000000 environ
+C:\Users\tecchio\AppData\Local\Temp\1\cckdLZDd.s:296    .sbss.__env:0000000000000000 __env
+C:\Users\tecchio\AppData\Local\Temp\1\cckdLZDd.s:300    .sdata.curbrk.3697:0000000000000000 .LANCHOR0
+C:\Users\tecchio\AppData\Local\Temp\1\cckdLZDd.s:303    .sdata.curbrk.3697:0000000000000000 curbrk.3697
+C:\Users\tecchio\AppData\Local\Temp\1\cckdLZDd.s:290    .rodata.write_hex.str1.4:0000000000000000 .LC0
+C:\Users\tecchio\AppData\Local\Temp\1\cckdLZDd.s:40     .text.write_hex:0000000000000068 .L2
+C:\Users\tecchio\AppData\Local\Temp\1\cckdLZDd.s:21     .text.write_hex:0000000000000028 .L4
+C:\Users\tecchio\AppData\Local\Temp\1\cckdLZDd.s:28     .text.write_hex:0000000000000040 .L7
+C:\Users\tecchio\AppData\Local\Temp\1\cckdLZDd.s:49     .text._exit:0000000000000000 .L9
+C:\Users\tecchio\AppData\Local\Temp\1\cckdLZDd.s:71     .text._sbrk:000000000000002a .L13
+C:\Users\tecchio\AppData\Local\Temp\1\cckdLZDd.s:68     .text._sbrk:0000000000000026 .L10
+C:\Users\tecchio\AppData\Local\Temp\1\cckdLZDd.s:88     .text._isatty:0000000000000016 .L16
+C:\Users\tecchio\AppData\Local\Temp\1\cckdLZDd.s:164    .text._fstat:0000000000000028 .L23
+C:\Users\tecchio\AppData\Local\Temp\1\cckdLZDd.s:161    .text._fstat:000000000000001e .L22
+C:\Users\tecchio\AppData\Local\Temp\1\cckdLZDd.s:215    .text._lseek:0000000000000026 .L31
+C:\Users\tecchio\AppData\Local\Temp\1\cckdLZDd.s:213    .text._lseek:000000000000001e .L29
+
+UNDEFINED SYMBOLS
+__riscv_save_6
+write
+__riscv_restore_6
+_end
+_heap_end
+__riscv_save_0
+isatty
+__riscv_restore_0

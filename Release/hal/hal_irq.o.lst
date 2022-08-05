@@ -1,0 +1,89 @@
+   1              		.file	"hal_irq.c"
+   2              		.option nopic
+   3              		.text
+   4              		.section	.text.HAL_enable_interrupts,"ax",@progbits
+   5              		.align	1
+   6              		.globl	HAL_enable_interrupts
+   8              	HAL_enable_interrupts:
+   9 0000 17030000 		call	t0,__riscv_save_0
+   9      E7020300 
+  10 0008 97000000 		call	__enable_irq
+  10      E7800000 
+  11 0010 17030000 		tail	__riscv_restore_0
+  11      67000300 
+  13              		.section	.text.HAL_disable_interrupts,"ax",@progbits
+  14              		.align	1
+  15              		.globl	HAL_disable_interrupts
+  17              	HAL_disable_interrupts:
+  18 0000 17030000 		call	t0,__riscv_save_0
+  18      E7020300 
+  19 0008 4111     		addi	sp,sp,-16
+  20              	 #APP
+  21              	# 25 "../hal/hal_irq.c" 1
+   1              	/***************************************************************************//**
+   2              	 * (c) Copyright 2007-2018 Microsemi SoC Products Group. All rights reserved.
+   3              	 * 
+   4              	 * Legacy interrupt control functions for the Microsemi driver library hardware
+   5              	 * abstraction layer.
+   6              	 *
+   7              	 * SVN $Revision: 9661 $
+   8              	 * SVN $Date: 2018-01-15 16:13:33 +0530 (Mon, 15 Jan 2018) $
+   9              	 */
+  10              	#include "hal.h"
+  11              	#include "riscv_hal.h"
+  12              	
+  13              	/*------------------------------------------------------------------------------
+  14              	 * 
+  15              	 */
+  16              	void HAL_enable_interrupts(void) {
+  17              	    __enable_irq();
+  18              	}
+  19              	
+  20              	/*------------------------------------------------------------------------------
+  21              	 * 
+  22              	 */
+  23              	psr_t HAL_disable_interrupts(void) {
+  24              	    psr_t psr;
+  25 000a 73250030 	    psr = read_csr(mstatus);
+  26              	    __disable_irq();
+  22              		csrr a0, mstatus
+  23              	# 0 "" 2
+  24              	 #NO_APP
+  25 000e 2AC6     		sw	a0,12(sp)
+  26 0010 97000000 		call	__disable_irq
+  26      E7800000 
+  27 0018 3245     		lw	a0,12(sp)
+  28 001a 4101     		addi	sp,sp,16
+  29 001c 17030000 		tail	__riscv_restore_0
+  29      67000300 
+  31              		.section	.text.HAL_restore_interrupts,"ax",@progbits
+  32              		.align	1
+  33              		.globl	HAL_restore_interrupts
+  35              	HAL_restore_interrupts:
+  36              	 #APP
+  37              	# 34 "../hal/hal_irq.c" 1
+  27              	    return(psr);
+  28              	}
+  29              	
+  30              	/*------------------------------------------------------------------------------
+  31              	 * 
+  32              	 */
+  33              	void HAL_restore_interrupts(psr_t saved_psr) {
+  34 0000 73100530 	    write_csr(mstatus, saved_psr);
+  35              	}
+  38              		csrw mstatus, a0
+  39              	# 0 "" 2
+  40              	 #NO_APP
+  41 0004 8280     		ret
+  43              		.ident	"GCC: (Microchip SoftConsole GNU RISC-V Embedded GCC, 64-bit) 8.2.0"
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 hal_irq.c
+C:\Users\tecchio\AppData\Local\Temp\cceLoSez.s:8      .text.HAL_enable_interrupts:0000000000000000 HAL_enable_interrupts
+C:\Users\tecchio\AppData\Local\Temp\cceLoSez.s:17     .text.HAL_disable_interrupts:0000000000000000 HAL_disable_interrupts
+C:\Users\tecchio\AppData\Local\Temp\cceLoSez.s:35     .text.HAL_restore_interrupts:0000000000000000 HAL_restore_interrupts
+
+UNDEFINED SYMBOLS
+__riscv_save_0
+__enable_irq
+__riscv_restore_0
+__disable_irq

@@ -1,0 +1,1570 @@
+   1              		.file	"core_spi.c"
+   2              		.option nopic
+   3              		.text
+   4              		.section	.text.recover_from_rx_overflow.isra.0,"ax",@progbits
+   5              		.align	1
+   7              	recover_from_rx_overflow.isra.0:
+   8 0000 17030000 		call	t0,__riscv_save_1
+   8      E7020300 
+   9 0008 2A84     		mv	s0,a0
+  10 000a 0841     		lw	a0,0(a0)
+  11 000c 8146     		li	a3,0
+  12 000e 0546     		li	a2,1
+  13 0010 8145     		li	a1,0
+  14 0012 97000000 		call	HW_set_8bit_reg_field
+  14      E7800000 
+  15 001a 0840     		lw	a0,0(s0)
+  16 001c 8D45     		li	a1,3
+  17 001e 7105     		addi	a0,a0,28
+  18 0020 97000000 		call	HW_set_8bit_reg
+  18      E7800000 
+  19 0028 0840     		lw	a0,0(s0)
+  20 002a 9305F00F 		li	a1,255
+  21 002e 1105     		addi	a0,a0,4
+  22 0030 97000000 		call	HW_set_8bit_reg
+  22      E7800000 
+  23 0038 0840     		lw	a0,0(s0)
+  24 003a 8546     		li	a3,1
+  25 003c 0546     		li	a2,1
+  26 003e 8145     		li	a1,0
+  27 0040 97000000 		call	HW_set_8bit_reg_field
+  27      E7800000 
+  28 0048 17030000 		tail	__riscv_restore_1
+  28      67000300 
+  30              		.section	.text.fill_slave_tx_fifo,"ax",@progbits
+  31              		.align	1
+  33              	fill_slave_tx_fifo:
+  34 0000 17030000 		call	t0,__riscv_save_1
+  34      E7020300 
+  35 0008 2A84     		mv	s0,a0
+  36              	.L4:
+  37 000a 1848     		lw	a4,16(s0)
+  38 000c 5C44     		lw	a5,12(s0)
+  39 000e 6370F702 		bgeu	a4,a5,.L7
+  40 0012 0840     		lw	a0,0(s0)
+  41 0014 2146     		li	a2,8
+  42 0016 8D45     		li	a1,3
+  43 0018 13050502 		addi	a0,a0,32
+  44 001c 97000000 		call	HW_get_8bit_reg_field
+  44      E7800000 
+  45 0024 1848     		lw	a4,16(s0)
+  46 0026 15C5     		beqz	a0,.L6
+  47 0028 5C44     		lw	a5,12(s0)
+  48 002a 6360F702 		bltu	a4,a5,.L3
+  49              	.L7:
+  50 002e 584C     		lw	a4,28(s0)
+  51 0030 1C4C     		lw	a5,24(s0)
+  52 0032 637CF700 		bgeu	a4,a5,.L3
+  53 0036 0840     		lw	a0,0(s0)
+  54 0038 2146     		li	a2,8
+  55 003a 8D45     		li	a1,3
+  56 003c 13050502 		addi	a0,a0,32
+  57 0040 97000000 		call	HW_get_8bit_reg_field
+  57      E7800000 
+  58 0048 1DC1     		beqz	a0,.L9
+  59              	.L3:
+  60 004a 17030000 		tail	__riscv_restore_1
+  60      67000300 
+  61              	.L6:
+  62 0052 1C44     		lw	a5,8(s0)
+  63 0054 0840     		lw	a0,0(s0)
+  64 0056 BA97     		add	a5,a5,a4
+  65 0058 83C50700 		lbu	a1,0(a5)
+  66 005c 3105     		addi	a0,a0,12
+  67 005e 97000000 		call	HW_set_32bit_reg
+  67      E7800000 
+  68 0066 1C48     		lw	a5,16(s0)
+  69 0068 8507     		addi	a5,a5,1
+  70 006a 1CC8     		sw	a5,16(s0)
+  71 006c 79BF     		j	.L4
+  72              	.L9:
+  73 006e 5C48     		lw	a5,20(s0)
+  74 0070 584C     		lw	a4,28(s0)
+  75 0072 0840     		lw	a0,0(s0)
+  76 0074 BA97     		add	a5,a5,a4
+  77 0076 83C50700 		lbu	a1,0(a5)
+  78 007a 3105     		addi	a0,a0,12
+  79 007c 97000000 		call	HW_set_32bit_reg
+  79      E7800000 
+  80 0084 5C4C     		lw	a5,28(s0)
+  81 0086 8507     		addi	a5,a5,1
+  82 0088 5CCC     		sw	a5,28(s0)
+  83 008a 55B7     		j	.L7
+  85              		.section	.text.read_slave_rx_fifo,"ax",@progbits
+  86              		.align	1
+  88              	read_slave_rx_fifo:
+  89 0000 17030000 		call	t0,__riscv_save_1
+  89      E7020300 
+  90 0008 3C45     		lw	a5,72(a0)
+  91 000a 0547     		li	a4,1
+  92 000c 2A84     		mv	s0,a0
+  93 000e 6392E704 		bne	a5,a4,.L26
+  94              	.L12:
+  95 0012 0840     		lw	a0,0(s0)
+  96 0014 1146     		li	a2,4
+  97 0016 8945     		li	a1,2
+  98 0018 13050502 		addi	a0,a0,32
+  99 001c 97000000 		call	HW_get_8bit_reg_field
+  99      E7800000 
+ 100 0024 09C5     		beqz	a0,.L15
+ 101              	.L11:
+ 102 0026 17030000 		tail	__riscv_restore_1
+ 102      67000300 
+ 103              	.L15:
+ 104 002e 0840     		lw	a0,0(s0)
+ 105 0030 2105     		addi	a0,a0,8
+ 106 0032 97000000 		call	HW_get_32bit_reg
+ 106      E7800000 
+ 107 003a 1858     		lw	a4,48(s0)
+ 108 003c 5C54     		lw	a5,44(s0)
+ 109 003e 6376F700 		bgeu	a4,a5,.L14
+ 110 0042 1C54     		lw	a5,40(s0)
+ 111 0044 BA97     		add	a5,a5,a4
+ 112 0046 2380A700 		sb	a0,0(a5)
+ 113              	.L14:
+ 114 004a 1C58     		lw	a5,48(s0)
+ 115 004c 8507     		addi	a5,a5,1
+ 116 004e 1CD8     		sw	a5,48(s0)
+ 117 0050 C9B7     		j	.L12
+ 118              	.L26:
+ 119 0052 0947     		li	a4,2
+ 120 0054 6383E702 		beq	a5,a4,.L19
+ 121 0058 0841     		lw	a0,0(a0)
+ 122 005a 8545     		li	a1,1
+ 123 005c 7105     		addi	a0,a0,28
+ 124 005e 97000000 		call	HW_set_8bit_reg
+ 124      E7800000 
+ 125 0066 C1B7     		j	.L11
+ 126              	.L20:
+ 127 0068 0840     		lw	a0,0(s0)
+ 128 006a 2105     		addi	a0,a0,8
+ 129 006c 97000000 		call	HW_get_32bit_reg
+ 129      E7800000 
+ 130 0074 5C58     		lw	a5,52(s0)
+ 131 0076 91C3     		beqz	a5,.L19
+ 132 0078 8297     		jalr	a5
+ 133              	.L19:
+ 134 007a 0840     		lw	a0,0(s0)
+ 135 007c 1146     		li	a2,4
+ 136 007e 8945     		li	a1,2
+ 137 0080 13050502 		addi	a0,a0,32
+ 138 0084 97000000 		call	HW_get_8bit_reg_field
+ 138      E7800000 
+ 139 008c 71DD     		beqz	a0,.L20
+ 140 008e 61BF     		j	.L11
+ 142              		.section	.text.SPI_init,"ax",@progbits
+ 143              		.align	1
+ 144              		.globl	SPI_init
+ 146              	SPI_init:
+ 147 0000 41CD     		beqz	a0,.L40
+ 148 0002 17030000 		call	t0,__riscv_save_3
+ 148      E7020300 
+ 149 000a AE84     		mv	s1,a1
+ 150 000c D1C1     		beqz	a1,.L29
+ 151 000e 2A84     		mv	s0,a0
+ 152 0010 3289     		mv	s2,a2
+ 153 0012 8145     		li	a1,0
+ 154 0014 13068004 		li	a2,72
+ 155 0018 1105     		addi	a0,a0,4
+ 156 001a 97000000 		call	memset
+ 156      E7800000 
+ 157 0022 9307F9FF 		addi	a5,s2,-1
+ 158 0026 C207     		slli	a5,a5,16
+ 159 0028 04C0     		sw	s1,0(s0)
+ 160 002a C183     		srli	a5,a5,16
+ 161 002c 7D47     		li	a4,31
+ 162 002e 6373F700 		bleu	a5,a4,.L31
+ 163 0032 0549     		li	s2,1
+ 164              	.L31:
+ 165 0034 8146     		li	a3,0
+ 166 0036 0546     		li	a2,1
+ 167 0038 8145     		li	a1,0
+ 168 003a 2685     		mv	a0,s1
+ 169 003c 23122405 		sh	s2,68(s0)
+ 170 0040 97000000 		call	HW_set_8bit_reg_field
+ 170      E7800000 
+ 171 0048 0840     		lw	a0,0(s0)
+ 172 004a 8145     		li	a1,0
+ 173 004c 13054502 		addi	a0,a0,36
+ 174 0050 97000000 		call	HW_set_8bit_reg
+ 174      E7800000 
+ 175 0058 0840     		lw	a0,0(s0)
+ 176 005a 8D45     		li	a1,3
+ 177 005c 7105     		addi	a0,a0,28
+ 178 005e 97000000 		call	HW_set_8bit_reg
+ 178      E7800000 
+ 179 0066 0840     		lw	a0,0(s0)
+ 180 0068 9305F00F 		li	a1,255
+ 181 006c 1105     		addi	a0,a0,4
+ 182 006e 97000000 		call	HW_set_8bit_reg
+ 182      E7800000 
+ 183 0076 0840     		lw	a0,0(s0)
+ 184 0078 8145     		li	a1,0
+ 185 007a 6105     		addi	a0,a0,24
+ 186 007c 97000000 		call	HW_set_8bit_reg
+ 186      E7800000 
+ 187 0084 0840     		lw	a0,0(s0)
+ 188 0086 8D45     		li	a1,3
+ 189 0088 97000000 		call	HW_set_8bit_reg
+ 189      E7800000 
+ 190              	.L29:
+ 191 0090 17030000 		tail	__riscv_restore_3
+ 191      67000300 
+ 192              	.L40:
+ 193 0098 8280     		ret
+ 195              		.section	.text.SPI_configure_slave_mode,"ax",@progbits
+ 196              		.align	1
+ 197              		.globl	SPI_configure_slave_mode
+ 199              	SPI_configure_slave_mode:
+ 200 0000 25C1     		beqz	a0,.L49
+ 201 0002 17030000 		call	t0,__riscv_save_1
+ 201      E7020300 
+ 202 000a 2A84     		mv	s0,a0
+ 203 000c 23240504 		sw	zero,72(a0)
+ 204 0010 0841     		lw	a0,0(a0)
+ 205 0012 8146     		li	a3,0
+ 206 0014 0546     		li	a2,1
+ 207 0016 8145     		li	a1,0
+ 208 0018 97000000 		call	HW_set_8bit_reg_field
+ 208      E7800000 
+ 209 0020 0840     		lw	a0,0(s0)
+ 210 0022 8D45     		li	a1,3
+ 211 0024 7105     		addi	a0,a0,28
+ 212 0026 97000000 		call	HW_set_8bit_reg
+ 212      E7800000 
+ 213 002e 0840     		lw	a0,0(s0)
+ 214 0030 9305F00F 		li	a1,255
+ 215 0034 1105     		addi	a0,a0,4
+ 216 0036 97000000 		call	HW_set_8bit_reg
+ 216      E7800000 
+ 217 003e 0840     		lw	a0,0(s0)
+ 218 0040 8145     		li	a1,0
+ 219 0042 6105     		addi	a0,a0,24
+ 220 0044 97000000 		call	HW_set_8bit_reg
+ 220      E7800000 
+ 221 004c 0840     		lw	a0,0(s0)
+ 222 004e 8545     		li	a1,1
+ 223 0050 97000000 		call	HW_set_8bit_reg
+ 223      E7800000 
+ 224 0058 17030000 		tail	__riscv_restore_1
+ 224      67000300 
+ 225              	.L49:
+ 226 0060 8280     		ret
+ 228              		.section	.text.SPI_configure_master_mode,"ax",@progbits
+ 229              		.align	1
+ 230              		.globl	SPI_configure_master_mode
+ 232              	SPI_configure_master_mode:
+ 233 0000 25C1     		beqz	a0,.L58
+ 234 0002 17030000 		call	t0,__riscv_save_1
+ 234      E7020300 
+ 235 000a 2A84     		mv	s0,a0
+ 236 000c 0841     		lw	a0,0(a0)
+ 237 000e 8146     		li	a3,0
+ 238 0010 0546     		li	a2,1
+ 239 0012 8145     		li	a1,0
+ 240 0014 97000000 		call	HW_set_8bit_reg_field
+ 240      E7800000 
+ 241 001c 0840     		lw	a0,0(s0)
+ 242 001e 23240404 		sw	zero,72(s0)
+ 243 0022 8D45     		li	a1,3
+ 244 0024 7105     		addi	a0,a0,28
+ 245 0026 97000000 		call	HW_set_8bit_reg
+ 245      E7800000 
+ 246 002e 0840     		lw	a0,0(s0)
+ 247 0030 9305F00F 		li	a1,255
+ 248 0034 1105     		addi	a0,a0,4
+ 249 0036 97000000 		call	HW_set_8bit_reg
+ 249      E7800000 
+ 250 003e 0840     		lw	a0,0(s0)
+ 251 0040 8145     		li	a1,0
+ 252 0042 6105     		addi	a0,a0,24
+ 253 0044 97000000 		call	HW_set_8bit_reg
+ 253      E7800000 
+ 254 004c 0840     		lw	a0,0(s0)
+ 255 004e 8D45     		li	a1,3
+ 256 0050 97000000 		call	HW_set_8bit_reg
+ 256      E7800000 
+ 257 0058 17030000 		tail	__riscv_restore_1
+ 257      67000300 
+ 258              	.L58:
+ 259 0060 8280     		ret
+ 261              		.section	.text.SPI_set_slave_select,"ax",@progbits
+ 262              		.align	1
+ 263              		.globl	SPI_set_slave_select
+ 265              	SPI_set_slave_select:
+ 266 0000 2DC9     		beqz	a0,.L70
+ 267 0002 9D47     		li	a5,7
+ 268 0004 63E7B706 		bgtu	a1,a5,.L70
+ 269 0008 17030000 		call	t0,__riscv_save_2
+ 269      E7020300 
+ 270 0010 2A84     		mv	s0,a0
+ 271 0012 0841     		lw	a0,0(a0)
+ 272 0014 AE84     		mv	s1,a1
+ 273 0016 0946     		li	a2,2
+ 274 0018 8545     		li	a1,1
+ 275 001a 97000000 		call	HW_get_8bit_reg_field
+ 275      E7800000 
+ 276 0022 21C5     		beqz	a0,.L61
+ 277 0024 0840     		lw	a0,0(s0)
+ 278 0026 4146     		li	a2,16
+ 279 0028 9145     		li	a1,4
+ 280 002a 13050502 		addi	a0,a0,32
+ 281 002e 97000000 		call	HW_get_8bit_reg_field
+ 281      E7800000 
+ 282 0036 8547     		li	a5,1
+ 283 0038 6317F500 		bne	a0,a5,.L65
+ 284 003c 2285     		mv	a0,s0
+ 285 003e 97000000 		call	recover_from_rx_overflow.isra.0
+ 285      E7800000 
+ 286              	.L65:
+ 287 0046 0840     		lw	a0,0(s0)
+ 288 0048 13054502 		addi	a0,a0,36
+ 289 004c 97000000 		call	HW_get_8bit_reg
+ 289      E7800000 
+ 290 0054 1C40     		lw	a5,0(s0)
+ 291 0056 8545     		li	a1,1
+ 292 0058 B3959500 		sll	a1,a1,s1
+ 293 005c C98D     		or	a1,a1,a0
+ 294 005e 13854702 		addi	a0,a5,36
+ 295 0062 97000000 		call	HW_set_8bit_reg
+ 295      E7800000 
+ 296              	.L61:
+ 297 006a 17030000 		tail	__riscv_restore_2
+ 297      67000300 
+ 298              	.L70:
+ 299 0072 8280     		ret
+ 301              		.section	.text.SPI_clear_slave_select,"ax",@progbits
+ 302              		.align	1
+ 303              		.globl	SPI_clear_slave_select
+ 305              	SPI_clear_slave_select:
+ 306 0000 3DC9     		beqz	a0,.L82
+ 307 0002 9D47     		li	a5,7
+ 308 0004 63E9B706 		bgtu	a1,a5,.L82
+ 309 0008 17030000 		call	t0,__riscv_save_2
+ 309      E7020300 
+ 310 0010 2A84     		mv	s0,a0
+ 311 0012 0841     		lw	a0,0(a0)
+ 312 0014 AE84     		mv	s1,a1
+ 313 0016 0946     		li	a2,2
+ 314 0018 8545     		li	a1,1
+ 315 001a 97000000 		call	HW_get_8bit_reg_field
+ 315      E7800000 
+ 316 0022 31C5     		beqz	a0,.L73
+ 317 0024 0840     		lw	a0,0(s0)
+ 318 0026 4146     		li	a2,16
+ 319 0028 9145     		li	a1,4
+ 320 002a 13050502 		addi	a0,a0,32
+ 321 002e 97000000 		call	HW_get_8bit_reg_field
+ 321      E7800000 
+ 322 0036 8547     		li	a5,1
+ 323 0038 6317F500 		bne	a0,a5,.L77
+ 324 003c 2285     		mv	a0,s0
+ 325 003e 97000000 		call	recover_from_rx_overflow.isra.0
+ 325      E7800000 
+ 326              	.L77:
+ 327 0046 0840     		lw	a0,0(s0)
+ 328 0048 13054502 		addi	a0,a0,36
+ 329 004c 97000000 		call	HW_get_8bit_reg
+ 329      E7800000 
+ 330 0054 8545     		li	a1,1
+ 331 0056 1C40     		lw	a5,0(s0)
+ 332 0058 B3959500 		sll	a1,a1,s1
+ 333 005c 93C5F5FF 		not	a1,a1
+ 334 0060 E98D     		and	a1,a1,a0
+ 335 0062 13854702 		addi	a0,a5,36
+ 336 0066 97000000 		call	HW_set_8bit_reg
+ 336      E7800000 
+ 337              	.L73:
+ 338 006e 17030000 		tail	__riscv_restore_2
+ 338      67000300 
+ 339              	.L82:
+ 340 0076 8280     		ret
+ 342              		.section	.text.SPI_transfer_frame,"ax",@progbits
+ 343              		.align	1
+ 344              		.globl	SPI_transfer_frame
+ 346              	SPI_transfer_frame:
+ 347 0000 17030000 		call	t0,__riscv_save_2
+ 347      E7020300 
+ 348 0008 4111     		addi	sp,sp,-16
+ 349 000a 02C6     		sw	zero,12(sp)
+ 350 000c 29CD     		beqz	a0,.L87
+ 351 000e 2A84     		mv	s0,a0
+ 352 0010 0841     		lw	a0,0(a0)
+ 353 0012 AE84     		mv	s1,a1
+ 354 0014 0946     		li	a2,2
+ 355 0016 8545     		li	a1,1
+ 356 0018 97000000 		call	HW_get_8bit_reg_field
+ 356      E7800000 
+ 357 0020 39C1     		beqz	a0,.L87
+ 358 0022 0840     		lw	a0,0(s0)
+ 359 0024 8D45     		li	a1,3
+ 360 0026 7105     		addi	a0,a0,28
+ 361 0028 97000000 		call	HW_set_8bit_reg
+ 361      E7800000 
+ 362 0030 0840     		lw	a0,0(s0)
+ 363 0032 A685     		mv	a1,s1
+ 364 0034 13058502 		addi	a0,a0,40
+ 365 0038 97000000 		call	HW_set_32bit_reg
+ 365      E7800000 
+ 366              	.L89:
+ 367 0040 0840     		lw	a0,0(s0)
+ 368 0042 0946     		li	a2,2
+ 369 0044 8545     		li	a1,1
+ 370 0046 13050502 		addi	a0,a0,32
+ 371 004a 97000000 		call	HW_get_8bit_reg_field
+ 371      E7800000 
+ 372 0052 8547     		li	a5,1
+ 373 0054 E316F5FE 		bne	a0,a5,.L89
+ 374 0058 0840     		lw	a0,0(s0)
+ 375 005a 2105     		addi	a0,a0,8
+ 376 005c 97000000 		call	HW_get_32bit_reg
+ 376      E7800000 
+ 377 0064 2AC6     		sw	a0,12(sp)
+ 378              	.L87:
+ 379 0066 3245     		lw	a0,12(sp)
+ 380 0068 4101     		addi	sp,sp,16
+ 381 006a 17030000 		tail	__riscv_restore_2
+ 381      67000300 
+ 383              		.section	.text.SPI_transfer_block,"ax",@progbits
+ 384              		.align	1
+ 385              		.globl	SPI_transfer_block
+ 387              	SPI_transfer_block:
+ 388 0000 6304052E 		beqz	a0,.L136
+ 389 0004 17030000 		call	t0,__riscv_save_8
+ 389      E7020300 
+ 390 000c 2A89     		mv	s2,a0
+ 391 000e 0841     		lw	a0,0(a0)
+ 392 0010 328A     		mv	s4,a2
+ 393 0012 AE8B     		mv	s7,a1
+ 394 0014 0946     		li	a2,2
+ 395 0016 8545     		li	a1,1
+ 396 0018 BA8A     		mv	s5,a4
+ 397 001a 368B     		mv	s6,a3
+ 398 001c 97000000 		call	HW_get_8bit_reg_field
+ 398      E7800000 
+ 399 0024 49CD     		beqz	a0,.L95
+ 400 0026 D29A     		add	s5,s4,s5
+ 401 0028 638B0A08 		beqz	s5,.L95
+ 402 002c 03250900 		lw	a0,0(s2)
+ 403 0030 8D45     		li	a1,3
+ 404 0032 FD1A     		addi	s5,s5,-1
+ 405 0034 7105     		addi	a0,a0,28
+ 406 0036 97000000 		call	HW_set_8bit_reg
+ 406      E7800000 
+ 407 003e 03250900 		lw	a0,0(s2)
+ 408 0042 4146     		li	a2,16
+ 409 0044 9145     		li	a1,4
+ 410 0046 13050502 		addi	a0,a0,32
+ 411 004a 97000000 		call	HW_get_8bit_reg_field
+ 411      E7800000 
+ 412 0052 8547     		li	a5,1
+ 413 0054 6317F500 		bne	a0,a5,.L98
+ 414 0058 4A85     		mv	a0,s2
+ 415 005a 97000000 		call	recover_from_rx_overflow.isra.0
+ 415      E7800000 
+ 416              	.L98:
+ 417 0062 03250900 		lw	a0,0(s2)
+ 418 0066 8146     		li	a3,0
+ 419 0068 0546     		li	a2,1
+ 420 006a 8145     		li	a1,0
+ 421 006c 97000000 		call	HW_set_8bit_reg_field
+ 421      E7800000 
+ 422 0074 0144     		li	s0,0
+ 423              	.L99:
+ 424 0076 03250900 		lw	a0,0(s2)
+ 425 007a 63765407 		bgeu	s0,s5,.L102
+ 426 007e 83574904 		lhu	a5,68(s2)
+ 427 0082 6362F404 		bgtu	a5,s0,.L103
+ 428              	.L104:
+ 429 0086 03250900 		lw	a0,0(s2)
+ 430 008a 8546     		li	a3,1
+ 431 008c 0546     		li	a2,1
+ 432 008e 8145     		li	a1,0
+ 433 0090 97000000 		call	HW_set_8bit_reg_field
+ 433      E7800000 
+ 434 0098 A284     		mv	s1,s0
+ 435 009a 8149     		li	s3,0
+ 436              	.L107:
+ 437 009c 636C4407 		bltu	s0,s4,.L112
+ 438              	.L113:
+ 439 00a0 63EE490D 		bltu	s3,s4,.L116
+ 440 00a4 014A     		li	s4,0
+ 441              	.L117:
+ 442 00a6 636A5413 		bltu	s0,s5,.L120
+ 443              	.L121:
+ 444 00aa 630D5419 		beq	s0,s5,.L124
+ 445 00ae B3894941 		sub	s3,s3,s4
+ 446              	.L125:
+ 447 00b2 33043A01 		add	s0,s4,s3
+ 448 00b6 4204     		slli	s0,s0,16
+ 449 00b8 4180     		srli	s0,s0,16
+ 450              	.L126:
+ 451 00ba 63FB8A1E 		bleu	s0,s5,.L127
+ 452              	.L95:
+ 453 00be 17030000 		tail	__riscv_restore_8
+ 453      67000300 
+ 454              	.L103:
+ 455 00c6 3105     		addi	a0,a0,12
+ 456 00c8 8145     		li	a1,0
+ 457 00ca 63764401 		bgeu	s0,s4,.L139
+ 458 00ce B3878B00 		add	a5,s7,s0
+ 459 00d2 83C50700 		lbu	a1,0(a5)
+ 460              	.L139:
+ 461 00d6 0504     		addi	s0,s0,1
+ 462 00d8 4204     		slli	s0,s0,16
+ 463 00da 97000000 		call	HW_set_32bit_reg
+ 463      E7800000 
+ 464 00e2 4180     		srli	s0,s0,16
+ 465 00e4 49BF     		j	.L99
+ 466              	.L102:
+ 467 00e6 E31054FB 		bne	s0,s5,.L104
+ 468 00ea 83574904 		lhu	a5,68(s2)
+ 469 00ee E37CF4F8 		bleu	a5,s0,.L104
+ 470 00f2 13058502 		addi	a0,a0,40
+ 471 00f6 8145     		li	a1,0
+ 472 00f8 63764401 		bgeu	s0,s4,.L140
+ 473 00fc B3878B00 		add	a5,s7,s0
+ 474 0100 83C50700 		lbu	a1,0(a5)
+ 475              	.L140:
+ 476 0104 0504     		addi	s0,s0,1
+ 477 0106 4204     		slli	s0,s0,16
+ 478 0108 97000000 		call	HW_set_32bit_reg
+ 478      E7800000 
+ 479 0110 4180     		srli	s0,s0,16
+ 480 0112 95BF     		j	.L104
+ 481              	.L112:
+ 482 0114 83574904 		lhu	a5,68(s2)
+ 483 0118 63F6F402 		bleu	a5,s1,.L108
+ 484 011c B3878B00 		add	a5,s7,s0
+ 485 0120 03250900 		lw	a0,0(s2)
+ 486 0124 83C50700 		lbu	a1,0(a5)
+ 487 0128 63185405 		bne	s0,s5,.L109
+ 488 012c 13058502 		addi	a0,a0,40
+ 489              	.L141:
+ 490 0130 0504     		addi	s0,s0,1
+ 491 0132 8504     		addi	s1,s1,1
+ 492 0134 4204     		slli	s0,s0,16
+ 493 0136 C204     		slli	s1,s1,16
+ 494 0138 97000000 		call	HW_set_32bit_reg
+ 494      E7800000 
+ 495 0140 4180     		srli	s0,s0,16
+ 496 0142 C180     		srli	s1,s1,16
+ 497              	.L108:
+ 498 0144 03250900 		lw	a0,0(s2)
+ 499 0148 1146     		li	a2,4
+ 500 014a 8945     		li	a1,2
+ 501 014c 13050502 		addi	a0,a0,32
+ 502 0150 97000000 		call	HW_get_8bit_reg_field
+ 502      E7800000 
+ 503 0158 31F1     		bnez	a0,.L107
+ 504 015a 03250900 		lw	a0,0(s2)
+ 505 015e 8509     		addi	s3,s3,1
+ 506 0160 FD14     		addi	s1,s1,-1
+ 507 0162 2105     		addi	a0,a0,8
+ 508 0164 C209     		slli	s3,s3,16
+ 509 0166 C204     		slli	s1,s1,16
+ 510 0168 97000000 		call	HW_get_32bit_reg
+ 510      E7800000 
+ 511 0170 93D90901 		srli	s3,s3,16
+ 512 0174 C180     		srli	s1,s1,16
+ 513 0176 1DB7     		j	.L107
+ 514              	.L109:
+ 515 0178 3105     		addi	a0,a0,12
+ 516 017a 5DBF     		j	.L141
+ 517              	.L116:
+ 518 017c 83574904 		lhu	a5,68(s2)
+ 519 0180 63F2F402 		bleu	a5,s1,.L114
+ 520 0184 63705403 		bleu	s5,s0,.L114
+ 521 0188 03250900 		lw	a0,0(s2)
+ 522 018c 0504     		addi	s0,s0,1
+ 523 018e 8504     		addi	s1,s1,1
+ 524 0190 8145     		li	a1,0
+ 525 0192 3105     		addi	a0,a0,12
+ 526 0194 4204     		slli	s0,s0,16
+ 527 0196 C204     		slli	s1,s1,16
+ 528 0198 97000000 		call	HW_set_32bit_reg
+ 528      E7800000 
+ 529 01a0 4180     		srli	s0,s0,16
+ 530 01a2 C180     		srli	s1,s1,16
+ 531              	.L114:
+ 532 01a4 03250900 		lw	a0,0(s2)
+ 533 01a8 1146     		li	a2,4
+ 534 01aa 8945     		li	a1,2
+ 535 01ac 13050502 		addi	a0,a0,32
+ 536 01b0 97000000 		call	HW_get_8bit_reg_field
+ 536      E7800000 
+ 537 01b8 E31405EE 		bnez	a0,.L113
+ 538 01bc 03250900 		lw	a0,0(s2)
+ 539 01c0 8509     		addi	s3,s3,1
+ 540 01c2 FD14     		addi	s1,s1,-1
+ 541 01c4 2105     		addi	a0,a0,8
+ 542 01c6 C209     		slli	s3,s3,16
+ 543 01c8 C204     		slli	s1,s1,16
+ 544 01ca 97000000 		call	HW_get_32bit_reg
+ 544      E7800000 
+ 545 01d2 93D90901 		srli	s3,s3,16
+ 546 01d6 C180     		srli	s1,s1,16
+ 547 01d8 E1B5     		j	.L113
+ 548              	.L120:
+ 549 01da 83574904 		lhu	a5,68(s2)
+ 550 01de 63F0F402 		bleu	a5,s1,.L118
+ 551 01e2 03250900 		lw	a0,0(s2)
+ 552 01e6 0504     		addi	s0,s0,1
+ 553 01e8 8504     		addi	s1,s1,1
+ 554 01ea 8145     		li	a1,0
+ 555 01ec 3105     		addi	a0,a0,12
+ 556 01ee 4204     		slli	s0,s0,16
+ 557 01f0 C204     		slli	s1,s1,16
+ 558 01f2 97000000 		call	HW_set_32bit_reg
+ 558      E7800000 
+ 559 01fa 4180     		srli	s0,s0,16
+ 560 01fc C180     		srli	s1,s1,16
+ 561              	.L118:
+ 562 01fe 03250900 		lw	a0,0(s2)
+ 563 0202 1146     		li	a2,4
+ 564 0204 8945     		li	a1,2
+ 565 0206 13050502 		addi	a0,a0,32
+ 566 020a 97000000 		call	HW_get_8bit_reg_field
+ 566      E7800000 
+ 567 0212 E31A05E8 		bnez	a0,.L117
+ 568 0216 03250900 		lw	a0,0(s2)
+ 569 021a 8509     		addi	s3,s3,1
+ 570 021c FD14     		addi	s1,s1,-1
+ 571 021e 2105     		addi	a0,a0,8
+ 572 0220 97000000 		call	HW_get_32bit_reg
+ 572      E7800000 
+ 573 0228 B3074B01 		add	a5,s6,s4
+ 574 022c 050A     		addi	s4,s4,1
+ 575 022e 420A     		slli	s4,s4,16
+ 576 0230 C209     		slli	s3,s3,16
+ 577 0232 C204     		slli	s1,s1,16
+ 578 0234 2380A700 		sb	a0,0(a5)
+ 579 0238 135A0A01 		srli	s4,s4,16
+ 580 023c 93D90901 		srli	s3,s3,16
+ 581 0240 C180     		srli	s1,s1,16
+ 582 0242 95B5     		j	.L117
+ 583              	.L124:
+ 584 0244 83574904 		lhu	a5,68(s2)
+ 585 0248 63F1F402 		bleu	a5,s1,.L122
+ 586 024c 03250900 		lw	a0,0(s2)
+ 587 0250 0504     		addi	s0,s0,1
+ 588 0252 8504     		addi	s1,s1,1
+ 589 0254 8145     		li	a1,0
+ 590 0256 13058502 		addi	a0,a0,40
+ 591 025a 4204     		slli	s0,s0,16
+ 592 025c C204     		slli	s1,s1,16
+ 593 025e 97000000 		call	HW_set_32bit_reg
+ 593      E7800000 
+ 594 0266 4180     		srli	s0,s0,16
+ 595 0268 C180     		srli	s1,s1,16
+ 596              	.L122:
+ 597 026a 03250900 		lw	a0,0(s2)
+ 598 026e 1146     		li	a2,4
+ 599 0270 8945     		li	a1,2
+ 600 0272 13050502 		addi	a0,a0,32
+ 601 0276 97000000 		call	HW_get_8bit_reg_field
+ 601      E7800000 
+ 602 027e E31605E2 		bnez	a0,.L121
+ 603 0282 03250900 		lw	a0,0(s2)
+ 604 0286 8509     		addi	s3,s3,1
+ 605 0288 FD14     		addi	s1,s1,-1
+ 606 028a 2105     		addi	a0,a0,8
+ 607 028c 97000000 		call	HW_get_32bit_reg
+ 607      E7800000 
+ 608 0294 B3074B01 		add	a5,s6,s4
+ 609 0298 050A     		addi	s4,s4,1
+ 610 029a 420A     		slli	s4,s4,16
+ 611 029c C209     		slli	s3,s3,16
+ 612 029e C204     		slli	s1,s1,16
+ 613 02a0 2380A700 		sb	a0,0(a5)
+ 614 02a4 135A0A01 		srli	s4,s4,16
+ 615 02a8 93D90901 		srli	s3,s3,16
+ 616 02ac C180     		srli	s1,s1,16
+ 617 02ae F5BB     		j	.L121
+ 618              	.L127:
+ 619 02b0 03250900 		lw	a0,0(s2)
+ 620 02b4 1146     		li	a2,4
+ 621 02b6 8945     		li	a1,2
+ 622 02b8 13050502 		addi	a0,a0,32
+ 623 02bc 97000000 		call	HW_get_8bit_reg_field
+ 623      E7800000 
+ 624 02c4 E31B05DE 		bnez	a0,.L126
+ 625 02c8 03250900 		lw	a0,0(s2)
+ 626 02cc 2105     		addi	a0,a0,8
+ 627 02ce 97000000 		call	HW_get_32bit_reg
+ 627      E7800000 
+ 628 02d6 B3074B01 		add	a5,s6,s4
+ 629 02da 050A     		addi	s4,s4,1
+ 630 02dc 420A     		slli	s4,s4,16
+ 631 02de 2380A700 		sb	a0,0(a5)
+ 632 02e2 135A0A01 		srli	s4,s4,16
+ 633 02e6 F1B3     		j	.L125
+ 634              	.L136:
+ 635 02e8 8280     		ret
+ 637              		.section	.text.SPI_set_frame_rx_handler,"ax",@progbits
+ 638              		.align	1
+ 639              		.globl	SPI_set_frame_rx_handler
+ 641              	SPI_set_frame_rx_handler:
+ 642 0000 6DC1     		beqz	a0,.L148
+ 643 0002 17030000 		call	t0,__riscv_save_2
+ 643      E7020300 
+ 644 000a 2A84     		mv	s0,a0
+ 645 000c 0841     		lw	a0,0(a0)
+ 646 000e AE84     		mv	s1,a1
+ 647 0010 0946     		li	a2,2
+ 648 0012 8545     		li	a1,1
+ 649 0014 97000000 		call	HW_get_8bit_reg_field
+ 649      E7800000 
+ 650 001c 5DED     		bnez	a0,.L142
+ 651 001e 0840     		lw	a0,0(s0)
+ 652 0020 8146     		li	a3,0
+ 653 0022 0546     		li	a2,1
+ 654 0024 8145     		li	a1,0
+ 655 0026 97000000 		call	HW_set_8bit_reg_field
+ 655      E7800000 
+ 656 002e 0840     		lw	a0,0(s0)
+ 657 0030 9305F00F 		li	a1,255
+ 658 0034 1105     		addi	a0,a0,4
+ 659 0036 97000000 		call	HW_set_8bit_reg
+ 659      E7800000 
+ 660 003e 0840     		lw	a0,0(s0)
+ 661 0040 8146     		li	a3,0
+ 662 0042 13060002 		li	a2,32
+ 663 0046 9545     		li	a1,5
+ 664 0048 6105     		addi	a0,a0,24
+ 665 004a 97000000 		call	HW_set_8bit_reg_field
+ 665      E7800000 
+ 666 0052 0840     		lw	a0,0(s0)
+ 667 0054 8146     		li	a3,0
+ 668 0056 4146     		li	a2,16
+ 669 0058 9145     		li	a1,4
+ 670 005a 6105     		addi	a0,a0,24
+ 671 005c 97000000 		call	HW_set_8bit_reg_field
+ 671      E7800000 
+ 672 0064 3844     		lw	a4,72(s0)
+ 673 0066 23200404 		sw	zero,64(s0)
+ 674 006a 44D8     		sw	s1,52(s0)
+ 675 006c 8947     		li	a5,2
+ 676 006e 630AF700 		beq	a4,a5,.L146
+ 677 0072 0840     		lw	a0,0(s0)
+ 678 0074 8146     		li	a3,0
+ 679 0076 2146     		li	a2,8
+ 680 0078 8D45     		li	a1,3
+ 681 007a 97000000 		call	HW_set_8bit_reg_field
+ 681      E7800000 
+ 682              	.L146:
+ 683 0082 0840     		lw	a0,0(s0)
+ 684 0084 8D45     		li	a1,3
+ 685 0086 7105     		addi	a0,a0,28
+ 686 0088 97000000 		call	HW_set_8bit_reg
+ 686      E7800000 
+ 687 0090 0840     		lw	a0,0(s0)
+ 688 0092 8546     		li	a3,1
+ 689 0094 4146     		li	a2,16
+ 690 0096 9145     		li	a1,4
+ 691 0098 97000000 		call	HW_set_8bit_reg_field
+ 691      E7800000 
+ 692 00a0 0840     		lw	a0,0(s0)
+ 693 00a2 8546     		li	a3,1
+ 694 00a4 13060002 		li	a2,32
+ 695 00a8 9545     		li	a1,5
+ 696 00aa 97000000 		call	HW_set_8bit_reg_field
+ 696      E7800000 
+ 697 00b2 0840     		lw	a0,0(s0)
+ 698 00b4 8546     		li	a3,1
+ 699 00b6 13060004 		li	a2,64
+ 700 00ba 9945     		li	a1,6
+ 701 00bc 6105     		addi	a0,a0,24
+ 702 00be 97000000 		call	HW_set_8bit_reg_field
+ 702      E7800000 
+ 703 00c6 0840     		lw	a0,0(s0)
+ 704 00c8 8947     		li	a5,2
+ 705 00ca 3CC4     		sw	a5,72(s0)
+ 706 00cc 8546     		li	a3,1
+ 707 00ce 0546     		li	a2,1
+ 708 00d0 8145     		li	a1,0
+ 709 00d2 97000000 		call	HW_set_8bit_reg_field
+ 709      E7800000 
+ 710              	.L142:
+ 711 00da 17030000 		tail	__riscv_restore_2
+ 711      67000300 
+ 712              	.L148:
+ 713 00e2 8280     		ret
+ 715              		.section	.text.SPI_set_slave_tx_frame,"ax",@progbits
+ 716              		.align	1
+ 717              		.globl	SPI_set_slave_tx_frame
+ 719              	SPI_set_slave_tx_frame:
+ 720 0000 79CD     		beqz	a0,.L157
+ 721 0002 17030000 		call	t0,__riscv_save_3
+ 721      E7020300 
+ 722 000a 2A84     		mv	s0,a0
+ 723 000c 0841     		lw	a0,0(a0)
+ 724 000e 3289     		mv	s2,a2
+ 725 0010 AE84     		mv	s1,a1
+ 726 0012 0946     		li	a2,2
+ 727 0014 8545     		li	a1,1
+ 728 0016 97000000 		call	HW_get_8bit_reg_field
+ 728      E7800000 
+ 729 001e 45ED     		bnez	a0,.L151
+ 730 0020 0840     		lw	a0,0(s0)
+ 731 0022 8146     		li	a3,0
+ 732 0024 0546     		li	a2,1
+ 733 0026 8145     		li	a1,0
+ 734 0028 97000000 		call	HW_set_8bit_reg_field
+ 734      E7800000 
+ 735 0030 0840     		lw	a0,0(s0)
+ 736 0032 9305F00F 		li	a1,255
+ 737 0036 1105     		addi	a0,a0,4
+ 738 0038 97000000 		call	HW_set_8bit_reg
+ 738      E7800000 
+ 739 0040 0840     		lw	a0,0(s0)
+ 740 0042 8146     		li	a3,0
+ 741 0044 13060002 		li	a2,32
+ 742 0048 9545     		li	a1,5
+ 743 004a 6105     		addi	a0,a0,24
+ 744 004c 97000000 		call	HW_set_8bit_reg_field
+ 744      E7800000 
+ 745 0054 0840     		lw	a0,0(s0)
+ 746 0056 8146     		li	a3,0
+ 747 0058 4146     		li	a2,16
+ 748 005a 9145     		li	a1,4
+ 749 005c 6105     		addi	a0,a0,24
+ 750 005e 97000000 		call	HW_set_8bit_reg_field
+ 750      E7800000 
+ 751 0066 3844     		lw	a4,72(s0)
+ 752 0068 8947     		li	a5,2
+ 753 006a 630CF700 		beq	a4,a5,.L155
+ 754 006e 0840     		lw	a0,0(s0)
+ 755 0070 8146     		li	a3,0
+ 756 0072 13060004 		li	a2,64
+ 757 0076 9945     		li	a1,6
+ 758 0078 6105     		addi	a0,a0,24
+ 759 007a 97000000 		call	HW_set_8bit_reg_field
+ 759      E7800000 
+ 760              	.L155:
+ 761 0082 0840     		lw	a0,0(s0)
+ 762 0084 8D45     		li	a1,3
+ 763 0086 23240400 		sw	zero,8(s0)
+ 764 008a 7105     		addi	a0,a0,28
+ 765 008c 23260400 		sw	zero,12(s0)
+ 766 0090 23280400 		sw	zero,16(s0)
+ 767 0094 97000000 		call	HW_set_8bit_reg
+ 767      E7800000 
+ 768 009c 0840     		lw	a0,0(s0)
+ 769 009e A685     		mv	a1,s1
+ 770 00a0 232E2403 		sw	s2,60(s0)
+ 771 00a4 13058502 		addi	a0,a0,40
+ 772 00a8 04DC     		sw	s1,56(s0)
+ 773 00aa 97000000 		call	HW_set_32bit_reg
+ 773      E7800000 
+ 774 00b2 0840     		lw	a0,0(s0)
+ 775 00b4 8546     		li	a3,1
+ 776 00b6 2146     		li	a2,8
+ 777 00b8 8D45     		li	a1,3
+ 778 00ba 97000000 		call	HW_set_8bit_reg_field
+ 778      E7800000 
+ 779 00c2 0840     		lw	a0,0(s0)
+ 780 00c4 8947     		li	a5,2
+ 781 00c6 3CC4     		sw	a5,72(s0)
+ 782 00c8 8546     		li	a3,1
+ 783 00ca 0546     		li	a2,1
+ 784 00cc 8145     		li	a1,0
+ 785 00ce 97000000 		call	HW_set_8bit_reg_field
+ 785      E7800000 
+ 786              	.L151:
+ 787 00d6 17030000 		tail	__riscv_restore_3
+ 787      67000300 
+ 788              	.L157:
+ 789 00de 8280     		ret
+ 791              		.section	.text.SPI_set_slave_block_buffers,"ax",@progbits
+ 792              		.align	1
+ 793              		.globl	SPI_set_slave_block_buffers
+ 795              	SPI_set_slave_block_buffers:
+ 796 0000 63000514 		beqz	a0,.L168
+ 797 0004 17030000 		call	t0,__riscv_save_6
+ 797      E7020300 
+ 798 000c 2A84     		mv	s0,a0
+ 799 000e 0841     		lw	a0,0(a0)
+ 800 0010 B284     		mv	s1,a2
+ 801 0012 2E89     		mv	s2,a1
+ 802 0014 0946     		li	a2,2
+ 803 0016 8545     		li	a1,1
+ 804 0018 BE8A     		mv	s5,a5
+ 805 001a BA89     		mv	s3,a4
+ 806 001c 368A     		mv	s4,a3
+ 807 001e 97000000 		call	HW_get_8bit_reg_field
+ 807      E7800000 
+ 808 0026 7DE9     		bnez	a0,.L160
+ 809 0028 0840     		lw	a0,0(s0)
+ 810 002a 8146     		li	a3,0
+ 811 002c 0546     		li	a2,1
+ 812 002e 8145     		li	a1,0
+ 813 0030 97000000 		call	HW_set_8bit_reg_field
+ 813      E7800000 
+ 814 0038 0840     		lw	a0,0(s0)
+ 815 003a 8547     		li	a5,1
+ 816 003c 8D45     		li	a1,3
+ 817 003e 7105     		addi	a0,a0,28
+ 818 0040 3CC4     		sw	a5,72(s0)
+ 819 0042 5CD0     		sw	a5,36(s0)
+ 820 0044 232A0402 		sw	zero,52(s0)
+ 821 0048 232E0402 		sw	zero,60(s0)
+ 822 004c 23205405 		sw	s5,64(s0)
+ 823 0050 23244403 		sw	s4,40(s0)
+ 824 0054 23263403 		sw	s3,44(s0)
+ 825 0058 23280402 		sw	zero,48(s0)
+ 826 005c 23242401 		sw	s2,8(s0)
+ 827 0060 44C4     		sw	s1,12(s0)
+ 828 0062 23280400 		sw	zero,16(s0)
+ 829 0066 97000000 		call	HW_set_8bit_reg
+ 829      E7800000 
+ 830 006e 0840     		lw	a0,0(s0)
+ 831 0070 9305F00F 		li	a1,255
+ 832 0074 1105     		addi	a0,a0,4
+ 833 0076 97000000 		call	HW_set_8bit_reg
+ 833      E7800000 
+ 834              	.L164:
+ 835 007e 0840     		lw	a0,0(s0)
+ 836 0080 2146     		li	a2,8
+ 837 0082 8D45     		li	a1,3
+ 838 0084 13050502 		addi	a0,a0,32
+ 839 0088 97000000 		call	HW_get_8bit_reg_field
+ 839      E7800000 
+ 840 0090 1840     		lw	a4,0(s0)
+ 841 0092 09E5     		bnez	a0,.L165
+ 842 0094 1448     		lw	a3,16(s0)
+ 843 0096 5C44     		lw	a5,12(s0)
+ 844 0098 63E6F608 		bltu	a3,a5,.L166
+ 845              	.L165:
+ 846 009c 13058701 		addi	a0,a4,24
+ 847 00a0 8146     		li	a3,0
+ 848 00a2 13060008 		li	a2,128
+ 849 00a6 9D45     		li	a1,7
+ 850 00a8 97000000 		call	HW_set_8bit_reg_field
+ 850      E7800000 
+ 851 00b0 0840     		lw	a0,0(s0)
+ 852 00b2 8546     		li	a3,1
+ 853 00b4 4146     		li	a2,16
+ 854 00b6 9145     		li	a1,4
+ 855 00b8 97000000 		call	HW_set_8bit_reg_field
+ 855      E7800000 
+ 856 00c0 0840     		lw	a0,0(s0)
+ 857 00c2 8546     		li	a3,1
+ 858 00c4 13060002 		li	a2,32
+ 859 00c8 9545     		li	a1,5
+ 860 00ca 97000000 		call	HW_set_8bit_reg_field
+ 860      E7800000 
+ 861 00d2 0840     		lw	a0,0(s0)
+ 862 00d4 8546     		li	a3,1
+ 863 00d6 13060004 		li	a2,64
+ 864 00da 9945     		li	a1,6
+ 865 00dc 6105     		addi	a0,a0,24
+ 866 00de 97000000 		call	HW_set_8bit_reg_field
+ 866      E7800000 
+ 867 00e6 0840     		lw	a0,0(s0)
+ 868 00e8 8546     		li	a3,1
+ 869 00ea 13060002 		li	a2,32
+ 870 00ee 9545     		li	a1,5
+ 871 00f0 6105     		addi	a0,a0,24
+ 872 00f2 97000000 		call	HW_set_8bit_reg_field
+ 872      E7800000 
+ 873 00fa 0840     		lw	a0,0(s0)
+ 874 00fc 8146     		li	a3,0
+ 875 00fe 4146     		li	a2,16
+ 876 0100 9145     		li	a1,4
+ 877 0102 6105     		addi	a0,a0,24
+ 878 0104 97000000 		call	HW_set_8bit_reg_field
+ 878      E7800000 
+ 879 010c 0840     		lw	a0,0(s0)
+ 880 010e 8546     		li	a3,1
+ 881 0110 0546     		li	a2,1
+ 882 0112 8145     		li	a1,0
+ 883 0114 97000000 		call	HW_set_8bit_reg_field
+ 883      E7800000 
+ 884              	.L160:
+ 885 011c 17030000 		tail	__riscv_restore_6
+ 885      67000300 
+ 886              	.L166:
+ 887 0124 1C44     		lw	a5,8(s0)
+ 888 0126 1305C700 		addi	a0,a4,12
+ 889 012a B697     		add	a5,a5,a3
+ 890 012c 83C50700 		lbu	a1,0(a5)
+ 891 0130 97000000 		call	HW_set_32bit_reg
+ 891      E7800000 
+ 892 0138 1C48     		lw	a5,16(s0)
+ 893 013a 8507     		addi	a5,a5,1
+ 894 013c 1CC8     		sw	a5,16(s0)
+ 895 013e 81B7     		j	.L164
+ 896              	.L168:
+ 897 0140 8280     		ret
+ 899              		.section	.text.SPI_set_cmd_handler,"ax",@progbits
+ 900              		.align	1
+ 901              		.globl	SPI_set_cmd_handler
+ 903              	SPI_set_cmd_handler:
+ 904 0000 25C5     		beqz	a0,.L183
+ 905 0002 3DC2     		beqz	a2,.L183
+ 906 0004 B5C1     		beqz	a1,.L183
+ 907 0006 17030000 		call	t0,__riscv_save_3
+ 907      E7020300 
+ 908 000e 2A84     		mv	s0,a0
+ 909 0010 0841     		lw	a0,0(a0)
+ 910 0012 8146     		li	a3,0
+ 911 0014 B284     		mv	s1,a2
+ 912 0016 2E89     		mv	s2,a1
+ 913 0018 0546     		li	a2,1
+ 914 001a 8145     		li	a1,0
+ 915 001c 97000000 		call	HW_set_8bit_reg_field
+ 915      E7800000 
+ 916 0024 0840     		lw	a0,0(s0)
+ 917 0026 23220402 		sw	zero,36(s0)
+ 918 002a 23202403 		sw	s2,32(s0)
+ 919 002e 6105     		addi	a0,a0,24
+ 920 0030 97000000 		call	HW_get_8bit_reg
+ 920      E7800000 
+ 921 0038 13F67400 		andi	a2,s1,7
+ 922 003c 6199     		andi	a0,a0,-8
+ 923 003e 498E     		or	a2,a2,a0
+ 924 0040 0840     		lw	a0,0(s0)
+ 925 0042 93650605 		ori	a1,a2,80
+ 926 0046 6105     		addi	a0,a0,24
+ 927 0048 97000000 		call	HW_set_8bit_reg
+ 927      E7800000 
+ 928 0050 0840     		lw	a0,0(s0)
+ 929 0052 8546     		li	a3,1
+ 930 0054 0546     		li	a2,1
+ 931 0056 8145     		li	a1,0
+ 932 0058 97000000 		call	HW_set_8bit_reg_field
+ 932      E7800000 
+ 933 0060 17030000 		tail	__riscv_restore_3
+ 933      67000300 
+ 934              	.L183:
+ 935 0068 8280     		ret
+ 937              		.section	.text.SPI_set_cmd_response,"ax",@progbits
+ 938              		.align	1
+ 939              		.globl	SPI_set_cmd_response
+ 941              	SPI_set_cmd_response:
+ 942 0000 1DC1     		beqz	a0,.L198
+ 943 0002 15C2     		beqz	a2,.L198
+ 944 0004 8DC1     		beqz	a1,.L198
+ 945 0006 17030000 		call	t0,__riscv_save_0
+ 945      E7020300 
+ 946 000e 4CC9     		sw	a1,20(a0)
+ 947 0010 10CD     		sw	a2,24(a0)
+ 948 0012 232E0500 		sw	zero,28(a0)
+ 949 0016 97000000 		call	fill_slave_tx_fifo
+ 949      E7800000 
+ 950 001e 17030000 		tail	__riscv_restore_0
+ 950      67000300 
+ 951              	.L198:
+ 952 0026 8280     		ret
+ 954              		.section	.text.SPI_enable,"ax",@progbits
+ 955              		.align	1
+ 956              		.globl	SPI_enable
+ 958              	SPI_enable:
+ 959 0000 0DC1     		beqz	a0,.L207
+ 960 0002 17030000 		call	t0,__riscv_save_0
+ 960      E7020300 
+ 961 000a 0841     		lw	a0,0(a0)
+ 962 000c 8546     		li	a3,1
+ 963 000e 0546     		li	a2,1
+ 964 0010 8145     		li	a1,0
+ 965 0012 97000000 		call	HW_set_8bit_reg_field
+ 965      E7800000 
+ 966 001a 17030000 		tail	__riscv_restore_0
+ 966      67000300 
+ 967              	.L207:
+ 968 0022 8280     		ret
+ 970              		.section	.text.SPI_disable,"ax",@progbits
+ 971              		.align	1
+ 972              		.globl	SPI_disable
+ 974              	SPI_disable:
+ 975 0000 0DC1     		beqz	a0,.L216
+ 976 0002 17030000 		call	t0,__riscv_save_0
+ 976      E7020300 
+ 977 000a 0841     		lw	a0,0(a0)
+ 978 000c 8146     		li	a3,0
+ 979 000e 0546     		li	a2,1
+ 980 0010 8145     		li	a1,0
+ 981 0012 97000000 		call	HW_set_8bit_reg_field
+ 981      E7800000 
+ 982 001a 17030000 		tail	__riscv_restore_0
+ 982      67000300 
+ 983              	.L216:
+ 984 0022 8280     		ret
+ 986              		.section	.text.SPI_isr,"ax",@progbits
+ 987              		.align	1
+ 988              		.globl	SPI_isr
+ 990              	SPI_isr:
+ 991 0000 630A0534 		beqz	a0,.L273
+ 992 0004 17030000 		call	t0,__riscv_save_3
+ 992      E7020300 
+ 993 000c 2A84     		mv	s0,a0
+ 994 000e 0841     		lw	a0,0(a0)
+ 995 0010 13060004 		li	a2,64
+ 996 0014 9945     		li	a1,6
+ 997 0016 4105     		addi	a0,a0,16
+ 998 0018 97000000 		call	HW_get_8bit_reg_field
+ 998      E7800000 
+ 999 0020 8547     		li	a5,1
+ 1000 0022 6310F506 		bne	a0,a5,.L222
+ 1001 0026 3C44     		lw	a5,72(s0)
+ 1002 0028 639DA72C 		bne	a5,a0,.L270
+ 1003              	.L223:
+ 1004 002c 0840     		lw	a0,0(s0)
+ 1005 002e 1146     		li	a2,4
+ 1006 0030 8945     		li	a1,2
+ 1007 0032 13050502 		addi	a0,a0,32
+ 1008 0036 97000000 		call	HW_get_8bit_reg_field
+ 1008      E7800000 
+ 1009 003e 63030520 		beqz	a0,.L226
+ 1010              	.L227:
+ 1011 0042 1848     		lw	a4,16(s0)
+ 1012 0044 5C44     		lw	a5,12(s0)
+ 1013 0046 0840     		lw	a0,0(s0)
+ 1014 0048 637CF724 		bgeu	a4,a5,.L232
+ 1015 004c 2146     		li	a2,8
+ 1016 004e 8D45     		li	a1,3
+ 1017 0050 13050502 		addi	a0,a0,32
+ 1018 0054 97000000 		call	HW_get_8bit_reg_field
+ 1018      E7800000 
+ 1019 005c 1848     		lw	a4,16(s0)
+ 1020 005e 63050520 		beqz	a0,.L229
+ 1021 0062 5C44     		lw	a5,12(s0)
+ 1022 0064 637EF722 		bgeu	a4,a5,.L232
+ 1023              	.L233:
+ 1024 0068 5C50     		lw	a5,36(s0)
+ 1025 006a 639A0724 		bnez	a5,.L230
+ 1026              	.L235:
+ 1027 006e 0840     		lw	a0,0(s0)
+ 1028 0070 8546     		li	a3,1
+ 1029 0072 13060004 		li	a2,64
+ 1030 0076 9945     		li	a1,6
+ 1031 0078 1105     		addi	a0,a0,4
+ 1032 007a 97000000 		call	HW_set_8bit_reg_field
+ 1032      E7800000 
+ 1033              	.L222:
+ 1034 0082 0840     		lw	a0,0(s0)
+ 1035 0084 0546     		li	a2,1
+ 1036 0086 8145     		li	a1,0
+ 1037 0088 4105     		addi	a0,a0,16
+ 1038 008a 97000000 		call	HW_get_8bit_reg_field
+ 1038      E7800000 
+ 1039 0092 8547     		li	a5,1
+ 1040 0094 631BF502 		bne	a0,a5,.L242
+ 1041 0098 3C44     		lw	a5,72(s0)
+ 1042 009a 0947     		li	a4,2
+ 1043 009c 6392E72A 		bne	a5,a4,.L243
+ 1044 00a0 5C5C     		lw	a5,60(s0)
+ 1045 00a2 99C3     		beqz	a5,.L244
+ 1046 00a4 2285     		mv	a0,s0
+ 1047 00a6 8297     		jalr	a5
+ 1048              	.L244:
+ 1049 00a8 0840     		lw	a0,0(s0)
+ 1050 00aa 0C5C     		lw	a1,56(s0)
+ 1051 00ac 13058502 		addi	a0,a0,40
+ 1052 00b0 97000000 		call	HW_set_32bit_reg
+ 1052      E7800000 
+ 1053              	.L245:
+ 1054 00b8 0840     		lw	a0,0(s0)
+ 1055 00ba 8546     		li	a3,1
+ 1056 00bc 0546     		li	a2,1
+ 1057 00be 8145     		li	a1,0
+ 1058 00c0 1105     		addi	a0,a0,4
+ 1059 00c2 97000000 		call	HW_set_8bit_reg_field
+ 1059      E7800000 
+ 1060              	.L242:
+ 1061 00ca 0840     		lw	a0,0(s0)
+ 1062 00cc 1146     		li	a2,4
+ 1063 00ce 8945     		li	a1,2
+ 1064 00d0 4105     		addi	a0,a0,16
+ 1065 00d2 97000000 		call	HW_get_8bit_reg_field
+ 1065      E7800000 
+ 1066 00da 8547     		li	a5,1
+ 1067 00dc 6312F502 		bne	a0,a5,.L246
+ 1068 00e0 0840     		lw	a0,0(s0)
+ 1069 00e2 8545     		li	a1,1
+ 1070 00e4 7105     		addi	a0,a0,28
+ 1071 00e6 97000000 		call	HW_set_8bit_reg
+ 1071      E7800000 
+ 1072 00ee 0840     		lw	a0,0(s0)
+ 1073 00f0 8546     		li	a3,1
+ 1074 00f2 1146     		li	a2,4
+ 1075 00f4 8945     		li	a1,2
+ 1076 00f6 1105     		addi	a0,a0,4
+ 1077 00f8 97000000 		call	HW_set_8bit_reg_field
+ 1077      E7800000 
+ 1078              	.L246:
+ 1079 0100 0840     		lw	a0,0(s0)
+ 1080 0102 2146     		li	a2,8
+ 1081 0104 8D45     		li	a1,3
+ 1082 0106 4105     		addi	a0,a0,16
+ 1083 0108 97000000 		call	HW_get_8bit_reg_field
+ 1083      E7800000 
+ 1084 0110 8547     		li	a5,1
+ 1085 0112 6312F502 		bne	a0,a5,.L247
+ 1086 0116 0840     		lw	a0,0(s0)
+ 1087 0118 8945     		li	a1,2
+ 1088 011a 7105     		addi	a0,a0,28
+ 1089 011c 97000000 		call	HW_set_8bit_reg
+ 1089      E7800000 
+ 1090 0124 0840     		lw	a0,0(s0)
+ 1091 0126 8546     		li	a3,1
+ 1092 0128 2146     		li	a2,8
+ 1093 012a 8D45     		li	a1,3
+ 1094 012c 1105     		addi	a0,a0,4
+ 1095 012e 97000000 		call	HW_set_8bit_reg_field
+ 1095      E7800000 
+ 1096              	.L247:
+ 1097 0136 0840     		lw	a0,0(s0)
+ 1098 0138 4146     		li	a2,16
+ 1099 013a 9145     		li	a1,4
+ 1100 013c 4105     		addi	a0,a0,16
+ 1101 013e 97000000 		call	HW_get_8bit_reg_field
+ 1101      E7800000 
+ 1102 0146 8547     		li	a5,1
+ 1103 0148 6310F504 		bne	a0,a5,.L248
+ 1104 014c 2285     		mv	a0,s0
+ 1105 014e 97000000 		call	read_slave_rx_fifo
+ 1105      E7800000 
+ 1106 0156 1C50     		lw	a5,32(s0)
+ 1107 0158 81C7     		beqz	a5,.L249
+ 1108 015a 0C58     		lw	a1,48(s0)
+ 1109 015c 0854     		lw	a0,40(s0)
+ 1110 015e 8297     		jalr	a5
+ 1111              	.L249:
+ 1112 0160 0840     		lw	a0,0(s0)
+ 1113 0162 8547     		li	a5,1
+ 1114 0164 8146     		li	a3,0
+ 1115 0166 4146     		li	a2,16
+ 1116 0168 9145     		li	a1,4
+ 1117 016a 6105     		addi	a0,a0,24
+ 1118 016c 5CD0     		sw	a5,36(s0)
+ 1119 016e 97000000 		call	HW_set_8bit_reg_field
+ 1119      E7800000 
+ 1120 0176 0840     		lw	a0,0(s0)
+ 1121 0178 8546     		li	a3,1
+ 1122 017a 4146     		li	a2,16
+ 1123 017c 9145     		li	a1,4
+ 1124 017e 1105     		addi	a0,a0,4
+ 1125 0180 97000000 		call	HW_set_8bit_reg_field
+ 1125      E7800000 
+ 1126              	.L248:
+ 1127 0188 0840     		lw	a0,0(s0)
+ 1128 018a 13060002 		li	a2,32
+ 1129 018e 9545     		li	a1,5
+ 1130 0190 4105     		addi	a0,a0,16
+ 1131 0192 97000000 		call	HW_get_8bit_reg_field
+ 1131      E7800000 
+ 1132 019a 8547     		li	a5,1
+ 1133 019c 6310F50A 		bne	a0,a5,.L219
+ 1134 01a0 3C44     		lw	a5,72(s0)
+ 1135 01a2 6393A708 		bne	a5,a0,.L251
+ 1136 01a6 2285     		mv	a0,s0
+ 1137 01a8 97000000 		call	read_slave_rx_fifo
+ 1137      E7800000 
+ 1138 01b0 1C50     		lw	a5,32(s0)
+ 1139 01b2 0458     		lw	s1,48(s0)
+ 1140 01b4 9DCB     		beqz	a5,.L252
+ 1141 01b6 0840     		lw	a0,0(s0)
+ 1142 01b8 8546     		li	a3,1
+ 1143 01ba 4146     		li	a2,16
+ 1144 01bc 9145     		li	a1,4
+ 1145 01be 1105     		addi	a0,a0,4
+ 1146 01c0 23220402 		sw	zero,36(s0)
+ 1147 01c4 232A0400 		sw	zero,20(s0)
+ 1148 01c8 232C0400 		sw	zero,24(s0)
+ 1149 01cc 232E0400 		sw	zero,28(s0)
+ 1150 01d0 97000000 		call	HW_set_8bit_reg_field
+ 1150      E7800000 
+ 1151 01d8 0840     		lw	a0,0(s0)
+ 1152 01da 8546     		li	a3,1
+ 1153 01dc 4146     		li	a2,16
+ 1154 01de 9145     		li	a1,4
+ 1155 01e0 6105     		addi	a0,a0,24
+ 1156 01e2 97000000 		call	HW_set_8bit_reg_field
+ 1156      E7800000 
+ 1157              	.L252:
+ 1158 01ea 0840     		lw	a0,0(s0)
+ 1159 01ec 8D45     		li	a1,3
+ 1160 01ee 23280400 		sw	zero,16(s0)
+ 1161 01f2 7105     		addi	a0,a0,28
+ 1162 01f4 97000000 		call	HW_set_8bit_reg
+ 1162      E7800000 
+ 1163 01fc 2285     		mv	a0,s0
+ 1164 01fe 97000000 		call	fill_slave_tx_fifo
+ 1164      E7800000 
+ 1165 0206 3C40     		lw	a5,64(s0)
+ 1166 0208 23280402 		sw	zero,48(s0)
+ 1167 020c 81C7     		beqz	a5,.L253
+ 1168 020e 0854     		lw	a0,40(s0)
+ 1169 0210 A685     		mv	a1,s1
+ 1170 0212 8297     		jalr	a5
+ 1171              	.L253:
+ 1172 0214 0840     		lw	a0,0(s0)
+ 1173 0216 8546     		li	a3,1
+ 1174 0218 13060004 		li	a2,64
+ 1175 021c 9945     		li	a1,6
+ 1176 021e 1105     		addi	a0,a0,4
+ 1177 0220 97000000 		call	HW_set_8bit_reg_field
+ 1177      E7800000 
+ 1178              	.L251:
+ 1179 0228 0840     		lw	a0,0(s0)
+ 1180 022a 8546     		li	a3,1
+ 1181 022c 13060002 		li	a2,32
+ 1182 0230 9545     		li	a1,5
+ 1183 0232 1105     		addi	a0,a0,4
+ 1184 0234 97000000 		call	HW_set_8bit_reg_field
+ 1184      E7800000 
+ 1185              	.L219:
+ 1186 023c 17030000 		tail	__riscv_restore_3
+ 1186      67000300 
+ 1187              	.L226:
+ 1188 0244 0840     		lw	a0,0(s0)
+ 1189 0246 2105     		addi	a0,a0,8
+ 1190 0248 97000000 		call	HW_get_32bit_reg
+ 1190      E7800000 
+ 1191 0250 1858     		lw	a4,48(s0)
+ 1192 0252 5C54     		lw	a5,44(s0)
+ 1193 0254 6376F700 		bgeu	a4,a5,.L225
+ 1194 0258 1C54     		lw	a5,40(s0)
+ 1195 025a BA97     		add	a5,a5,a4
+ 1196 025c 2380A700 		sb	a0,0(a5)
+ 1197              	.L225:
+ 1198 0260 1C58     		lw	a5,48(s0)
+ 1199 0262 8507     		addi	a5,a5,1
+ 1200 0264 1CD8     		sw	a5,48(s0)
+ 1201 0266 D9B3     		j	.L223
+ 1202              	.L229:
+ 1203 0268 1C44     		lw	a5,8(s0)
+ 1204 026a 0840     		lw	a0,0(s0)
+ 1205 026c BA97     		add	a5,a5,a4
+ 1206 026e 83C50700 		lbu	a1,0(a5)
+ 1207 0272 3105     		addi	a0,a0,12
+ 1208 0274 97000000 		call	HW_set_32bit_reg
+ 1208      E7800000 
+ 1209 027c 1C48     		lw	a5,16(s0)
+ 1210 027e 8507     		addi	a5,a5,1
+ 1211 0280 1CC8     		sw	a5,16(s0)
+ 1212 0282 C1B3     		j	.L227
+ 1213              	.L234:
+ 1214 0284 5C48     		lw	a5,20(s0)
+ 1215 0286 584C     		lw	a4,28(s0)
+ 1216 0288 0840     		lw	a0,0(s0)
+ 1217 028a BA97     		add	a5,a5,a4
+ 1218 028c 83C50700 		lbu	a1,0(a5)
+ 1219 0290 3105     		addi	a0,a0,12
+ 1220 0292 97000000 		call	HW_set_32bit_reg
+ 1220      E7800000 
+ 1221 029a 5C4C     		lw	a5,28(s0)
+ 1222 029c 8507     		addi	a5,a5,1
+ 1223 029e 5CCC     		sw	a5,28(s0)
+ 1224              	.L232:
+ 1225 02a0 584C     		lw	a4,28(s0)
+ 1226 02a2 1C4C     		lw	a5,24(s0)
+ 1227 02a4 0840     		lw	a0,0(s0)
+ 1228 02a6 E371F7DC 		bgeu	a4,a5,.L233
+ 1229 02aa 2146     		li	a2,8
+ 1230 02ac 8D45     		li	a1,3
+ 1231 02ae 13050502 		addi	a0,a0,32
+ 1232 02b2 97000000 		call	HW_get_8bit_reg_field
+ 1232      E7800000 
+ 1233 02ba 69D5     		beqz	a0,.L234
+ 1234 02bc 75B3     		j	.L233
+ 1235              	.L230:
+ 1236 02be 1848     		lw	a4,16(s0)
+ 1237 02c0 5C44     		lw	a5,12(s0)
+ 1238 02c2 E366F7DA 		bltu	a4,a5,.L235
+ 1239 02c6 584C     		lw	a4,28(s0)
+ 1240 02c8 1C4C     		lw	a5,24(s0)
+ 1241 02ca E362F7DA 		bltu	a4,a5,.L235
+ 1242 02ce 83544404 		lhu	s1,68(s0)
+ 1243 02d2 7D59     		li	s2,-1
+ 1244 02d4 8980     		srli	s1,s1,2
+ 1245              	.L236:
+ 1246 02d6 0840     		lw	a0,0(s0)
+ 1247 02d8 2146     		li	a2,8
+ 1248 02da 8D45     		li	a1,3
+ 1249 02dc 13050502 		addi	a0,a0,32
+ 1250 02e0 97000000 		call	HW_get_8bit_reg_field
+ 1250      E7800000 
+ 1251 02e8 E31305D8 		bnez	a0,.L235
+ 1252 02ec 0840     		lw	a0,0(s0)
+ 1253 02ee E38024D9 		beq	s1,s2,.L235
+ 1254 02f2 8145     		li	a1,0
+ 1255 02f4 3105     		addi	a0,a0,12
+ 1256 02f6 97000000 		call	HW_set_32bit_reg
+ 1256      E7800000 
+ 1257 02fe FD14     		addi	s1,s1,-1
+ 1258 0300 D9BF     		j	.L236
+ 1259              	.L270:
+ 1260 0302 0947     		li	a4,2
+ 1261 0304 6383E702 		beq	a5,a4,.L240
+ 1262 0308 0840     		lw	a0,0(s0)
+ 1263 030a 8545     		li	a1,1
+ 1264 030c 7105     		addi	a0,a0,28
+ 1265 030e 97000000 		call	HW_set_8bit_reg
+ 1265      E7800000 
+ 1266 0316 A1BB     		j	.L235
+ 1267              	.L241:
+ 1268 0318 0840     		lw	a0,0(s0)
+ 1269 031a 2105     		addi	a0,a0,8
+ 1270 031c 97000000 		call	HW_get_32bit_reg
+ 1270      E7800000 
+ 1271 0324 5C58     		lw	a5,52(s0)
+ 1272 0326 91C3     		beqz	a5,.L240
+ 1273 0328 8297     		jalr	a5
+ 1274              	.L240:
+ 1275 032a 0840     		lw	a0,0(s0)
+ 1276 032c 1146     		li	a2,4
+ 1277 032e 8945     		li	a1,2
+ 1278 0330 13050502 		addi	a0,a0,32
+ 1279 0334 97000000 		call	HW_get_8bit_reg_field
+ 1279      E7800000 
+ 1280 033c 71DD     		beqz	a0,.L241
+ 1281 033e 05BB     		j	.L235
+ 1282              	.L243:
+ 1283 0340 E38CA7D6 		beq	a5,a0,.L245
+ 1284 0344 0840     		lw	a0,0(s0)
+ 1285 0346 8945     		li	a1,2
+ 1286 0348 7105     		addi	a0,a0,28
+ 1287 034a 97000000 		call	HW_set_8bit_reg
+ 1287      E7800000 
+ 1288 0352 9DB3     		j	.L245
+ 1289              	.L273:
+ 1290 0354 8280     		ret
+ 1292              		.ident	"GCC: (Microchip SoftConsole GNU RISC-V Embedded GCC, 64-bit) 8.2.0"
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 core_spi.c
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:7      .text.recover_from_rx_overflow.isra.0:0000000000000000 recover_from_rx_overflow.isra.0
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:33     .text.fill_slave_tx_fifo:0000000000000000 fill_slave_tx_fifo
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:88     .text.read_slave_rx_fifo:0000000000000000 read_slave_rx_fifo
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:146    .text.SPI_init:0000000000000000 SPI_init
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:199    .text.SPI_configure_slave_mode:0000000000000000 SPI_configure_slave_mode
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:232    .text.SPI_configure_master_mode:0000000000000000 SPI_configure_master_mode
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:265    .text.SPI_set_slave_select:0000000000000000 SPI_set_slave_select
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:305    .text.SPI_clear_slave_select:0000000000000000 SPI_clear_slave_select
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:346    .text.SPI_transfer_frame:0000000000000000 SPI_transfer_frame
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:387    .text.SPI_transfer_block:0000000000000000 SPI_transfer_block
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:641    .text.SPI_set_frame_rx_handler:0000000000000000 SPI_set_frame_rx_handler
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:719    .text.SPI_set_slave_tx_frame:0000000000000000 SPI_set_slave_tx_frame
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:795    .text.SPI_set_slave_block_buffers:0000000000000000 SPI_set_slave_block_buffers
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:903    .text.SPI_set_cmd_handler:0000000000000000 SPI_set_cmd_handler
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:941    .text.SPI_set_cmd_response:0000000000000000 SPI_set_cmd_response
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:958    .text.SPI_enable:0000000000000000 SPI_enable
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:974    .text.SPI_disable:0000000000000000 SPI_disable
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:990    .text.SPI_isr:0000000000000000 SPI_isr
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:49     .text.fill_slave_tx_fifo:000000000000002e .L7
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:61     .text.fill_slave_tx_fifo:0000000000000052 .L6
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:59     .text.fill_slave_tx_fifo:000000000000004a .L3
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:72     .text.fill_slave_tx_fifo:000000000000006e .L9
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:36     .text.fill_slave_tx_fifo:000000000000000a .L4
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:118    .text.read_slave_rx_fifo:0000000000000052 .L26
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:103    .text.read_slave_rx_fifo:000000000000002e .L15
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:113    .text.read_slave_rx_fifo:000000000000004a .L14
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:94     .text.read_slave_rx_fifo:0000000000000012 .L12
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:133    .text.read_slave_rx_fifo:000000000000007a .L19
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:101    .text.read_slave_rx_fifo:0000000000000026 .L11
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:126    .text.read_slave_rx_fifo:0000000000000068 .L20
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:192    .text.SPI_init:0000000000000098 .L40
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:190    .text.SPI_init:0000000000000090 .L29
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:164    .text.SPI_init:0000000000000034 .L31
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:225    .text.SPI_configure_slave_mode:0000000000000060 .L49
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:258    .text.SPI_configure_master_mode:0000000000000060 .L58
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:298    .text.SPI_set_slave_select:0000000000000072 .L70
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:296    .text.SPI_set_slave_select:000000000000006a .L61
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:286    .text.SPI_set_slave_select:0000000000000046 .L65
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:339    .text.SPI_clear_slave_select:0000000000000076 .L82
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:337    .text.SPI_clear_slave_select:000000000000006e .L73
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:326    .text.SPI_clear_slave_select:0000000000000046 .L77
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:378    .text.SPI_transfer_frame:0000000000000066 .L87
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:366    .text.SPI_transfer_frame:0000000000000040 .L89
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:634    .text.SPI_transfer_block:00000000000002e8 .L136
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:452    .text.SPI_transfer_block:00000000000000be .L95
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:416    .text.SPI_transfer_block:0000000000000062 .L98
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:466    .text.SPI_transfer_block:00000000000000e6 .L102
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:454    .text.SPI_transfer_block:00000000000000c6 .L103
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:481    .text.SPI_transfer_block:0000000000000114 .L112
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:517    .text.SPI_transfer_block:000000000000017c .L116
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:548    .text.SPI_transfer_block:00000000000001da .L120
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:583    .text.SPI_transfer_block:0000000000000244 .L124
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:618    .text.SPI_transfer_block:00000000000002b0 .L127
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:460    .text.SPI_transfer_block:00000000000000d6 .L139
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:423    .text.SPI_transfer_block:0000000000000076 .L99
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:428    .text.SPI_transfer_block:0000000000000086 .L104
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:475    .text.SPI_transfer_block:0000000000000104 .L140
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:497    .text.SPI_transfer_block:0000000000000144 .L108
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:514    .text.SPI_transfer_block:0000000000000178 .L109
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:436    .text.SPI_transfer_block:000000000000009c .L107
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:489    .text.SPI_transfer_block:0000000000000130 .L141
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:531    .text.SPI_transfer_block:00000000000001a4 .L114
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:438    .text.SPI_transfer_block:00000000000000a0 .L113
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:561    .text.SPI_transfer_block:00000000000001fe .L118
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:441    .text.SPI_transfer_block:00000000000000a6 .L117
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:596    .text.SPI_transfer_block:000000000000026a .L122
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:443    .text.SPI_transfer_block:00000000000000aa .L121
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:450    .text.SPI_transfer_block:00000000000000ba .L126
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:446    .text.SPI_transfer_block:00000000000000b2 .L125
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:712    .text.SPI_set_frame_rx_handler:00000000000000e2 .L148
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:710    .text.SPI_set_frame_rx_handler:00000000000000da .L142
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:682    .text.SPI_set_frame_rx_handler:0000000000000082 .L146
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:788    .text.SPI_set_slave_tx_frame:00000000000000de .L157
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:786    .text.SPI_set_slave_tx_frame:00000000000000d6 .L151
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:760    .text.SPI_set_slave_tx_frame:0000000000000082 .L155
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:896    .text.SPI_set_slave_block_buffers:0000000000000140 .L168
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:884    .text.SPI_set_slave_block_buffers:000000000000011c .L160
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:845    .text.SPI_set_slave_block_buffers:000000000000009c .L165
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:886    .text.SPI_set_slave_block_buffers:0000000000000124 .L166
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:834    .text.SPI_set_slave_block_buffers:000000000000007e .L164
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:934    .text.SPI_set_cmd_handler:0000000000000068 .L183
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:951    .text.SPI_set_cmd_response:0000000000000026 .L198
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:967    .text.SPI_enable:0000000000000022 .L207
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:983    .text.SPI_disable:0000000000000022 .L216
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:1289   .text.SPI_isr:0000000000000354 .L273
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:1033   .text.SPI_isr:0000000000000082 .L222
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:1259   .text.SPI_isr:0000000000000302 .L270
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:1187   .text.SPI_isr:0000000000000244 .L226
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:1224   .text.SPI_isr:00000000000002a0 .L232
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:1202   .text.SPI_isr:0000000000000268 .L229
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:1235   .text.SPI_isr:00000000000002be .L230
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:1060   .text.SPI_isr:00000000000000ca .L242
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:1282   .text.SPI_isr:0000000000000340 .L243
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:1048   .text.SPI_isr:00000000000000a8 .L244
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:1078   .text.SPI_isr:0000000000000100 .L246
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:1096   .text.SPI_isr:0000000000000136 .L247
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:1126   .text.SPI_isr:0000000000000188 .L248
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:1111   .text.SPI_isr:0000000000000160 .L249
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:1185   .text.SPI_isr:000000000000023c .L219
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:1178   .text.SPI_isr:0000000000000228 .L251
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:1157   .text.SPI_isr:00000000000001ea .L252
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:1171   .text.SPI_isr:0000000000000214 .L253
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:1197   .text.SPI_isr:0000000000000260 .L225
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:1003   .text.SPI_isr:000000000000002c .L223
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:1010   .text.SPI_isr:0000000000000042 .L227
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:1023   .text.SPI_isr:0000000000000068 .L233
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:1213   .text.SPI_isr:0000000000000284 .L234
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:1026   .text.SPI_isr:000000000000006e .L235
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:1245   .text.SPI_isr:00000000000002d6 .L236
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:1274   .text.SPI_isr:000000000000032a .L240
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:1267   .text.SPI_isr:0000000000000318 .L241
+C:\Users\tecchio\AppData\Local\Temp\ccfzmo3T.s:1053   .text.SPI_isr:00000000000000b8 .L245
+
+UNDEFINED SYMBOLS
+__riscv_save_1
+HW_set_8bit_reg_field
+HW_set_8bit_reg
+__riscv_restore_1
+HW_get_8bit_reg_field
+HW_set_32bit_reg
+HW_get_32bit_reg
+__riscv_save_3
+memset
+__riscv_restore_3
+__riscv_save_2
+HW_get_8bit_reg
+__riscv_restore_2
+__riscv_save_8
+__riscv_restore_8
+__riscv_save_6
+__riscv_restore_6
+__riscv_save_0
+__riscv_restore_0

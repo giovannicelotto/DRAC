@@ -1,0 +1,278 @@
+   1              		.file	"SPI_daisy.c"
+   2              		.option nopic
+   3              		.text
+   4              		.section	.text.SPI_daisy_setup,"ax",@progbits
+   5              		.align	1
+   6              		.globl	SPI_daisy_setup
+   8              	SPI_daisy_setup:
+   9 0000 17030000 		call	t0,__riscv_save_1
+   9      E7020300 
+  10 0008 2A84     		mv	s0,a0
+  11 000a 1CC4     		sw	a5,8(s0)
+  12 000c 83470101 		lbu	a5,16(sp)
+  13 0010 2E85     		mv	a0,a1
+  14 0012 08C0     		sw	a0,0(s0)
+  15 0014 B285     		mv	a1,a2
+  16 0016 A309F400 		sb	a5,19(s0)
+  17 001a 2308C400 		sb	a2,16(s0)
+  18 001e 54C0     		sw	a3,4(s0)
+  19 0020 A308E400 		sb	a4,17(s0)
+  20 0024 23090401 		sb	a6,18(s0)
+  21 0028 23261401 		sw	a7,12(s0)
+  22 002c 0546     		li	a2,1
+  23 002e 97000000 		call	MCP_pinWrite
+  23      E7800000 
+  24 0036 0840     		lw	a0,0(s0)
+  25 0038 83450401 		lbu	a1,16(s0)
+  26 003c 0146     		li	a2,0
+  27 003e 97000000 		call	MCP_pinMode
+  27      E7800000 
+  28 0046 0840     		lw	a0,0(s0)
+  29 0048 83474506 		lbu	a5,100(a0)
+  30 004c 81CB     		beqz	a5,.L2
+  31 004e 83450401 		lbu	a1,16(s0)
+  32 0052 0546     		li	a2,1
+  33 0054 97000000 		call	MCP_pullupMode
+  33      E7800000 
+  34              	.L2:
+  35 005c 83451401 		lbu	a1,17(s0)
+  36 0060 4840     		lw	a0,4(s0)
+  37 0062 0146     		li	a2,0
+  38 0064 97000000 		call	MCP_pinWrite
+  38      E7800000 
+  39 006c 4840     		lw	a0,4(s0)
+  40 006e 83451401 		lbu	a1,17(s0)
+  41 0072 0146     		li	a2,0
+  42 0074 97000000 		call	MCP_pinMode
+  42      E7800000 
+  43 007c 4840     		lw	a0,4(s0)
+  44 007e 83474506 		lbu	a5,100(a0)
+  45 0082 81CB     		beqz	a5,.L3
+  46 0084 83451401 		lbu	a1,17(s0)
+  47 0088 0546     		li	a2,1
+  48 008a 97000000 		call	MCP_pullupMode
+  48      E7800000 
+  49              	.L3:
+  50 0092 83452401 		lbu	a1,18(s0)
+  51 0096 0844     		lw	a0,8(s0)
+  52 0098 0146     		li	a2,0
+  53 009a 97000000 		call	MCP_pinWrite
+  53      E7800000 
+  54 00a2 0844     		lw	a0,8(s0)
+  55 00a4 83452401 		lbu	a1,18(s0)
+  56 00a8 0546     		li	a2,1
+  57 00aa 97000000 		call	MCP_pinMode
+  57      E7800000 
+  58 00b2 0844     		lw	a0,8(s0)
+  59 00b4 83474506 		lbu	a5,100(a0)
+  60 00b8 81CB     		beqz	a5,.L4
+  61 00ba 83452401 		lbu	a1,18(s0)
+  62 00be 0546     		li	a2,1
+  63 00c0 97000000 		call	MCP_pullupMode
+  63      E7800000 
+  64              	.L4:
+  65 00c8 83453401 		lbu	a1,19(s0)
+  66 00cc 4844     		lw	a0,12(s0)
+  67 00ce 0546     		li	a2,1
+  68 00d0 97000000 		call	MCP_pinWrite
+  68      E7800000 
+  69 00d8 4844     		lw	a0,12(s0)
+  70 00da 83453401 		lbu	a1,19(s0)
+  71 00de 0146     		li	a2,0
+  72 00e0 97000000 		call	MCP_pinMode
+  72      E7800000 
+  73 00e8 4844     		lw	a0,12(s0)
+  74 00ea 83474506 		lbu	a5,100(a0)
+  75 00ee 81CB     		beqz	a5,.L1
+  76 00f0 83453401 		lbu	a1,19(s0)
+  77 00f4 0546     		li	a2,1
+  78 00f6 97000000 		call	MCP_pullupMode
+  78      E7800000 
+  79              	.L1:
+  80 00fe 17030000 		tail	__riscv_restore_1
+  80      67000300 
+  82              		.section	.text.SPI_daisy_read,"ax",@progbits
+  83              		.align	1
+  84              		.globl	SPI_daisy_read
+  86              	SPI_daisy_read:
+  87 0000 17030000 		call	t0,__riscv_save_5
+  87      E7020300 
+  88 0008 AA84     		mv	s1,a0
+  89 000a 8147     		li	a5,0
+  90              	.L20:
+  91 000c 13F7F70F 		andi	a4,a5,0xff
+  92 0010 636CB700 		bgtu	a1,a4,.L21
+  93 0014 3284     		mv	s0,a2
+  94 0016 3309B600 		add	s2,a2,a1
+  95 001a 7D5A     		li	s4,-1
+  96              	.L22:
+  97 001c 631C8900 		bne	s2,s0,.L25
+  98 0020 17030000 		tail	__riscv_restore_5
+  98      67000300 
+  99              	.L21:
+ 100 0028 3307F600 		add	a4,a2,a5
+ 101 002c 23000700 		sb	zero,0(a4)
+ 102 0030 8507     		addi	a5,a5,1
+ 103 0032 E9BF     		j	.L20
+ 104              	.L25:
+ 105 0034 9D49     		li	s3,7
+ 106              	.L24:
+ 107 0036 83C50401 		lbu	a1,16(s1)
+ 108 003a 8840     		lw	a0,0(s1)
+ 109 003c 0146     		li	a2,0
+ 110 003e 97000000 		call	MCP_pinWrite
+ 110      E7800000 
+ 111 0046 1305803E 		li	a0,1000
+ 112 004a 97000000 		call	hwdelay
+ 112      E7800000 
+ 113 0052 83C50401 		lbu	a1,16(s1)
+ 114 0056 8840     		lw	a0,0(s1)
+ 115 0058 0546     		li	a2,1
+ 116 005a 97000000 		call	MCP_pinWrite
+ 116      E7800000 
+ 117 0062 83C52401 		lbu	a1,18(s1)
+ 118 0066 8844     		lw	a0,8(s1)
+ 119 0068 97000000 		call	MCP_pinRead
+ 119      E7800000 
+ 120 0070 09C9     		beqz	a0,.L23
+ 121 0072 03470400 		lbu	a4,0(s0)
+ 122 0076 8547     		li	a5,1
+ 123 0078 B3973701 		sll	a5,a5,s3
+ 124 007c D98F     		or	a5,a5,a4
+ 125 007e 2300F400 		sb	a5,0(s0)
+ 126              	.L23:
+ 127 0082 1305803E 		li	a0,1000
+ 128 0086 FD19     		addi	s3,s3,-1
+ 129 0088 97000000 		call	hwdelay
+ 129      E7800000 
+ 130 0090 E39349FB 		bne	s3,s4,.L24
+ 131 0094 0504     		addi	s0,s0,1
+ 132 0096 59B7     		j	.L22
+ 134              		.section	.text.SPI_daisy_write,"ax",@progbits
+ 135              		.align	1
+ 136              		.globl	SPI_daisy_write
+ 138              	SPI_daisy_write:
+ 139 0000 17030000 		call	t0,__riscv_save_5
+ 139      E7020300 
+ 140 0008 2A84     		mv	s0,a0
+ 141 000a B284     		mv	s1,a2
+ 142 000c 338AC500 		add	s4,a1,a2
+ 143              	.L32:
+ 144 0010 631E9A00 		bne	s4,s1,.L34
+ 145 0014 83451401 		lbu	a1,17(s0)
+ 146 0018 4840     		lw	a0,4(s0)
+ 147 001a 0146     		li	a2,0
+ 148 001c 97000000 		call	MCP_pinWrite
+ 148      E7800000 
+ 149 0024 17030000 		tail	__riscv_restore_5
+ 149      67000300 
+ 150              	.L34:
+ 151 002c 2149     		li	s2,8
+ 152 002e 93090008 		li	s3,128
+ 153              	.L33:
+ 154 0032 83450401 		lbu	a1,16(s0)
+ 155 0036 0840     		lw	a0,0(s0)
+ 156 0038 0146     		li	a2,0
+ 157 003a 7D19     		addi	s2,s2,-1
+ 158 003c 97000000 		call	MCP_pinWrite
+ 158      E7800000 
+ 159 0044 03C60400 		lbu	a2,0(s1)
+ 160 0048 83451401 		lbu	a1,17(s0)
+ 161 004c 4840     		lw	a0,4(s0)
+ 162 004e 33F6C900 		and	a2,s3,a2
+ 163 0052 93D91900 		srli	s3,s3,1
+ 164 0056 97000000 		call	MCP_pinWrite
+ 164      E7800000 
+ 165 005e 1305803E 		li	a0,1000
+ 166 0062 97000000 		call	hwdelay
+ 166      E7800000 
+ 167 006a 83450401 		lbu	a1,16(s0)
+ 168 006e 0840     		lw	a0,0(s0)
+ 169 0070 0546     		li	a2,1
+ 170 0072 97000000 		call	MCP_pinWrite
+ 170      E7800000 
+ 171 007a 1305803E 		li	a0,1000
+ 172 007e 97000000 		call	hwdelay
+ 172      E7800000 
+ 173 0086 E31609FA 		bnez	s2,.L33
+ 174 008a 8504     		addi	s1,s1,1
+ 175 008c 51B7     		j	.L32
+ 177              		.section	.text.SPI_daisy_rw_cycle,"ax",@progbits
+ 178              		.align	1
+ 179              		.globl	SPI_daisy_rw_cycle
+ 181              	SPI_daisy_rw_cycle:
+ 182 0000 17030000 		call	t0,__riscv_save_3
+ 182      E7020300 
+ 183 0008 2A84     		mv	s0,a0
+ 184 000a AE84     		mv	s1,a1
+ 185 000c 83453501 		lbu	a1,19(a0)
+ 186 0010 4845     		lw	a0,12(a0)
+ 187 0012 4111     		addi	sp,sp,-16
+ 188 0014 3289     		mv	s2,a2
+ 189 0016 0146     		li	a2,0
+ 190 0018 36C6     		sw	a3,12(sp)
+ 191 001a 3AC4     		sw	a4,8(sp)
+ 192 001c 97000000 		call	MCP_pinWrite
+ 192      E7800000 
+ 193 0024 1305800C 		li	a0,200
+ 194 0028 97000000 		call	hwdelay
+ 194      E7800000 
+ 195 0030 4A86     		mv	a2,s2
+ 196 0032 A685     		mv	a1,s1
+ 197 0034 2285     		mv	a0,s0
+ 198 0036 97000000 		call	SPI_daisy_write
+ 198      E7800000 
+ 199 003e 2247     		lw	a4,8(sp)
+ 200 0040 B246     		lw	a3,12(sp)
+ 201 0042 2285     		mv	a0,s0
+ 202 0044 3A86     		mv	a2,a4
+ 203 0046 B685     		mv	a1,a3
+ 204 0048 97000000 		call	SPI_daisy_read
+ 204      E7800000 
+ 205 0050 83453401 		lbu	a1,19(s0)
+ 206 0054 4844     		lw	a0,12(s0)
+ 207 0056 0546     		li	a2,1
+ 208 0058 97000000 		call	MCP_pinWrite
+ 208      E7800000 
+ 209 0060 4101     		addi	sp,sp,16
+ 210 0062 17030000 		tail	__riscv_restore_3
+ 210      67000300 
+ 212              		.comm	registers_0_addr,4,4
+ 213              		.comm	mapped_channel_mask,12,4
+ 214              		.comm	channel_mask,12,4
+ 215              		.ident	"GCC: (Microchip SoftConsole GNU RISC-V Embedded GCC, 64-bit) 8.2.0"
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 SPI_daisy.c
+C:\Users\tecchio\AppData\Local\Temp\ccaz2iTf.s:8      .text.SPI_daisy_setup:0000000000000000 SPI_daisy_setup
+C:\Users\tecchio\AppData\Local\Temp\ccaz2iTf.s:86     .text.SPI_daisy_read:0000000000000000 SPI_daisy_read
+C:\Users\tecchio\AppData\Local\Temp\ccaz2iTf.s:138    .text.SPI_daisy_write:0000000000000000 SPI_daisy_write
+C:\Users\tecchio\AppData\Local\Temp\ccaz2iTf.s:181    .text.SPI_daisy_rw_cycle:0000000000000000 SPI_daisy_rw_cycle
+                            *COM*:0000000000000004 registers_0_addr
+                            *COM*:000000000000000c mapped_channel_mask
+                            *COM*:000000000000000c channel_mask
+C:\Users\tecchio\AppData\Local\Temp\ccaz2iTf.s:34     .text.SPI_daisy_setup:000000000000005c .L2
+C:\Users\tecchio\AppData\Local\Temp\ccaz2iTf.s:49     .text.SPI_daisy_setup:0000000000000092 .L3
+C:\Users\tecchio\AppData\Local\Temp\ccaz2iTf.s:64     .text.SPI_daisy_setup:00000000000000c8 .L4
+C:\Users\tecchio\AppData\Local\Temp\ccaz2iTf.s:79     .text.SPI_daisy_setup:00000000000000fe .L1
+C:\Users\tecchio\AppData\Local\Temp\ccaz2iTf.s:99     .text.SPI_daisy_read:0000000000000028 .L21
+C:\Users\tecchio\AppData\Local\Temp\ccaz2iTf.s:104    .text.SPI_daisy_read:0000000000000034 .L25
+C:\Users\tecchio\AppData\Local\Temp\ccaz2iTf.s:90     .text.SPI_daisy_read:000000000000000c .L20
+C:\Users\tecchio\AppData\Local\Temp\ccaz2iTf.s:126    .text.SPI_daisy_read:0000000000000082 .L23
+C:\Users\tecchio\AppData\Local\Temp\ccaz2iTf.s:106    .text.SPI_daisy_read:0000000000000036 .L24
+C:\Users\tecchio\AppData\Local\Temp\ccaz2iTf.s:96     .text.SPI_daisy_read:000000000000001c .L22
+C:\Users\tecchio\AppData\Local\Temp\ccaz2iTf.s:150    .text.SPI_daisy_write:000000000000002c .L34
+C:\Users\tecchio\AppData\Local\Temp\ccaz2iTf.s:153    .text.SPI_daisy_write:0000000000000032 .L33
+C:\Users\tecchio\AppData\Local\Temp\ccaz2iTf.s:143    .text.SPI_daisy_write:0000000000000010 .L32
+
+UNDEFINED SYMBOLS
+__riscv_save_1
+MCP_pinWrite
+MCP_pinMode
+MCP_pullupMode
+__riscv_restore_1
+__riscv_save_5
+__riscv_restore_5
+hwdelay
+MCP_pinRead
+__riscv_save_3
+__riscv_restore_3

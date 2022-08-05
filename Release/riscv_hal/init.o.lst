@@ -1,0 +1,109 @@
+   1              		.file	"init.c"
+   2              		.option nopic
+   3              		.text
+   4              		.section	.text._init,"ax",@progbits
+   5              		.align	1
+   6              		.globl	_init
+   8              	_init:
+   9 0000 17030000 		call	t0,__riscv_save_0
+   9      E7020300 
+  10 0008 B7070000 		lui	a5,%hi(.LC0)
+  11 000c 4111     		addi	sp,sp,-16
+  12 000e 93870700 		addi	a5,a5,%lo(.LC0)
+  13 0012 3EC2     		sw	a5,4(sp)
+  14 0014 37070000 		lui	a4,%hi(__sdata_load)
+  15 0018 B7070000 		lui	a5,%hi(__sdata_start)
+  16 001c B7060000 		lui	a3,%hi(__sdata_end)
+  17 0020 02C4     		sw	zero,8(sp)
+  18 0022 02C6     		sw	zero,12(sp)
+  19 0024 93870700 		addi	a5,a5,%lo(__sdata_start)
+  20 0028 13070700 		addi	a4,a4,%lo(__sdata_load)
+  21 002c 93860600 		addi	a3,a3,%lo(__sdata_end)
+  22              	.L2:
+  23 0030 63FFF604 		bleu	a5,a3,.L3
+  24 0034 B7070000 		lui	a5,%hi(__data_start)
+  25 0038 37070000 		lui	a4,%hi(__data_load)
+  26 003c B7060000 		lui	a3,%hi(__data_end)
+  27 0040 93870700 		addi	a5,a5,%lo(__data_start)
+  28 0044 13070700 		addi	a4,a4,%lo(__data_load)
+  29 0048 93860600 		addi	a3,a3,%lo(__data_end)
+  30              	.L4:
+  31 004c 63F7F604 		bleu	a5,a3,.L5
+  32 0050 B7070000 		lui	a5,%hi(__sbss_start)
+  33 0054 37070000 		lui	a4,%hi(__sbss_end)
+  34 0058 93870700 		addi	a5,a5,%lo(__sbss_start)
+  35 005c 13070700 		addi	a4,a4,%lo(__sbss_end)
+  36              	.L6:
+  37 0060 6373F704 		bleu	a5,a4,.L7
+  38 0064 B7070000 		lui	a5,%hi(__bss_start)
+  39 0068 37070000 		lui	a4,%hi(__bss_end)
+  40 006c 93870700 		addi	a5,a5,%lo(__bss_start)
+  41 0070 13070700 		addi	a4,a4,%lo(__bss_end)
+  42              	.L8:
+  43 0074 637DF702 		bleu	a5,a4,.L9
+  44 0078 4C00     		addi	a1,sp,4
+  45 007a 0545     		li	a0,1
+  46 007c 97000000 		call	main
+  46      E7800000 
+  47 0084 4101     		addi	sp,sp,16
+  48 0086 17030000 		tail	__riscv_restore_0
+  48      67000300 
+  49              	.L3:
+  50 008e 1043     		lw	a2,0(a4)
+  51 0090 9107     		addi	a5,a5,4
+  52 0092 1107     		addi	a4,a4,4
+  53 0094 23AEC7FE 		sw	a2,-4(a5)
+  54 0098 61BF     		j	.L2
+  55              	.L5:
+  56 009a 1043     		lw	a2,0(a4)
+  57 009c 9107     		addi	a5,a5,4
+  58 009e 1107     		addi	a4,a4,4
+  59 00a0 23AEC7FE 		sw	a2,-4(a5)
+  60 00a4 65B7     		j	.L4
+  61              	.L7:
+  62 00a6 23A00700 		sw	zero,0(a5)
+  63 00aa 9107     		addi	a5,a5,4
+  64 00ac 55BF     		j	.L6
+  65              	.L9:
+  66 00ae 23A00700 		sw	zero,0(a5)
+  67 00b2 9107     		addi	a5,a5,4
+  68 00b4 C1B7     		j	.L8
+  70              		.section	.text._fini,"ax",@progbits
+  71              		.align	1
+  72              		.globl	_fini
+  74              	_fini:
+  75 0000 8280     		ret
+  77              		.section	.rodata._init.str1.4,"aMS",@progbits,1
+  78              		.align	2
+  79              	.LC0:
+  80 0000 68656C6C 		.string	"hello"
+  80      6F00
+  81              		.ident	"GCC: (Microchip SoftConsole GNU RISC-V Embedded GCC, 64-bit) 8.2.0"
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 init.c
+C:\Users\tecchio\AppData\Local\Temp\1\ccRAJcFU.s:8      .text._init:0000000000000000 _init
+C:\Users\tecchio\AppData\Local\Temp\1\ccRAJcFU.s:74     .text._fini:0000000000000000 _fini
+C:\Users\tecchio\AppData\Local\Temp\1\ccRAJcFU.s:79     .rodata._init.str1.4:0000000000000000 .LC0
+C:\Users\tecchio\AppData\Local\Temp\1\ccRAJcFU.s:49     .text._init:000000000000008e .L3
+C:\Users\tecchio\AppData\Local\Temp\1\ccRAJcFU.s:55     .text._init:000000000000009a .L5
+C:\Users\tecchio\AppData\Local\Temp\1\ccRAJcFU.s:61     .text._init:00000000000000a6 .L7
+C:\Users\tecchio\AppData\Local\Temp\1\ccRAJcFU.s:65     .text._init:00000000000000ae .L9
+C:\Users\tecchio\AppData\Local\Temp\1\ccRAJcFU.s:22     .text._init:0000000000000030 .L2
+C:\Users\tecchio\AppData\Local\Temp\1\ccRAJcFU.s:30     .text._init:000000000000004c .L4
+C:\Users\tecchio\AppData\Local\Temp\1\ccRAJcFU.s:36     .text._init:0000000000000060 .L6
+C:\Users\tecchio\AppData\Local\Temp\1\ccRAJcFU.s:42     .text._init:0000000000000074 .L8
+
+UNDEFINED SYMBOLS
+__riscv_save_0
+__sdata_load
+__sdata_start
+__sdata_end
+__data_start
+__data_load
+__data_end
+__sbss_start
+__sbss_end
+__bss_start
+__bss_end
+main
+__riscv_restore_0

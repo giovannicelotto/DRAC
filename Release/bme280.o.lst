@@ -1,0 +1,8 @@
+   1              		.file	"bme280.c"
+   2              		.option nopic
+   3              		.text
+   4              		.ident	"GCC: (Microchip SoftConsole GNU RISC-V Embedded GCC, 64-bit) 8.2.0"
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 bme280.c
+
+NO UNDEFINED SYMBOLS

@@ -1,0 +1,95 @@
+   1              		.file	"DS28CM00.c"
+   2              		.option nopic
+   3              		.text
+   4              		.section	.text.DS28CM00_setup,"ax",@progbits
+   5              		.align	1
+   6              		.globl	DS28CM00_setup
+   8              	DS28CM00_setup:
+   9 0000 930700FA 		li	a5,-96
+  10 0004 4CC1     		sw	a1,4(a0)
+  11 0006 2300F500 		sb	a5,0(a0)
+  12 000a 8280     		ret
+  14              		.section	.text.getUID,"ax",@progbits
+  15              		.align	1
+  16              		.globl	getUID
+  18              	getUID:
+  19 0000 17030000 		call	t0,__riscv_save_4
+  19      E7020300 
+  20 0008 2E89     		mv	s2,a1
+  21 000a 83450500 		lbu	a1,0(a0)
+  22 000e 2A84     		mv	s0,a0
+  23 0010 4841     		lw	a0,4(a0)
+  24 0012 8605     		slli	a1,a1,1
+  25 0014 93F5E50F 		andi	a1,a1,254
+  26 0018 97000000 		call	I2C_start
+  26      E7800000 
+  27 0020 51E1     		bnez	a0,.L3
+  28 0022 4840     		lw	a0,4(s0)
+  29 0024 8145     		li	a1,0
+  30 0026 97000000 		call	I2C_write
+  30      E7800000 
+  31 002e 3DE9     		bnez	a0,.L3
+  32 0030 4840     		lw	a0,4(s0)
+  33 0032 97000000 		call	I2C_stop
+  33      E7800000 
+  34 003a 13054006 		li	a0,100
+  35 003e 97000000 		call	delayUs
+  35      E7800000 
+  36 0046 83450400 		lbu	a1,0(s0)
+  37 004a 4840     		lw	a0,4(s0)
+  38 004c 8605     		slli	a1,a1,1
+  39 004e 93E51500 		ori	a1,a1,1
+  40 0052 93F5F50F 		andi	a1,a1,0xff
+  41 0056 97000000 		call	I2C_start
+  41      E7800000 
+  42 005e 8147     		li	a5,0
+  43 0060 0DED     		bnez	a0,.L2
+  44 0062 8144     		li	s1,0
+  45 0064 9D49     		li	s3,7
+  46              	.L5:
+  47 0066 4840     		lw	a0,4(s0)
+  48 0068 8145     		li	a1,0
+  49 006a 97000000 		call	I2C_read
+  49      E7800000 
+  50 0072 B3079900 		add	a5,s2,s1
+  51 0076 2380A700 		sb	a0,0(a5)
+  52 007a 8504     		addi	s1,s1,1
+  53 007c E39534FF 		bne	s1,s3,.L5
+  54 0080 4840     		lw	a0,4(s0)
+  55 0082 8545     		li	a1,1
+  56 0084 97000000 		call	I2C_read
+  56      E7800000 
+  57 008c A303A900 		sb	a0,7(s2)
+  58 0090 4840     		lw	a0,4(s0)
+  59 0092 97000000 		call	I2C_stop
+  59      E7800000 
+  60              	.L2:
+  61 009a 3E85     		mv	a0,a5
+  62 009c 17030000 		tail	__riscv_restore_4
+  62      67000300 
+  63              	.L3:
+  64 00a4 FD57     		li	a5,-1
+  65 00a6 D5BF     		j	.L2
+  67              		.comm	registers_0_addr,4,4
+  68              		.comm	mapped_channel_mask,12,4
+  69              		.comm	channel_mask,12,4
+  70              		.ident	"GCC: (Microchip SoftConsole GNU RISC-V Embedded GCC, 64-bit) 8.2.0"
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 DS28CM00.c
+C:\Users\tecchio\AppData\Local\Temp\cckX4As7.s:8      .text.DS28CM00_setup:0000000000000000 DS28CM00_setup
+C:\Users\tecchio\AppData\Local\Temp\cckX4As7.s:18     .text.getUID:0000000000000000 getUID
+                            *COM*:0000000000000004 registers_0_addr
+                            *COM*:000000000000000c mapped_channel_mask
+                            *COM*:000000000000000c channel_mask
+C:\Users\tecchio\AppData\Local\Temp\cckX4As7.s:63     .text.getUID:00000000000000a4 .L3
+C:\Users\tecchio\AppData\Local\Temp\cckX4As7.s:60     .text.getUID:000000000000009a .L2
+C:\Users\tecchio\AppData\Local\Temp\cckX4As7.s:46     .text.getUID:0000000000000066 .L5
+
+UNDEFINED SYMBOLS
+__riscv_save_4
+I2C_start
+I2C_write
+I2C_stop
+delayUs
+I2C_read
+__riscv_restore_4

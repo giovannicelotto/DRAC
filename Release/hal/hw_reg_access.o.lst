@@ -1,0 +1,227 @@
+   1              	# 1 "../hal/hw_reg_access.S"
+   1              	/***************************************************************************//**
+   0              	
+   0              	
+   2              	 * (c) Copyright 2007-2018 Microsemi SoC Products Group. All rights reserved.
+   3              	 *
+   4              	 * Hardware registers access functions.
+   5              	 * The implementation of these function is platform and toolchain specific.
+   6              	 * The functions declared here are implemented using assembler as part of the
+   7              	 * processor/toolchain specific HAL.
+   8              	 *
+   9              	 * SVN $Revision: 9661 $
+  10              	 * SVN $Date: 2018-01-15 16:13:33 +0530 (Mon, 15 Jan 2018) $
+  11              	 */
+  12              	
+  13              	.section .text
+  14              	    .globl HW_set_32bit_reg
+  15              	    .globl HW_get_32bit_reg
+  16              	    .globl HW_set_32bit_reg_field
+  17              	    .globl HW_get_32bit_reg_field
+  18              	    .globl HW_set_16bit_reg
+  19              	    .globl HW_get_16bit_reg
+  20              	    .globl HW_set_16bit_reg_field
+  21              	    .globl HW_get_16bit_reg_field
+  22              	    .globl HW_set_8bit_reg
+  23              	    .globl HW_get_8bit_reg
+  24              	    .globl HW_set_8bit_reg_field
+  25              	    .globl HW_get_8bit_reg_field
+  26              	
+  27              	
+  28              	/***************************************************************************//**
+  29              	 * HW_set_32bit_reg is used to write the content of a 32 bits wide peripheral
+  30              	 * register.
+  31              	 *
+  32              	 * a0:   addr_t reg_addr
+  33              	 * a1:   uint32_t value
+  34              	 */
+  35              	HW_set_32bit_reg:
+  36 0000 0CC1     	    sw a1, 0(a0)
+  37 0002 8280     	    ret
+  38              	
+  39              	/***************************************************************************//**
+  40              	 * HW_get_32bit_reg is used to read the content of a 32 bits wide peripheral
+  41              	 * register.
+  42              	 *
+  43              	 * R0:   addr_t reg_addr
+  44              	 * @return          32 bits value read from the peripheral register.
+  45              	 */
+  46              	HW_get_32bit_reg:
+  47 0004 0841     	    lw a0, 0(a0)
+  48 0006 8280     	    ret
+  49              	
+  50              	/***************************************************************************//**
+  51              	 * HW_set_32bit_reg_field is used to set the content of a field in a 32 bits
+  52              	 * wide peripheral register.
+  53              	 *
+  54              	 * a0:   addr_t reg_addr
+  55              	 * a1:   int_fast8_t shift
+  56              	 * a2:   uint32_t mask
+  57              	 * a3:   uint32_t value
+  58              	 */
+  59              	HW_set_32bit_reg_field:
+  60 0008 368E     	    mv t3, a3
+  61 000a 331EBE00 	    sll t3, t3, a1
+  62 000e 337ECE00 	    and  t3, t3, a2
+  63 0012 03230500 	    lw t1, 0(a0)
+  64 0016 B283     	    mv t2, a2
+  65 0018 93C3F3FF 	    not t2, t2
+  66 001c 33737300 	    and t1, t1, t2
+  67 0020 3363C301 	    or t1, t1, t3
+  68 0024 23206500 	    sw t1, 0(a0)
+  69 0028 8280     	    ret
+  70              	
+  71              	/***************************************************************************//**
+  72              	 * HW_get_32bit_reg_field is used to read the content of a field out of a
+  73              	 * 32 bits wide peripheral register.
+  74              	 *
+  75              	 * a0:   addr_t reg_addr
+  76              	 * a1:   int_fast8_t shift
+  77              	 * a2:   uint32_t mask
+  78              	 *
+  79              	 * @return          32 bits value containing the register field value specified
+  80              	 *                  as parameter.
+  81              	 */
+  82              	HW_get_32bit_reg_field:
+  83 002a 0841     	    lw a0, 0(a0)
+  84 002c 718D     	    and a0, a0, a2
+  85 002e 3355B500 	    srl a0, a0, a1
+  86 0032 8280     	    ret
+  87              	
+  88              	/***************************************************************************//**
+  89              	 * HW_set_16bit_reg is used to write the content of a 16 bits wide peripheral
+  90              	 * register.
+  91              	 *
+  92              	 * a0:   addr_t reg_addr
+  93              	 * a1:   uint_fast16_t value
+  94              	 */
+  95              	HW_set_16bit_reg:
+  96 0034 2310B500 	    sh a1, 0(a0)
+  97 0038 8280     	    ret
+  98              	
+  99              	/***************************************************************************//**
+ 100              	 * HW_get_16bit_reg is used to read the content of a 16 bits wide peripheral
+ 101              	 * register.
+ 102              	 *
+ 103              	 * a0:   addr_t reg_addr
+ 104              	 * @return          16 bits value read from the peripheral register.
+ 105              	 */
+ 106              	HW_get_16bit_reg:
+ 107 003a 03150500 	    lh a0, (a0)
+ 108 003e 8280     	    ret
+ 109              	
+ 110              	/***************************************************************************//**
+ 111              	 * HW_set_16bit_reg_field is used to set the content of a field in a 16 bits
+ 112              	 * wide peripheral register.
+ 113              	 *
+ 114              	 * a0:   addr_t reg_addr
+ 115              	 * a1:   int_fast8_t shift
+ 116              	 * a2:   uint_fast16_t mask
+ 117              	 * a3:   uint_fast16_t value
+ 118              	 * @param value     Value to be written in the specified field.
+ 119              	 */
+ 120              	HW_set_16bit_reg_field:
+ 121 0040 368E     	    mv t3, a3
+ 122 0042 331EBE00 	    sll t3, t3, a1
+ 123 0046 337ECE00 	    and  t3, t3, a2
+ 124 004a 03130500 	    lh t1, 0(a0)
+ 125 004e B283     	    mv t2, a2
+ 126 0050 93C3F3FF 	    not t2, t2
+ 127 0054 33737300 	    and t1, t1, t2
+ 128 0058 3363C301 	    or t1, t1, t3
+ 129 005c 23106500 	    sh t1, 0(a0)
+ 130 0060 8280     	    ret
+ 131              	
+ 132              	/***************************************************************************//**
+ 133              	 * HW_get_16bit_reg_field is used to read the content of a field from a
+ 134              	 * 16 bits wide peripheral register.
+ 135              	 *
+ 136              	 * a0:   addr_t reg_addr
+ 137              	 * a1:   int_fast8_t shift
+ 138              	 * a2:   uint_fast16_t mask
+ 139              	 *
+ 140              	 * @return          16 bits value containing the register field value specified
+ 141              	 *                  as parameter.
+ 142              	 */
+ 143              	HW_get_16bit_reg_field:
+ 144 0062 03150500 	    lh a0, 0(a0)
+ 145 0066 718D     	    and a0, a0, a2
+ 146 0068 3355B500 	    srl a0, a0, a1
+ 147 006c 8280     	    ret
+ 148              	
+ 149              	/***************************************************************************//**
+ 150              	 * HW_set_8bit_reg is used to write the content of a 8 bits wide peripheral
+ 151              	 * register.
+ 152              	 *
+ 153              	 * a0:   addr_t reg_addr
+ 154              	 * a1:   uint_fast8_t value
+ 155              	 */
+ 156              	HW_set_8bit_reg:
+ 157 006e 2300B500 	    sb a1, 0(a0)
+ 158 0072 8280     	    ret
+ 159              	
+ 160              	/***************************************************************************//**
+ 161              	 * HW_get_8bit_reg is used to read the content of a 8 bits wide peripheral
+ 162              	 * register.
+ 163              	 *
+ 164              	 * a0:   addr_t reg_addr
+ 165              	 * @return          8 bits value read from the peripheral register.
+ 166              	 */
+ 167              	HW_get_8bit_reg:
+ 168 0074 03050500 	    lb a0, 0(a0)
+ 169 0078 8280     	    ret
+ 170              	
+ 171              	/***************************************************************************//**
+ 172              	 * HW_set_8bit_reg_field is used to set the content of a field in a 8 bits
+ 173              	 * wide peripheral register.
+ 174              	 *
+ 175              	 * a0:   addr_t reg_addr,
+ 176              	 * a1:   int_fast8_t shift
+ 177              	 * a2:   uint_fast8_t mask
+ 178              	 * a3:   uint_fast8_t value
+ 179              	 */
+ 180              	HW_set_8bit_reg_field:
+ 181 007a 368E     	    mv t3, a3
+ 182 007c 331EBE00 	    sll t3, t3, a1
+ 183 0080 337ECE00 	    and  t3, t3, a2
+ 184 0084 03030500 	    lb t1, 0(a0)
+ 185 0088 B283     	    mv t2, a2
+ 186 008a 93C3F3FF 	    not t2, t2
+ 187 008e 33737300 	    and t1, t1, t2
+ 188 0092 3363C301 	    or t1, t1, t3
+ 189 0096 23006500 	    sb t1, 0(a0)
+ 190 009a 8280     	    ret
+ 191              	
+ 192              	/***************************************************************************//**
+ 193              	 * HW_get_8bit_reg_field is used to read the content of a field from a
+ 194              	 * 8 bits wide peripheral register.
+ 195              	 *
+ 196              	 * a0:   addr_t reg_addr
+ 197              	 * a1:   int_fast8_t shift
+ 198              	 * a2:   uint_fast8_t mask
+ 199              	 *
+ 200              	 * @return          8 bits value containing the register field value specified
+ 201              	 *                  as parameter.
+ 202              	 */
+ 203              	HW_get_8bit_reg_field:
+ 204 009c 03050500 	    lb a0, 0(a0)
+ 205 00a0 718D     	    and a0, a0, a2
+ 206 00a2 3355B500 	    srl a0, a0, a1
+ 207 00a6 8280     	    ret
+ 208              	
+ 209              	.end
+DEFINED SYMBOLS
+../hal/hw_reg_access.S:35     .text:0000000000000000 HW_set_32bit_reg
+../hal/hw_reg_access.S:46     .text:0000000000000004 HW_get_32bit_reg
+../hal/hw_reg_access.S:59     .text:0000000000000008 HW_set_32bit_reg_field
+../hal/hw_reg_access.S:82     .text:000000000000002a HW_get_32bit_reg_field
+../hal/hw_reg_access.S:95     .text:0000000000000034 HW_set_16bit_reg
+../hal/hw_reg_access.S:106    .text:000000000000003a HW_get_16bit_reg
+../hal/hw_reg_access.S:120    .text:0000000000000040 HW_set_16bit_reg_field
+../hal/hw_reg_access.S:143    .text:0000000000000062 HW_get_16bit_reg_field
+../hal/hw_reg_access.S:156    .text:000000000000006e HW_set_8bit_reg
+../hal/hw_reg_access.S:167    .text:0000000000000074 HW_get_8bit_reg
+../hal/hw_reg_access.S:180    .text:000000000000007a HW_set_8bit_reg_field
+../hal/hw_reg_access.S:203    .text:000000000000009c HW_get_8bit_reg_field
+
+NO UNDEFINED SYMBOLS

@@ -1,0 +1,865 @@
+   1              		.file	"autobitslip.c"
+   2              		.option nopic
+   3              		.text
+   4              		.globl	__udivsi3
+   5              		.globl	__divsi3
+   6              		.globl	__umodsi3
+   7              		.globl	__modsi3
+   8              		.section	.text.autobitslip,"ax",@progbits
+   9              		.align	1
+  10              		.globl	autobitslip
+  12              	autobitslip:
+  13 0000 17030000 		call	t0,__riscv_save_12
+  13      E7020300 
+  14 0008 37040000 		lui	s0,%hi(buffer)
+  15 000c 13040400 		addi	s0,s0,%lo(buffer)
+  16 0010 83474400 		lbu	a5,4(s0)
+  17 0014 37050000 		lui	a0,%hi(buffer+6)
+  18 0018 7171     		addi	sp,sp,-176
+  19 001a 13056500 		addi	a0,a0,%lo(buffer+6)
+  20 001e 3EC2     		sw	a5,4(sp)
+  21 0020 B7040000 		lui	s1,%hi(channel_mask)
+  22 0024 034D5400 		lbu	s10,5(s0)
+  23 0028 97000000 		call	readU32fromBytes
+  23      E7800000 
+  24 0030 23A0A400 		sw	a0,%lo(channel_mask)(s1)
+  25 0034 37050000 		lui	a0,%hi(buffer+10)
+  26 0038 1305A500 		addi	a0,a0,%lo(buffer+10)
+  27 003c 97000000 		call	readU32fromBytes
+  27      E7800000 
+  28 0044 93840400 		addi	s1,s1,%lo(channel_mask)
+  29 0048 C8C0     		sw	a0,4(s1)
+  30 004a 37050000 		lui	a0,%hi(buffer+14)
+  31 004e 1305E500 		addi	a0,a0,%lo(buffer+14)
+  32 0052 97000000 		call	readU32fromBytes
+  32      E7800000 
+  33 005a 83472401 		lbu	a5,18(s0)
+  34 005e 37090000 		lui	s2,%hi(bufcount)
+  35 0062 88C4     		sw	a0,8(s1)
+  36 0064 3EC4     		sw	a5,8(sp)
+  37 0066 97000000 		call	get_mapped_channels
+  37      E7800000 
+  38 006e 03570900 		lhu	a4,%lo(bufcount)(s2)
+  39 0072 B7090000 		lui	s3,%hi(outBuffer)
+  40 0076 93860900 		addi	a3,s3,%lo(outBuffer)
+  41 007a 93071700 		addi	a5,a4,1
+  42 007e C207     		slli	a5,a5,16
+  43 0080 3697     		add	a4,a4,a3
+  44 0082 93067006 		li	a3,103
+  45 0086 C183     		srli	a5,a5,16
+  46 0088 2300D700 		sb	a3,0(a4)
+  47 008c 0146     		li	a2,0
+  48 008e 37070000 		lui	a4,%hi(bufcount_place_holder)
+  49 0092 8946     		li	a3,2
+  50 0094 93050900 		addi	a1,s2,%lo(bufcount)
+  51 0098 13850900 		addi	a0,s3,%lo(outBuffer)
+  52 009c 2310F900 		sh	a5,%lo(bufcount)(s2)
+  53 00a0 2310F700 		sh	a5,%lo(bufcount_place_holder)(a4)
+  54 00a4 97000000 		call	bufWrite
+  54      E7800000 
+  55 00ac 1246     		lw	a2,4(sp)
+  56 00ae 8546     		li	a3,1
+  57 00b0 93050900 		addi	a1,s2,%lo(bufcount)
+  58 00b4 13850900 		addi	a0,s3,%lo(outBuffer)
+  59 00b8 97000000 		call	bufWrite
+  59      E7800000 
+  60 00c0 2246     		lw	a2,8(sp)
+  61 00c2 8546     		li	a3,1
+  62 00c4 93050900 		addi	a1,s2,%lo(bufcount)
+  63 00c8 13850900 		addi	a0,s3,%lo(outBuffer)
+  64 00cc B70A0000 		lui	s5,%hi(mapped_channel_mask)
+  65 00d0 97000000 		call	bufWrite
+  65      E7800000 
+  66 00d8 014A     		li	s4,0
+  67 00da 4A8B     		mv	s6,s2
+  68 00dc CE8B     		mv	s7,s3
+  69 00de 138C0A00 		addi	s8,s5,%lo(mapped_channel_mask)
+  70              	.L37:
+  71 00e2 0146     		li	a2,0
+  72 00e4 8145     		li	a1,0
+  73 00e6 1305F006 		li	a0,111
+  74 00ea 97000000 		call	digi_write
+  74      E7800000 
+  75 00f2 2145     		li	a0,8
+  76 00f4 97000000 		call	delayUs
+  76      E7800000 
+  77 00fc 0146     		li	a2,0
+  78 00fe 8545     		li	a1,1
+  79 0100 1305F006 		li	a0,111
+  80 0104 97000000 		call	digi_write
+  80      E7800000 
+  81 010c 0146     		li	a2,0
+  82 010e 8545     		li	a1,1
+  83 0110 0D45     		li	a0,3
+  84 0112 97000000 		call	digi_write
+  84      E7800000 
+  85 011a 0146     		li	a2,0
+  86 011c 8545     		li	a1,1
+  87 011e 1145     		li	a0,4
+  88 0120 97000000 		call	digi_write
+  88      E7800000 
+  89 0128 0146     		li	a2,0
+  90 012a 8145     		li	a1,0
+  91 012c 2945     		li	a0,10
+  92 012e 97000000 		call	digi_write
+  92      E7800000 
+  93 0136 0146     		li	a2,0
+  94 0138 8545     		li	a1,1
+  95 013a 3145     		li	a0,12
+  96 013c 97000000 		call	digi_write
+  96      E7800000 
+  97 0144 0147     		li	a4,0
+  98 0146 814C     		li	s9,0
+  99 0148 93850A00 		addi	a1,s5,%lo(mapped_channel_mask)
+ 100 014c 0545     		li	a0,1
+ 101 014e 3146     		li	a2,12
+ 102              	.L3:
+ 103 0150 9377F70F 		andi	a5,a4,0xff
+ 104 0154 93F6C70F 		andi	a3,a5,252
+ 105 0158 AE96     		add	a3,a3,a1
+ 106 015a 9442     		lw	a3,0(a3)
+ 107 015c 8D8B     		andi	a5,a5,3
+ 108 015e 8E07     		slli	a5,a5,3
+ 109 0160 B3D7F600 		srl	a5,a3,a5
+ 110 0164 93F7F70F 		andi	a5,a5,255
+ 111 0168 81CB     		beqz	a5,.L2
+ 112 016a B317E500 		sll	a5,a0,a4
+ 113 016e B3EC9701 		or	s9,a5,s9
+ 114 0172 C20C     		slli	s9,s9,16
+ 115 0174 93DC0C01 		srli	s9,s9,16
+ 116              	.L2:
+ 117 0178 0507     		addi	a4,a4,1
+ 118 017a E31BC7FC 		bne	a4,a2,.L3
+ 119 017e 0144     		li	s0,0
+ 120 0180 8546     		li	a3,1
+ 121 0182 1308F00F 		li	a6,255
+ 122 0186 B14D     		li	s11,12
+ 123              	.L6:
+ 124 0188 B3948600 		sll	s1,a3,s0
+ 125 018c 33F69401 		and	a2,s1,s9
+ 126 0190 9377F40F 		andi	a5,s0,0xff
+ 127 0194 630F0660 		beqz	a2,.L4
+ 128 0198 C204     		slli	s1,s1,16
+ 129 019a C180     		srli	s1,s1,16
+ 130 019c 2686     		mv	a2,s1
+ 131 019e EA85     		mv	a1,s10
+ 132 01a0 5945     		li	a0,22
+ 133 01a2 97000000 		call	adc_write
+ 133      E7800000 
+ 134 01aa 2686     		mv	a2,s1
+ 135 01ac A545     		li	a1,9
+ 136 01ae 3545     		li	a0,13
+ 137 01b0 97000000 		call	adc_write
+ 137      E7800000 
+ 138 01b8 8546     		li	a3,1
+ 139 01ba 1308F00F 		li	a6,255
+ 140              	.L5:
+ 141 01be 0504     		addi	s0,s0,1
+ 142 01c0 E314B4FD 		bne	s0,s11,.L6
+ 143 01c4 8546     		li	a3,1
+ 144 01c6 6A86     		mv	a2,s10
+ 145 01c8 93050B00 		addi	a1,s6,%lo(bufcount)
+ 146 01cc 13850B00 		addi	a0,s7,%lo(outBuffer)
+ 147 01d0 97000000 		call	bufWrite
+ 147      E7800000 
+ 148 01d8 B7070000 		lui	a5,%hi(registers_0_addr)
+ 149 01dc 83A70700 		lw	a5,%lo(registers_0_addr)(a5)
+ 150 01e0 0547     		li	a4,1
+ 151 01e2 9245     		lw	a1,4(sp)
+ 152 01e4 23ACE710 		sw	a4,280(a5)
+ 153 01e8 23A2E720 		sw	a4,516(a5)
+ 154 01ec 0146     		li	a2,0
+ 155 01ee 13053006 		li	a0,99
+ 156 01f2 97000000 		call	digi_write
+ 156      E7800000 
+ 157 01fa B7070000 		lui	a5,%hi(mapped_channel_mask)
+ 158 01fe 83A50700 		lw	a1,%lo(mapped_channel_mask)(a5)
+ 159 0202 03A70700 		lw	a4,%lo(mapped_channel_mask)(a5)
+ 160 0206 83274C00 		lw	a5,4(s8)
+ 161 020a 832C4C00 		lw	s9,4(s8)
+ 162 020e 83248C00 		lw	s1,8(s8)
+ 163 0212 03248C00 		lw	s0,8(s8)
+ 164 0216 939D0701 		slli	s11,a5,16
+ 165 021a C205     		slli	a1,a1,16
+ 166 021c C204     		slli	s1,s1,16
+ 167 021e 4183     		srli	a4,a4,16
+ 168 0220 C181     		srli	a1,a1,16
+ 169 0222 93DD0D01 		srli	s11,s11,16
+ 170 0226 93DC0C01 		srli	s9,s9,16
+ 171 022a C180     		srli	s1,s1,16
+ 172 022c 4180     		srli	s0,s0,16
+ 173 022e 0546     		li	a2,1
+ 174 0230 2D45     		li	a0,11
+ 175 0232 2310B102 		sh	a1,32(sp)
+ 176 0236 2311E102 		sh	a4,34(sp)
+ 177 023a 3AC0     		sw	a4,0(sp)
+ 178 023c 2312B103 		sh	s11,36(sp)
+ 179 0240 23139103 		sh	s9,38(sp)
+ 180 0244 23149102 		sh	s1,40(sp)
+ 181 0248 23158102 		sh	s0,42(sp)
+ 182 024c 97000000 		call	digi_write
+ 182      E7800000 
+ 183 0254 0247     		lw	a4,0(sp)
+ 184 0256 0546     		li	a2,1
+ 185 0258 3945     		li	a0,14
+ 186 025a BA85     		mv	a1,a4
+ 187 025c 97000000 		call	digi_write
+ 187      E7800000 
+ 188 0264 EE85     		mv	a1,s11
+ 189 0266 0546     		li	a2,1
+ 190 0268 3545     		li	a0,13
+ 191 026a 97000000 		call	digi_write
+ 191      E7800000 
+ 192 0272 E685     		mv	a1,s9
+ 193 0274 0946     		li	a2,2
+ 194 0276 2D45     		li	a0,11
+ 195 0278 97000000 		call	digi_write
+ 195      E7800000 
+ 196 0280 A685     		mv	a1,s1
+ 197 0282 0946     		li	a2,2
+ 198 0284 3945     		li	a0,14
+ 199 0286 97000000 		call	digi_write
+ 199      E7800000 
+ 200 028e 0946     		li	a2,2
+ 201 0290 A285     		mv	a1,s0
+ 202 0292 3545     		li	a0,13
+ 203 0294 97000000 		call	digi_write
+ 203      E7800000 
+ 204 029c 930C0102 		addi	s9,sp,32
+ 205 02a0 E687     		mv	a5,s9
+ 206 02a2 8144     		li	s1,0
+ 207 02a4 994D     		li	s11,6
+ 208              	.L7:
+ 209 02a6 8D45     		li	a1,3
+ 210 02a8 2685     		mv	a0,s1
+ 211 02aa 03D40700 		lhu	s0,0(a5)
+ 212 02ae 3EC6     		sw	a5,12(sp)
+ 213 02b0 97000000 		call	__udivsi3
+ 213      E7800000 
+ 214 02b8 13061500 		addi	a2,a0,1
+ 215 02bc 1376F60F 		andi	a2,a2,0xff
+ 216 02c0 8D45     		li	a1,3
+ 217 02c2 2685     		mv	a0,s1
+ 218 02c4 32C0     		sw	a2,0(sp)
+ 219 02c6 97000000 		call	__umodsi3
+ 219      E7800000 
+ 220 02ce 0246     		lw	a2,0(sp)
+ 221 02d0 13050506 		addi	a0,a0,96
+ 222 02d4 A285     		mv	a1,s0
+ 223 02d6 1375F50F 		andi	a0,a0,0xff
+ 224 02da 97000000 		call	digi_write
+ 224      E7800000 
+ 225 02e2 8946     		li	a3,2
+ 226 02e4 2286     		mv	a2,s0
+ 227 02e6 93050B00 		addi	a1,s6,%lo(bufcount)
+ 228 02ea 13850B00 		addi	a0,s7,%lo(outBuffer)
+ 229 02ee 97000000 		call	bufWrite
+ 229      E7800000 
+ 230 02f6 B247     		lw	a5,12(sp)
+ 231 02f8 8504     		addi	s1,s1,1
+ 232 02fa 93F4F40F 		andi	s1,s1,0xff
+ 233 02fe 8907     		addi	a5,a5,2
+ 234 0300 E393B4FB 		bne	s1,s11,.L7
+ 235 0304 0146     		li	a2,0
+ 236 0306 8545     		li	a1,1
+ 237 0308 13054006 		li	a0,100
+ 238 030c 97000000 		call	digi_write
+ 238      E7800000 
+ 239 0314 2145     		li	a0,8
+ 240 0316 97000000 		call	delayUs
+ 240      E7800000 
+ 241 031e 0146     		li	a2,0
+ 242 0320 8145     		li	a1,0
+ 243 0322 13054006 		li	a0,100
+ 244 0326 97000000 		call	digi_write
+ 244      E7800000 
+ 245 032e 02D6     		sw	zero,44(sp)
+ 246 0330 02D8     		sw	zero,48(sp)
+ 247 0332 02DA     		sw	zero,52(sp)
+ 248 0334 02DC     		sw	zero,56(sp)
+ 249 0336 37F7FA02 		li	a4,49999872
+ 250 033a 02DE     		sw	zero,60(sp)
+ 251 033c 93070708 		addi	a5,a4,128
+ 252 0340 82C0     		sw	zero,64(sp)
+ 253 0342 8D4D     		li	s11,3
+ 254 0344 3EC6     		sw	a5,12(sp)
+ 255              	.L11:
+ 256 0346 3245     		lw	a0,12(sp)
+ 257 0348 0144     		li	s0,0
+ 258 034a 97000000 		call	hwdelay
+ 258      E7800000 
+ 259 0352 6688     		mv	a6,s9
+ 260 0354 8548     		li	a7,1
+ 261              	.L9:
+ 262 0356 9376F40F 		andi	a3,s0,0xff
+ 263 035a 8D45     		li	a1,3
+ 264 035c 3685     		mv	a0,a3
+ 265 035e 42CE     		sw	a6,28(sp)
+ 266 0360 46CC     		sw	a7,24(sp)
+ 267 0362 36C8     		sw	a3,16(sp)
+ 268 0364 97000000 		call	__umodsi3
+ 268      E7800000 
+ 269 036c C246     		lw	a3,16(sp)
+ 270 036e 9377F50F 		andi	a5,a0,0xff
+ 271 0372 8D45     		li	a1,3
+ 272 0374 3685     		mv	a0,a3
+ 273 0376 3EC0     		sw	a5,0(sp)
+ 274 0378 97000000 		call	__udivsi3
+ 274      E7800000 
+ 275 0380 8247     		lw	a5,0(sp)
+ 276 0382 0505     		addi	a0,a0,1
+ 277 0384 1376F50F 		andi	a2,a0,0xff
+ 278 0388 13856706 		addi	a0,a5,102
+ 279 038c B285     		mv	a1,a2
+ 280 038e 1375F50F 		andi	a0,a0,0xff
+ 281 0392 32CA     		sw	a2,20(sp)
+ 282 0394 97000000 		call	digi_read
+ 282      E7800000 
+ 283 039c 1C19     		addi	a5,sp,176
+ 284 039e 93161400 		slli	a3,s0,1
+ 285 03a2 BE96     		add	a3,a5,a3
+ 286 03a4 8247     		lw	a5,0(sp)
+ 287 03a6 5246     		lw	a2,20(sp)
+ 288 03a8 239EA6F6 		sh	a0,-132(a3)
+ 289 03ac 13859706 		addi	a0,a5,105
+ 290 03b0 B285     		mv	a1,a2
+ 291 03b2 1375F50F 		andi	a0,a0,0xff
+ 292 03b6 36C8     		sw	a3,16(sp)
+ 293 03b8 97000000 		call	digi_read
+ 293      E7800000 
+ 294 03c0 C246     		lw	a3,16(sp)
+ 295 03c2 7248     		lw	a6,28(sp)
+ 296 03c4 E248     		lw	a7,24(sp)
+ 297 03c6 2394A6F8 		sh	a0,-120(a3)
+ 298 03ca 83D6C6F7 		lhu	a3,-132(a3)
+ 299 03ce 03560800 		lhu	a2,0(a6)
+ 300 03d2 F18E     		and	a3,a2,a3
+ 301 03d4 6303D600 		beq	a2,a3,.L8
+ 302 03d8 8148     		li	a7,0
+ 303              	.L8:
+ 304 03da 0504     		addi	s0,s0,1
+ 305 03dc 9947     		li	a5,6
+ 306 03de 0908     		addi	a6,a6,2
+ 307 03e0 E31BF4F6 		bne	s0,a5,.L9
+ 308 03e4 63980800 		bnez	a7,.L39
+ 309 03e8 9387FDFF 		addi	a5,s11,-1
+ 310 03ec 93FDF70F 		andi	s11,a5,0xff
+ 311 03f0 E39B0DF4 		bnez	s11,.L11
+ 312              	.L39:
+ 313 03f4 0147     		li	a4,0
+ 314 03f6 0144     		li	s0,0
+ 315              	.L14:
+ 316 03f8 93171700 		slli	a5,a4,1
+ 317 03fc 3AC6     		sw	a4,12(sp)
+ 318 03fe 1819     		addi	a4,sp,176
+ 319 0400 B30DF700 		add	s11,a4,a5
+ 320 0404 03D6CDF7 		lhu	a2,-132(s11)
+ 321 0408 8946     		li	a3,2
+ 322 040a 93050B00 		addi	a1,s6,%lo(bufcount)
+ 323 040e 13850B00 		addi	a0,s7,%lo(outBuffer)
+ 324 0412 3EC0     		sw	a5,0(sp)
+ 325 0414 97000000 		call	bufWrite
+ 325      E7800000 
+ 326 041c 03D68DF8 		lhu	a2,-120(s11)
+ 327 0420 8946     		li	a3,2
+ 328 0422 93050B00 		addi	a1,s6,%lo(bufcount)
+ 329 0426 13850B00 		addi	a0,s7,%lo(outBuffer)
+ 330 042a 97000000 		call	bufWrite
+ 330      E7800000 
+ 331 0432 83D6CDF7 		lhu	a3,-132(s11)
+ 332 0436 4166     		li	a2,65536
+ 333 0438 8247     		lw	a5,0(sp)
+ 334 043a 93C6F6FF 		not	a3,a3
+ 335 043e 93F6F60F 		andi	a3,a3,255
+ 336 0442 3247     		lw	a4,12(sp)
+ 337 0444 130806F0 		addi	a6,a2,-256
+ 338 0448 1943     		li	t1,6
+ 339 044a 8548     		li	a7,1
+ 340 044c 91C6     		beqz	a3,.L12
+ 341 044e B396F800 		sll	a3,a7,a5
+ 342 0452 558C     		or	s0,a3,s0
+ 343 0454 4204     		slli	s0,s0,16
+ 344 0456 4180     		srli	s0,s0,16
+ 345              	.L12:
+ 346 0458 1419     		addi	a3,sp,176
+ 347 045a BE96     		add	a3,a3,a5
+ 348 045c 83D6C6F7 		lhu	a3,-132(a3)
+ 349 0460 93C6F6FF 		not	a3,a3
+ 350 0464 B3F60601 		and	a3,a3,a6
+ 351 0468 99C6     		beqz	a3,.L13
+ 352 046a 8507     		addi	a5,a5,1
+ 353 046c B397F800 		sll	a5,a7,a5
+ 354 0470 5D8C     		or	s0,a5,s0
+ 355 0472 4204     		slli	s0,s0,16
+ 356 0474 4180     		srli	s0,s0,16
+ 357              	.L13:
+ 358 0476 0507     		addi	a4,a4,1
+ 359 0478 E31067F8 		bne	a4,t1,.L14
+ 360 047c 8147     		li	a5,0
+ 361 047e 8546     		li	a3,1
+ 362 0480 B14D     		li	s11,12
+ 363              	.L15:
+ 364 0482 3396F600 		sll	a2,a3,a5
+ 365 0486 4206     		slli	a2,a2,16
+ 366 0488 4182     		srli	a2,a2,16
+ 367 048a 8545     		li	a1,1
+ 368 048c 3545     		li	a0,13
+ 369 048e 3EC0     		sw	a5,0(sp)
+ 370 0490 97000000 		call	adc_write
+ 370      E7800000 
+ 371 0498 8247     		lw	a5,0(sp)
+ 372 049a 8546     		li	a3,1
+ 373 049c 8507     		addi	a5,a5,1
+ 374 049e E392B7FF 		bne	a5,s11,.L15
+ 375 04a2 8147     		li	a5,0
+ 376 04a4 7D56     		li	a2,-1
+ 377 04a6 13070006 		li	a4,96
+ 378              	.L16:
+ 379 04aa 9408     		addi	a3,sp,80
+ 380 04ac BE96     		add	a3,a3,a5
+ 381 04ae 2380C600 		sb	a2,0(a3)
+ 382 04b2 8507     		addi	a5,a5,1
+ 383 04b4 E39BE7FE 		bne	a5,a4,.L16
+ 384 04b8 82C2     		sw	zero,68(sp)
+ 385 04ba 82C4     		sw	zero,72(sp)
+ 386 04bc 82C6     		sw	zero,76(sp)
+ 387 04be 814D     		li	s11,0
+ 388              	.L20:
+ 389 04c0 13052003 		li	a0,50
+ 390 04c4 97000000 		call	hwdelay
+ 390      E7800000 
+ 391 04cc 0146     		li	a2,0
+ 392 04ce 8145     		li	a1,0
+ 393 04d0 13050007 		li	a0,112
+ 394 04d4 97000000 		call	digi_write
+ 394      E7800000 
+ 395 04dc 0146     		li	a2,0
+ 396 04de 8545     		li	a1,1
+ 397 04e0 13055006 		li	a0,101
+ 398 04e4 97000000 		call	digi_write
+ 398      E7800000 
+ 399 04ec 2945     		li	a0,10
+ 400 04ee 97000000 		call	delayUs
+ 400      E7800000 
+ 401 04f6 0146     		li	a2,0
+ 402 04f8 8145     		li	a1,0
+ 403 04fa 13055006 		li	a0,101
+ 404 04fe 97000000 		call	digi_write
+ 404      E7800000 
+ 405 0506 8147     		li	a5,0
+ 406              	.L17:
+ 407 0508 13F6F70F 		andi	a2,a5,0xff
+ 408 050c 8D45     		li	a1,3
+ 409 050e 3285     		mv	a0,a2
+ 410 0510 3EC8     		sw	a5,16(sp)
+ 411 0512 32C6     		sw	a2,12(sp)
+ 412 0514 97000000 		call	__udivsi3
+ 412      E7800000 
+ 413 051c 3246     		lw	a2,12(sp)
+ 414 051e 0505     		addi	a0,a0,1
+ 415 0520 9376F50F 		andi	a3,a0,0xff
+ 416 0524 8D45     		li	a1,3
+ 417 0526 3285     		mv	a0,a2
+ 418 0528 36C0     		sw	a3,0(sp)
+ 419 052a 97000000 		call	__umodsi3
+ 419      E7800000 
+ 420 0532 8246     		lw	a3,0(sp)
+ 421 0534 1305C506 		addi	a0,a0,108
+ 422 0538 1375F50F 		andi	a0,a0,0xff
+ 423 053c B685     		mv	a1,a3
+ 424 053e 97000000 		call	digi_read
+ 424      E7800000 
+ 425 0546 C247     		lw	a5,16(sp)
+ 426 0548 1819     		addi	a4,sp,176
+ 427 054a 93961700 		slli	a3,a5,1
+ 428 054e BA96     		add	a3,a4,a3
+ 429 0550 239AA6F8 		sh	a0,-108(a3)
+ 430 0554 8507     		addi	a5,a5,1
+ 431 0556 1947     		li	a4,6
+ 432 0558 E398E7FA 		bne	a5,a4,.L17
+ 433 055c 8146     		li	a3,0
+ 434 055e 8545     		li	a1,1
+ 435              	.L19:
+ 436 0560 93F7F60F 		andi	a5,a3,0xff
+ 437 0564 13D64700 		srli	a2,a5,4
+ 438 0568 0606     		slli	a2,a2,1
+ 439 056a 1819     		addi	a4,sp,176
+ 440 056c 3A96     		add	a2,a4,a2
+ 441 056e 035646F9 		lhu	a2,-108(a2)
+ 442 0572 BD8B     		andi	a5,a5,15
+ 443 0574 B397F500 		sll	a5,a1,a5
+ 444 0578 F18F     		and	a5,a5,a2
+ 445 057a 99CB     		beqz	a5,.L18
+ 446 057c 9C08     		addi	a5,sp,80
+ 447 057e B697     		add	a5,a5,a3
+ 448 0580 03C60700 		lbu	a2,0(a5)
+ 449 0584 1307F00F 		li	a4,255
+ 450 0588 6314E600 		bne	a2,a4,.L18
+ 451 058c 2380B701 		sb	s11,0(a5)
+ 452              	.L18:
+ 453 0590 8506     		addi	a3,a3,1
+ 454 0592 93070006 		li	a5,96
+ 455 0596 E395F6FC 		bne	a3,a5,.L19
+ 456 059a 13871D00 		addi	a4,s11,1
+ 457 059e 937DF70F 		andi	s11,a4,0xff
+ 458 05a2 A947     		li	a5,10
+ 459 05a4 E39EFDF0 		bne	s11,a5,.L20
+ 460 05a8 0148     		li	a6,0
+ 461              	.L23:
+ 462 05aa 93171800 		slli	a5,a6,1
+ 463 05ae 1819     		addi	a4,sp,176
+ 464 05b0 3E97     		add	a4,a4,a5
+ 465 05b2 035647F9 		lhu	a2,-108(a4)
+ 466 05b6 8946     		li	a3,2
+ 467 05b8 93050B00 		addi	a1,s6,%lo(bufcount)
+ 468 05bc 13850B00 		addi	a0,s7,%lo(outBuffer)
+ 469 05c0 42C8     		sw	a6,16(sp)
+ 470 05c2 3EC6     		sw	a5,12(sp)
+ 471 05c4 3AC0     		sw	a4,0(sp)
+ 472 05c6 97000000 		call	bufWrite
+ 472      E7800000 
+ 473 05ce 0247     		lw	a4,0(sp)
+ 474 05d0 C166     		li	a3,65536
+ 475 05d2 B247     		lw	a5,12(sp)
+ 476 05d4 035747F9 		lhu	a4,-108(a4)
+ 477 05d8 4248     		lw	a6,16(sp)
+ 478 05da 938806F0 		addi	a7,a3,-256
+ 479 05de 1347F7FF 		not	a4,a4
+ 480 05e2 1377F70F 		andi	a4,a4,255
+ 481 05e6 194E     		li	t3,6
+ 482 05e8 0543     		li	t1,1
+ 483 05ea 11C7     		beqz	a4,.L21
+ 484 05ec 3317F300 		sll	a4,t1,a5
+ 485 05f0 598C     		or	s0,a4,s0
+ 486 05f2 4204     		slli	s0,s0,16
+ 487 05f4 4180     		srli	s0,s0,16
+ 488              	.L21:
+ 489 05f6 1819     		addi	a4,sp,176
+ 490 05f8 3E97     		add	a4,a4,a5
+ 491 05fa 035747F9 		lhu	a4,-108(a4)
+ 492 05fe 1347F7FF 		not	a4,a4
+ 493 0602 33771701 		and	a4,a4,a7
+ 494 0606 19C7     		beqz	a4,.L22
+ 495 0608 8507     		addi	a5,a5,1
+ 496 060a B317F300 		sll	a5,t1,a5
+ 497 060e 5D8C     		or	s0,a5,s0
+ 498 0610 4204     		slli	s0,s0,16
+ 499 0612 4180     		srli	s0,s0,16
+ 500              	.L22:
+ 501 0614 0508     		addi	a6,a6,1
+ 502 0616 E31AC8F9 		bne	a6,t3,.L23
+ 503 061a 8147     		li	a5,0
+ 504              	.L24:
+ 505 061c 9808     		addi	a4,sp,80
+ 506 061e 3306F700 		add	a2,a4,a5
+ 507 0622 3EC0     		sw	a5,0(sp)
+ 508 0624 03460600 		lbu	a2,0(a2)
+ 509 0628 B7070000 		lui	a5,%hi(bufcount)
+ 510 062c 93850700 		addi	a1,a5,%lo(bufcount)
+ 511 0630 B7070000 		lui	a5,%hi(outBuffer)
+ 512 0634 13850700 		addi	a0,a5,%lo(outBuffer)
+ 513 0638 8546     		li	a3,1
+ 514 063a 97000000 		call	bufWrite
+ 514      E7800000 
+ 515 0642 8247     		lw	a5,0(sp)
+ 516 0644 13070006 		li	a4,96
+ 517 0648 8507     		addi	a5,a5,1
+ 518 064a E399E7FC 		bne	a5,a4,.L24
+ 519 064e A247     		lw	a5,8(sp)
+ 520 0650 638E0716 		beqz	a5,.L25
+ 521 0654 8144     		li	s1,0
+ 522 0656 0547     		li	a4,1
+ 523              	.L26:
+ 524 0658 33169700 		sll	a2,a4,s1
+ 525 065c 4206     		slli	a2,a2,16
+ 526 065e 4182     		srli	a2,a2,16
+ 527 0660 B145     		li	a1,12
+ 528 0662 3545     		li	a0,13
+ 529 0664 97000000 		call	adc_write
+ 529      E7800000 
+ 530 066c 8504     		addi	s1,s1,1
+ 531 066e B147     		li	a5,12
+ 532 0670 0547     		li	a4,1
+ 533 0672 E393F4FE 		bne	s1,a5,.L26
+ 534 0676 0146     		li	a2,0
+ 535 0678 8545     		li	a1,1
+ 536 067a 13050007 		li	a0,112
+ 537 067e 97000000 		call	digi_write
+ 537      E7800000 
+ 538 0686 0146     		li	a2,0
+ 539 0688 8545     		li	a1,1
+ 540 068a 13055006 		li	a0,101
+ 541 068e 97000000 		call	digi_write
+ 541      E7800000 
+ 542 0696 2945     		li	a0,10
+ 543 0698 97000000 		call	delayUs
+ 543      E7800000 
+ 544 06a0 0146     		li	a2,0
+ 545 06a2 8145     		li	a1,0
+ 546 06a4 13055006 		li	a0,101
+ 547 06a8 97000000 		call	digi_write
+ 547      E7800000 
+ 548 06b0 0147     		li	a4,0
+ 549              	.L29:
+ 550 06b2 9374F70F 		andi	s1,a4,0xff
+ 551 06b6 8D45     		li	a1,3
+ 552 06b8 2685     		mv	a0,s1
+ 553 06ba 3AC6     		sw	a4,12(sp)
+ 554 06bc 97000000 		call	__udivsi3
+ 554      E7800000 
+ 555 06c4 0505     		addi	a0,a0,1
+ 556 06c6 9377F50F 		andi	a5,a0,0xff
+ 557 06ca 8D45     		li	a1,3
+ 558 06cc 2685     		mv	a0,s1
+ 559 06ce 3EC0     		sw	a5,0(sp)
+ 560 06d0 97000000 		call	__umodsi3
+ 560      E7800000 
+ 561 06d8 8247     		lw	a5,0(sp)
+ 562 06da 13051507 		addi	a0,a0,113
+ 563 06de 1375F50F 		andi	a0,a0,0xff
+ 564 06e2 BE85     		mv	a1,a5
+ 565 06e4 97000000 		call	digi_read
+ 565      E7800000 
+ 566 06ec AA84     		mv	s1,a0
+ 567 06ee 2A86     		mv	a2,a0
+ 568 06f0 8946     		li	a3,2
+ 569 06f2 93050900 		addi	a1,s2,%lo(bufcount)
+ 570 06f6 13850900 		addi	a0,s3,%lo(outBuffer)
+ 571 06fa 97000000 		call	bufWrite
+ 571      E7800000 
+ 572 0702 83D70C00 		lhu	a5,0(s9)
+ 573 0706 93C4F4FF 		not	s1,s1
+ 574 070a 3247     		lw	a4,12(sp)
+ 575 070c FD8C     		and	s1,s1,a5
+ 576 070e 93F7F40F 		andi	a5,s1,0xff
+ 577 0712 9948     		li	a7,6
+ 578 0714 0548     		li	a6,1
+ 579 0716 81CB     		beqz	a5,.L27
+ 580 0718 93171700 		slli	a5,a4,1
+ 581 071c B317F800 		sll	a5,a6,a5
+ 582 0720 5D8C     		or	s0,a5,s0
+ 583 0722 4204     		slli	s0,s0,16
+ 584 0724 4180     		srli	s0,s0,16
+ 585              	.L27:
+ 586 0726 93F404F0 		andi	s1,s1,-256
+ 587 072a 89C8     		beqz	s1,.L28
+ 588 072c 93171700 		slli	a5,a4,1
+ 589 0730 8507     		addi	a5,a5,1
+ 590 0732 B317F800 		sll	a5,a6,a5
+ 591 0736 5D8C     		or	s0,a5,s0
+ 592 0738 4204     		slli	s0,s0,16
+ 593 073a 4180     		srli	s0,s0,16
+ 594              	.L28:
+ 595 073c 0507     		addi	a4,a4,1
+ 596 073e 890C     		addi	s9,s9,2
+ 597 0740 E31917F7 		bne	a4,a7,.L29
+ 598              	.L30:
+ 599 0744 050A     		addi	s4,s4,1
+ 600 0746 137AFA0F 		andi	s4,s4,0xff
+ 601 074a 45C4     		beqz	s0,.L31
+ 602 074c 9947     		li	a5,6
+ 603 074e 6302FA0A 		beq	s4,a5,.L31
+ 604 0752 8D47     		li	a5,3
+ 605 0754 631BFA08 		bne	s4,a5,.L32
+ 606 0758 13053D00 		addi	a0,s10,3
+ 607 075c B145     		li	a1,12
+ 608 075e 97000000 		call	__modsi3
+ 608      E7800000 
+ 609 0766 137DF50F 		andi	s10,a0,0xff
+ 610              	.L33:
+ 611 076a 23A00A00 		sw	zero,%lo(mapped_channel_mask)(s5)
+ 612 076e 93870A00 		addi	a5,s5,%lo(mapped_channel_mask)
+ 613 0772 23A20700 		sw	zero,4(a5)
+ 614 0776 23A40700 		sw	zero,8(a5)
+ 615 077a 0147     		li	a4,0
+ 616 077c 93850A00 		addi	a1,s5,%lo(mapped_channel_mask)
+ 617 0780 1305F00F 		li	a0,255
+ 618 0784 3146     		li	a2,12
+ 619              	.L36:
+ 620 0786 B356E440 		sra	a3,s0,a4
+ 621 078a 858A     		andi	a3,a3,1
+ 622 078c 9377F70F 		andi	a5,a4,0xff
+ 623 0790 89CE     		beqz	a3,.L35
+ 624 0792 93F6C70F 		andi	a3,a5,252
+ 625 0796 AE96     		add	a3,a1,a3
+ 626 0798 03A80600 		lw	a6,0(a3)
+ 627 079c 8D8B     		andi	a5,a5,3
+ 628 079e 8E07     		slli	a5,a5,3
+ 629 07a0 B317F500 		sll	a5,a0,a5
+ 630 07a4 B3E70701 		or	a5,a5,a6
+ 631 07a8 9CC2     		sw	a5,0(a3)
+ 632              	.L35:
+ 633 07aa 0507     		addi	a4,a4,1
+ 634 07ac E31DC7FC 		bne	a4,a2,.L36
+ 635 07b0 0DBA     		j	.L37
+ 636              	.L4:
+ 637 07b2 13F6C70F 		andi	a2,a5,252
+ 638 07b6 6296     		add	a2,s8,a2
+ 639 07b8 8D8B     		andi	a5,a5,3
+ 640 07ba 0C42     		lw	a1,0(a2)
+ 641 07bc 8E07     		slli	a5,a5,3
+ 642 07be B317F800 		sll	a5,a6,a5
+ 643 07c2 93C7F7FF 		not	a5,a5
+ 644 07c6 ED8F     		and	a5,a5,a1
+ 645 07c8 1CC2     		sw	a5,0(a2)
+ 646 07ca D5BA     		j	.L5
+ 647              	.L25:
+ 648 07cc FD14     		addi	s1,s1,-1
+ 649 07ce 8946     		li	a3,2
+ 650 07d0 0146     		li	a2,0
+ 651 07d2 93050900 		addi	a1,s2,%lo(bufcount)
+ 652 07d6 13850900 		addi	a0,s3,%lo(outBuffer)
+ 653 07da 93F4F40F 		andi	s1,s1,0xff
+ 654 07de 97000000 		call	bufWrite
+ 654      E7800000 
+ 655 07e6 FDF0     		bnez	s1,.L25
+ 656 07e8 B1BF     		j	.L30
+ 657              	.L32:
+ 658 07ea 8947     		li	a5,2
+ 659 07ec E3FB478F 		bleu	s4,a5,.L37
+ 660 07f0 ADBF     		j	.L33
+ 661              	.L31:
+ 662 07f2 0144     		li	s0,0
+ 663 07f4 054A     		li	s4,1
+ 664 07f6 B144     		li	s1,12
+ 665              	.L38:
+ 666 07f8 33168A00 		sll	a2,s4,s0
+ 667 07fc 4206     		slli	a2,a2,16
+ 668 07fe 4182     		srli	a2,a2,16
+ 669 0800 8145     		li	a1,0
+ 670 0802 3545     		li	a0,13
+ 671 0804 0504     		addi	s0,s0,1
+ 672 0806 97000000 		call	adc_write
+ 672      E7800000 
+ 673 080e E31594FE 		bne	s0,s1,.L38
+ 674 0812 03560900 		lhu	a2,%lo(bufcount)(s2)
+ 675 0816 B7050000 		lui	a1,%hi(bufcount_place_holder)
+ 676 081a 13850900 		addi	a0,s3,%lo(outBuffer)
+ 677 081e 8946     		li	a3,2
+ 678 0820 7516     		addi	a2,a2,-3
+ 679 0822 93850500 		addi	a1,a1,%lo(bufcount_place_holder)
+ 680 0826 97000000 		call	bufWrite
+ 680      E7800000 
+ 681 082e B7070000 		lui	a5,%hi(g_uart)
+ 682 0832 03A50700 		lw	a0,%lo(g_uart)(a5)
+ 683 0836 93870700 		addi	a5,a5,%lo(g_uart)
+ 684 083a 83560900 		lhu	a3,%lo(bufcount)(s2)
+ 685 083e CC43     		lw	a1,4(a5)
+ 686 0840 13860900 		addi	a2,s3,%lo(outBuffer)
+ 687 0844 97000000 		call	outBufSend
+ 687      E7800000 
+ 688 084c 4D61     		addi	sp,sp,176
+ 689 084e 17030000 		tail	__riscv_restore_12
+ 689      67000300 
+ 691              		.comm	DS28,8,4
+ 692              		.comm	slowamps,384,4
+ 693              		.comm	i2c_slowamps,576,4
+ 694              		.comm	i2c_sensor,24,4
+ 695              		.comm	I2CserialHV,12,4
+ 696              		.comm	I2CserialCal,12,4
+ 697              		.comm	strawsHV,768,4
+ 698              		.comm	strawsCal,768,4
+ 699              		.comm	caldac1,16,4
+ 700              		.comm	caldac0,16,4
+ 701              		.comm	dacs,1536,4
+ 702              		.comm	spi_ambtemp_hv,20,4
+ 703              		.comm	spi_ambtemp_cal,20,4
+ 704              		.comm	spi_sensor,20,4
+ 705              		.comm	sensorMCP,104,4
+ 706              		.comm	preampMCP,1248,4
+ 707              		.comm	pulserOdd,1,1
+ 708              		.comm	dutyCycle,2,2
+ 709              		.comm	pulserDelay,4,4
+ 710              		.comm	pulserOn,1,1
+ 711              		.comm	current_thresholds,64,4
+ 712              		.comm	current_gains,64,4
+ 713              		.comm	registers_0_addr,4,4
+ 714              		.comm	mapped_channel_mask,12,4
+ 715              		.comm	channel_mask,12,4
+ 716              		.ident	"GCC: (Microchip SoftConsole GNU RISC-V Embedded GCC, 64-bit) 8.2.0"
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 autobitslip.c
+C:\Users\tecchio\AppData\Local\Temp\ccoeoYux.s:12     .text.autobitslip:0000000000000000 autobitslip
+                            *COM*:000000000000000c channel_mask
+                            *COM*:000000000000000c mapped_channel_mask
+                            *COM*:0000000000000004 registers_0_addr
+                            *COM*:0000000000000008 DS28
+                            *COM*:0000000000000180 slowamps
+                            *COM*:0000000000000240 i2c_slowamps
+                            *COM*:0000000000000018 i2c_sensor
+                            *COM*:000000000000000c I2CserialHV
+                            *COM*:000000000000000c I2CserialCal
+                            *COM*:0000000000000300 strawsHV
+                            *COM*:0000000000000300 strawsCal
+                            *COM*:0000000000000010 caldac1
+                            *COM*:0000000000000010 caldac0
+                            *COM*:0000000000000600 dacs
+                            *COM*:0000000000000014 spi_ambtemp_hv
+                            *COM*:0000000000000014 spi_ambtemp_cal
+                            *COM*:0000000000000014 spi_sensor
+                            *COM*:0000000000000068 sensorMCP
+                            *COM*:00000000000004e0 preampMCP
+                            *COM*:0000000000000001 pulserOdd
+                            *COM*:0000000000000002 dutyCycle
+                            *COM*:0000000000000004 pulserDelay
+                            *COM*:0000000000000001 pulserOn
+                            *COM*:0000000000000040 current_thresholds
+                            *COM*:0000000000000040 current_gains
+C:\Users\tecchio\AppData\Local\Temp\ccoeoYux.s:116    .text.autobitslip:0000000000000178 .L2
+C:\Users\tecchio\AppData\Local\Temp\ccoeoYux.s:102    .text.autobitslip:0000000000000150 .L3
+C:\Users\tecchio\AppData\Local\Temp\ccoeoYux.s:636    .text.autobitslip:00000000000007b2 .L4
+C:\Users\tecchio\AppData\Local\Temp\ccoeoYux.s:123    .text.autobitslip:0000000000000188 .L6
+C:\Users\tecchio\AppData\Local\Temp\ccoeoYux.s:208    .text.autobitslip:00000000000002a6 .L7
+C:\Users\tecchio\AppData\Local\Temp\ccoeoYux.s:303    .text.autobitslip:00000000000003da .L8
+C:\Users\tecchio\AppData\Local\Temp\ccoeoYux.s:261    .text.autobitslip:0000000000000356 .L9
+C:\Users\tecchio\AppData\Local\Temp\ccoeoYux.s:312    .text.autobitslip:00000000000003f4 .L39
+C:\Users\tecchio\AppData\Local\Temp\ccoeoYux.s:255    .text.autobitslip:0000000000000346 .L11
+C:\Users\tecchio\AppData\Local\Temp\ccoeoYux.s:345    .text.autobitslip:0000000000000458 .L12
+C:\Users\tecchio\AppData\Local\Temp\ccoeoYux.s:357    .text.autobitslip:0000000000000476 .L13
+C:\Users\tecchio\AppData\Local\Temp\ccoeoYux.s:315    .text.autobitslip:00000000000003f8 .L14
+C:\Users\tecchio\AppData\Local\Temp\ccoeoYux.s:363    .text.autobitslip:0000000000000482 .L15
+C:\Users\tecchio\AppData\Local\Temp\ccoeoYux.s:378    .text.autobitslip:00000000000004aa .L16
+C:\Users\tecchio\AppData\Local\Temp\ccoeoYux.s:406    .text.autobitslip:0000000000000508 .L17
+C:\Users\tecchio\AppData\Local\Temp\ccoeoYux.s:452    .text.autobitslip:0000000000000590 .L18
+C:\Users\tecchio\AppData\Local\Temp\ccoeoYux.s:435    .text.autobitslip:0000000000000560 .L19
+C:\Users\tecchio\AppData\Local\Temp\ccoeoYux.s:388    .text.autobitslip:00000000000004c0 .L20
+C:\Users\tecchio\AppData\Local\Temp\ccoeoYux.s:488    .text.autobitslip:00000000000005f6 .L21
+C:\Users\tecchio\AppData\Local\Temp\ccoeoYux.s:500    .text.autobitslip:0000000000000614 .L22
+C:\Users\tecchio\AppData\Local\Temp\ccoeoYux.s:461    .text.autobitslip:00000000000005aa .L23
+C:\Users\tecchio\AppData\Local\Temp\ccoeoYux.s:504    .text.autobitslip:000000000000061c .L24
+C:\Users\tecchio\AppData\Local\Temp\ccoeoYux.s:647    .text.autobitslip:00000000000007cc .L25
+C:\Users\tecchio\AppData\Local\Temp\ccoeoYux.s:523    .text.autobitslip:0000000000000658 .L26
+C:\Users\tecchio\AppData\Local\Temp\ccoeoYux.s:585    .text.autobitslip:0000000000000726 .L27
+C:\Users\tecchio\AppData\Local\Temp\ccoeoYux.s:594    .text.autobitslip:000000000000073c .L28
+C:\Users\tecchio\AppData\Local\Temp\ccoeoYux.s:549    .text.autobitslip:00000000000006b2 .L29
+C:\Users\tecchio\AppData\Local\Temp\ccoeoYux.s:661    .text.autobitslip:00000000000007f2 .L31
+C:\Users\tecchio\AppData\Local\Temp\ccoeoYux.s:657    .text.autobitslip:00000000000007ea .L32
+C:\Users\tecchio\AppData\Local\Temp\ccoeoYux.s:632    .text.autobitslip:00000000000007aa .L35
+C:\Users\tecchio\AppData\Local\Temp\ccoeoYux.s:619    .text.autobitslip:0000000000000786 .L36
+C:\Users\tecchio\AppData\Local\Temp\ccoeoYux.s:70     .text.autobitslip:00000000000000e2 .L37
+C:\Users\tecchio\AppData\Local\Temp\ccoeoYux.s:140    .text.autobitslip:00000000000001be .L5
+C:\Users\tecchio\AppData\Local\Temp\ccoeoYux.s:598    .text.autobitslip:0000000000000744 .L30
+C:\Users\tecchio\AppData\Local\Temp\ccoeoYux.s:610    .text.autobitslip:000000000000076a .L33
+C:\Users\tecchio\AppData\Local\Temp\ccoeoYux.s:665    .text.autobitslip:00000000000007f8 .L38
+
+UNDEFINED SYMBOLS
+__udivsi3
+__divsi3
+__umodsi3
+__modsi3
+__riscv_save_12
+buffer
+readU32fromBytes
+bufcount
+get_mapped_channels
+outBuffer
+bufcount_place_holder
+bufWrite
+digi_write
+delayUs
+adc_write
+hwdelay
+digi_read
+g_uart
+outBufSend
+__riscv_restore_12

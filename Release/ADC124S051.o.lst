@@ -1,0 +1,81 @@
+   1              		.file	"ADC124S051.c"
+   2              		.option nopic
+   3              		.text
+   4              		.section	.text.ADC124S051_daisy_read,"ax",@progbits
+   5              		.align	1
+   6              		.globl	ADC124S051_daisy_read
+   8              	ADC124S051_daisy_read:
+   9 0000 17030000 		call	t0,__riscv_save_0
+   9      E7020300 
+  10 0008 4111     		addi	sp,sp,-16
+  11 000a 8E05     		slli	a1,a1,3
+  12 000c 2304B100 		sb	a1,8(sp)
+  13 0010 7800     		addi	a4,sp,12
+  14 0012 3000     		addi	a2,sp,8
+  15 0014 8946     		li	a3,2
+  16 0016 8945     		li	a1,2
+  17 0018 23160100 		sh	zero,12(sp)
+  18 001c A3040100 		sb	zero,9(sp)
+  19 0020 97000000 		call	SPI_daisy_rw_cycle
+  19      E7800000 
+  20 0028 8347C100 		lbu	a5,12(sp)
+  21 002c 0345D100 		lbu	a0,13(sp)
+  22 0030 A207     		slli	a5,a5,8
+  23 0032 5D8D     		or	a0,a5,a0
+  24 0034 4101     		addi	sp,sp,16
+  25 0036 17030000 		tail	__riscv_restore_0
+  25      67000300 
+  27              		.section	.text.ADC124S051_read,"ax",@progbits
+  28              		.align	1
+  29              		.globl	ADC124S051_read
+  31              	ADC124S051_read:
+  32 0000 17030000 		call	t0,__riscv_save_3
+  32      E7020300 
+  33 0008 8947     		li	a5,2
+  34 000a 2A89     		mv	s2,a0
+  35 000c B284     		mv	s1,a2
+  36 000e 0944     		li	s0,2
+  37 0010 6385F500 		beq	a1,a5,.L4
+  38 0014 FD15     		addi	a1,a1,-1
+  39 0016 13B41500 		seqz	s0,a1
+  40              	.L4:
+  41 001a AE04     		slli	s1,s1,11
+  42 001c A285     		mv	a1,s0
+  43 001e 4A85     		mv	a0,s2
+  44 0020 C204     		slli	s1,s1,16
+  45 0022 97000000 		call	SPI_set_slave_select
+  45      E7800000 
+  46 002a C180     		srli	s1,s1,16
+  47 002c A685     		mv	a1,s1
+  48 002e 4A85     		mv	a0,s2
+  49 0030 97000000 		call	SPI_transfer_frame
+  49      E7800000 
+  50 0038 A685     		mv	a1,s1
+  51 003a 4A85     		mv	a0,s2
+  52 003c 97000000 		call	SPI_transfer_frame
+  52      E7800000 
+  53 0044 AA84     		mv	s1,a0
+  54 0046 A285     		mv	a1,s0
+  55 0048 4A85     		mv	a0,s2
+  56 004a 97000000 		call	SPI_clear_slave_select
+  56      E7800000 
+  57 0052 13950401 		slli	a0,s1,16
+  58 0056 4181     		srli	a0,a0,16
+  59 0058 17030000 		tail	__riscv_restore_3
+  59      67000300 
+  61              		.ident	"GCC: (Microchip SoftConsole GNU RISC-V Embedded GCC, 64-bit) 8.2.0"
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 ADC124S051.c
+C:\Users\tecchio\AppData\Local\Temp\ccOK7G2S.s:8      .text.ADC124S051_daisy_read:0000000000000000 ADC124S051_daisy_read
+C:\Users\tecchio\AppData\Local\Temp\ccOK7G2S.s:31     .text.ADC124S051_read:0000000000000000 ADC124S051_read
+C:\Users\tecchio\AppData\Local\Temp\ccOK7G2S.s:40     .text.ADC124S051_read:000000000000001a .L4
+
+UNDEFINED SYMBOLS
+__riscv_save_0
+SPI_daisy_rw_cycle
+__riscv_restore_0
+__riscv_save_3
+SPI_set_slave_select
+SPI_transfer_frame
+SPI_clear_slave_select
+__riscv_restore_3

@@ -1,0 +1,549 @@
+   1              		.file	"MCP23S17.c"
+   2              		.option nopic
+   3              		.text
+   4              		.section	.text.MCP_byteWrite,"ax",@progbits
+   5              		.align	1
+   6              		.globl	MCP_byteWrite
+   8              	MCP_byteWrite:
+   9 0000 17030000 		call	t0,__riscv_save_2
+   9      E7020300 
+  10 0008 83470500 		lbu	a5,0(a0)
+  11 000c 4111     		addi	sp,sp,-16
+  12 000e A306B100 		sb	a1,13(sp)
+  13 0012 83454501 		lbu	a1,20(a0)
+  14 0016 93048501 		addi	s1,a0,24
+  15 001a 8607     		slli	a5,a5,1
+  16 001c 93E70704 		ori	a5,a5,64
+  17 0020 2A84     		mv	s0,a0
+  18 0022 2685     		mv	a0,s1
+  19 0024 2306F100 		sb	a5,12(sp)
+  20 0028 2307C100 		sb	a2,14(sp)
+  21 002c 97000000 		call	SPI_set_slave_select
+  21      E7800000 
+  22 0034 0147     		li	a4,0
+  23 0036 8146     		li	a3,0
+  24 0038 0D46     		li	a2,3
+  25 003a 6C00     		addi	a1,sp,12
+  26 003c 2685     		mv	a0,s1
+  27 003e 97000000 		call	SPI_transfer_block
+  27      E7800000 
+  28 0046 83454401 		lbu	a1,20(s0)
+  29 004a 2685     		mv	a0,s1
+  30 004c 97000000 		call	SPI_clear_slave_select
+  30      E7800000 
+  31 0054 4101     		addi	sp,sp,16
+  32 0056 17030000 		tail	__riscv_restore_2
+  32      67000300 
+  34              		.section	.text.MCP_setup,"ax",@progbits
+  35              		.align	1
+  36              		.globl	MCP_setup
+  38              	MCP_setup:
+  39 0000 17030000 		call	t0,__riscv_save_2
+  39      E7020300 
+  40 0008 2A84     		mv	s0,a0
+  41 000a 4111     		addi	sp,sp,-16
+  42 000c B284     		mv	s1,a2
+  43 000e 6105     		addi	a0,a0,24
+  44 0010 1306C004 		li	a2,76
+  45 0014 36C6     		sw	a3,12(sp)
+  46 0016 3AC4     		sw	a4,8(sp)
+  47 0018 97000000 		call	memcpy
+  47      E7800000 
+  48 0020 B246     		lw	a3,12(sp)
+  49 0022 2247     		lw	a4,8(sp)
+  50 0024 C167     		li	a5,65536
+  51 0026 FD17     		addi	a5,a5,-1
+  52 0028 230A9400 		sb	s1,20(s0)
+  53 002c 2300D400 		sb	a3,0(s0)
+  54 0030 5CC0     		sw	a5,4(s0)
+  55 0032 23280400 		sw	zero,16(s0)
+  56 0036 23240400 		sw	zero,8(s0)
+  57 003a 23260400 		sw	zero,12(s0)
+  58 003e 2302E406 		sb	a4,100(s0)
+  59 0042 A945     		li	a1,10
+  60 0044 11C3     		beqz	a4,.L4
+  61 0046 9545     		li	a1,5
+  62              	.L4:
+  63 0048 2146     		li	a2,8
+  64 004a 2285     		mv	a0,s0
+  65 004c 97000000 		call	MCP_byteWrite
+  65      E7800000 
+  66 0054 4101     		addi	sp,sp,16
+  67 0056 17030000 		tail	__riscv_restore_2
+  67      67000300 
+  69              		.section	.text.MCP_wordWrite,"ax",@progbits
+  70              		.align	1
+  71              		.globl	MCP_wordWrite
+  73              	MCP_wordWrite:
+  74 0000 17030000 		call	t0,__riscv_save_2
+  74      E7020300 
+  75 0008 83474506 		lbu	a5,100(a0)
+  76 000c 4111     		addi	sp,sp,-16
+  77 000e 81CF     		beqz	a5,.L9
+  78 0010 1376F60F 		andi	a2,a2,0xff
+  79 0014 97000000 		call	MCP_byteWrite
+  79      E7800000 
+  80              	.L8:
+  81 001c 4101     		addi	sp,sp,16
+  82 001e 17030000 		tail	__riscv_restore_2
+  82      67000300 
+  83              	.L9:
+  84 0026 83470500 		lbu	a5,0(a0)
+  85 002a A306B100 		sb	a1,13(sp)
+  86 002e 83454501 		lbu	a1,20(a0)
+  87 0032 93048501 		addi	s1,a0,24
+  88 0036 8607     		slli	a5,a5,1
+  89 0038 93E70704 		ori	a5,a5,64
+  90 003c 2A84     		mv	s0,a0
+  91 003e 2685     		mv	a0,s1
+  92 0040 2306F100 		sb	a5,12(sp)
+  93 0044 2317C100 		sh	a2,14(sp)
+  94 0048 97000000 		call	SPI_set_slave_select
+  94      E7800000 
+  95 0050 6C00     		addi	a1,sp,12
+  96 0052 2685     		mv	a0,s1
+  97 0054 0147     		li	a4,0
+  98 0056 8146     		li	a3,0
+  99 0058 1146     		li	a2,4
+ 100 005a 97000000 		call	SPI_transfer_block
+ 100      E7800000 
+ 101 0062 83454401 		lbu	a1,20(s0)
+ 102 0066 2685     		mv	a0,s1
+ 103 0068 97000000 		call	SPI_clear_slave_select
+ 103      E7800000 
+ 104 0070 75B7     		j	.L8
+ 106              		.section	.text.MCP_pinMode,"ax",@progbits
+ 107              		.align	1
+ 108              		.globl	MCP_pinMode
+ 110              	MCP_pinMode:
+ 111 0000 83464506 		lbu	a3,100(a0)
+ 112 0004 13B71500 		seqz	a4,a1
+ 113 0008 C147     		li	a5,16
+ 114 000a 91C2     		beqz	a3,.L13
+ 115 000c A147     		li	a5,8
+ 116              	.L13:
+ 117 000e 63CFB702 		bgt	a1,a5,.L20
+ 118 0012 0DEF     		bnez	a4,.L20
+ 119 0014 17030000 		call	t0,__riscv_save_0
+ 119      E7020300 
+ 120 001c FD15     		addi	a1,a1,-1
+ 121 001e 0547     		li	a4,1
+ 122 0020 5C41     		lw	a5,4(a0)
+ 123 0022 B315B700 		sll	a1,a4,a1
+ 124 0026 631EE600 		bne	a2,a4,.L15
+ 125 002a 33E6F500 		or	a2,a1,a5
+ 126              	.L16:
+ 127 002e 50C1     		sw	a2,4(a0)
+ 128 0030 8145     		li	a1,0
+ 129 0032 97000000 		call	MCP_wordWrite
+ 129      E7800000 
+ 130 003a 17030000 		tail	__riscv_restore_0
+ 130      67000300 
+ 131              	.L15:
+ 132 0042 93C5F5FF 		not	a1,a1
+ 133 0046 33F6F500 		and	a2,a1,a5
+ 134 004a D5B7     		j	.L16
+ 135              	.L20:
+ 136 004c 8280     		ret
+ 138              		.section	.text.MCP_pinModeAll,"ax",@progbits
+ 139              		.align	1
+ 140              		.globl	MCP_pinModeAll
+ 142              	MCP_pinModeAll:
+ 143 0000 17030000 		call	t0,__riscv_save_2
+ 143      E7020300 
+ 144 0008 2E84     		mv	s0,a1
+ 145 000a AA84     		mv	s1,a0
+ 146 000c 2E86     		mv	a2,a1
+ 147 000e 8145     		li	a1,0
+ 148 0010 97000000 		call	MCP_wordWrite
+ 148      E7800000 
+ 149 0018 C0C0     		sw	s0,4(s1)
+ 150 001a 17030000 		tail	__riscv_restore_2
+ 150      67000300 
+ 152              		.section	.text.MCP_pullupMode,"ax",@progbits
+ 153              		.align	1
+ 154              		.globl	MCP_pullupMode
+ 156              	MCP_pullupMode:
+ 157 0000 03474506 		lbu	a4,100(a0)
+ 158 0004 93B61500 		seqz	a3,a1
+ 159 0008 C147     		li	a5,16
+ 160 000a 11C3     		beqz	a4,.L26
+ 161 000c A147     		li	a5,8
+ 162              	.L26:
+ 163 000e 63C1B704 		bgt	a1,a5,.L35
+ 164 0012 9DEE     		bnez	a3,.L35
+ 165 0014 17030000 		call	t0,__riscv_save_0
+ 165      E7020300 
+ 166 001c FD15     		addi	a1,a1,-1
+ 167 001e 8546     		li	a3,1
+ 168 0020 1C45     		lw	a5,8(a0)
+ 169 0022 B395B600 		sll	a1,a3,a1
+ 170 0026 6310D602 		bne	a2,a3,.L28
+ 171 002a 33E6F500 		or	a2,a1,a5
+ 172              	.L29:
+ 173 002e 10C5     		sw	a2,8(a0)
+ 174 0030 9945     		li	a1,6
+ 175 0032 11E3     		bnez	a4,.L30
+ 176 0034 B145     		li	a1,12
+ 177              	.L30:
+ 178 0036 97000000 		call	MCP_wordWrite
+ 178      E7800000 
+ 179 003e 17030000 		tail	__riscv_restore_0
+ 179      67000300 
+ 180              	.L28:
+ 181 0046 93C5F5FF 		not	a1,a1
+ 182 004a 33F6F500 		and	a2,a1,a5
+ 183 004e C5B7     		j	.L29
+ 184              	.L35:
+ 185 0050 8280     		ret
+ 187              		.section	.text.MCP_pullupModeAll,"ax",@progbits
+ 188              		.align	1
+ 189              		.globl	MCP_pullupModeAll
+ 191              	MCP_pullupModeAll:
+ 192 0000 17030000 		call	t0,__riscv_save_2
+ 192      E7020300 
+ 193 0008 83474506 		lbu	a5,100(a0)
+ 194 000c AE84     		mv	s1,a1
+ 195 000e 2A84     		mv	s0,a0
+ 196 0010 B145     		li	a1,12
+ 197 0012 91C3     		beqz	a5,.L39
+ 198 0014 9945     		li	a1,6
+ 199              	.L39:
+ 200 0016 2686     		mv	a2,s1
+ 201 0018 2285     		mv	a0,s0
+ 202 001a 97000000 		call	MCP_wordWrite
+ 202      E7800000 
+ 203 0022 04C4     		sw	s1,8(s0)
+ 204 0024 17030000 		tail	__riscv_restore_2
+ 204      67000300 
+ 206              		.section	.text.MCP_inputInvert,"ax",@progbits
+ 207              		.align	1
+ 208              		.globl	MCP_inputInvert
+ 210              	MCP_inputInvert:
+ 211 0000 03474506 		lbu	a4,100(a0)
+ 212 0004 93B61500 		seqz	a3,a1
+ 213 0008 C147     		li	a5,16
+ 214 000a 11C3     		beqz	a4,.L44
+ 215 000c A147     		li	a5,8
+ 216              	.L44:
+ 217 000e 63C1B704 		bgt	a1,a5,.L53
+ 218 0012 9DEE     		bnez	a3,.L53
+ 219 0014 17030000 		call	t0,__riscv_save_0
+ 219      E7020300 
+ 220 001c FD15     		addi	a1,a1,-1
+ 221 001e 8546     		li	a3,1
+ 222 0020 5C45     		lw	a5,12(a0)
+ 223 0022 B395B600 		sll	a1,a3,a1
+ 224 0026 6310D602 		bne	a2,a3,.L46
+ 225 002a 33E6F500 		or	a2,a1,a5
+ 226              	.L47:
+ 227 002e 93351700 		seqz	a1,a4
+ 228 0032 50C5     		sw	a2,12(a0)
+ 229 0034 8505     		addi	a1,a1,1
+ 230 0036 97000000 		call	MCP_wordWrite
+ 230      E7800000 
+ 231 003e 17030000 		tail	__riscv_restore_0
+ 231      67000300 
+ 232              	.L46:
+ 233 0046 93C5F5FF 		not	a1,a1
+ 234 004a 33F6F500 		and	a2,a1,a5
+ 235 004e C5B7     		j	.L47
+ 236              	.L53:
+ 237 0050 8280     		ret
+ 239              		.section	.text.MCP_inputInvertAll,"ax",@progbits
+ 240              		.align	1
+ 241              		.globl	MCP_inputInvertAll
+ 243              	MCP_inputInvertAll:
+ 244 0000 17030000 		call	t0,__riscv_save_2
+ 244      E7020300 
+ 245 0008 AE84     		mv	s1,a1
+ 246 000a 83454506 		lbu	a1,100(a0)
+ 247 000e 2A84     		mv	s0,a0
+ 248 0010 2686     		mv	a2,s1
+ 249 0012 93B51500 		seqz	a1,a1
+ 250 0016 8505     		addi	a1,a1,1
+ 251 0018 97000000 		call	MCP_wordWrite
+ 251      E7800000 
+ 252 0020 44C4     		sw	s1,12(s0)
+ 253 0022 17030000 		tail	__riscv_restore_2
+ 253      67000300 
+ 255              		.section	.text.MCP_pinWrite,"ax",@progbits
+ 256              		.align	1
+ 257              		.globl	MCP_pinWrite
+ 259              	MCP_pinWrite:
+ 260 0000 83464506 		lbu	a3,100(a0)
+ 261 0004 13B71500 		seqz	a4,a1
+ 262 0008 C147     		li	a5,16
+ 263 000a 91C2     		beqz	a3,.L61
+ 264 000c A147     		li	a5,8
+ 265              	.L61:
+ 266 000e 63C0B704 		bgt	a1,a5,.L70
+ 267 0012 15EF     		bnez	a4,.L70
+ 268 0014 17030000 		call	t0,__riscv_save_0
+ 268      E7020300 
+ 269 001c 1387F5FF 		addi	a4,a1,-1
+ 270 0020 8545     		li	a1,1
+ 271 0022 1C49     		lw	a5,16(a0)
+ 272 0024 B395E500 		sll	a1,a1,a4
+ 273 0028 19CE     		beqz	a2,.L63
+ 274 002a 33E6F500 		or	a2,a1,a5
+ 275              	.L64:
+ 276 002e 10C9     		sw	a2,16(a0)
+ 277 0030 A545     		li	a1,9
+ 278 0032 91E2     		bnez	a3,.L65
+ 279 0034 C945     		li	a1,18
+ 280              	.L65:
+ 281 0036 97000000 		call	MCP_wordWrite
+ 281      E7800000 
+ 282 003e 17030000 		tail	__riscv_restore_0
+ 282      67000300 
+ 283              	.L63:
+ 284 0046 13C6F5FF 		not	a2,a1
+ 285 004a 7D8E     		and	a2,a2,a5
+ 286 004c CDB7     		j	.L64
+ 287              	.L70:
+ 288 004e 8280     		ret
+ 290              		.section	.text.MCP_pinWriteAll,"ax",@progbits
+ 291              		.align	1
+ 292              		.globl	MCP_pinWriteAll
+ 294              	MCP_pinWriteAll:
+ 295 0000 17030000 		call	t0,__riscv_save_2
+ 295      E7020300 
+ 296 0008 83474506 		lbu	a5,100(a0)
+ 297 000c AE84     		mv	s1,a1
+ 298 000e 2A84     		mv	s0,a0
+ 299 0010 C945     		li	a1,18
+ 300 0012 91C3     		beqz	a5,.L74
+ 301 0014 A545     		li	a1,9
+ 302              	.L74:
+ 303 0016 2686     		mv	a2,s1
+ 304 0018 2285     		mv	a0,s0
+ 305 001a 97000000 		call	MCP_wordWrite
+ 305      E7800000 
+ 306 0022 04C8     		sw	s1,16(s0)
+ 307 0024 17030000 		tail	__riscv_restore_2
+ 307      67000300 
+ 309              		.section	.text.MCP_byteRead,"ax",@progbits
+ 310              		.align	1
+ 311              		.globl	MCP_byteRead
+ 313              	MCP_byteRead:
+ 314 0000 17030000 		call	t0,__riscv_save_2
+ 314      E7020300 
+ 315 0008 83470500 		lbu	a5,0(a0)
+ 316 000c 4111     		addi	sp,sp,-16
+ 317 000e A306B100 		sb	a1,13(sp)
+ 318 0012 83454501 		lbu	a1,20(a0)
+ 319 0016 93048501 		addi	s1,a0,24
+ 320 001a 8607     		slli	a5,a5,1
+ 321 001c 93E71704 		ori	a5,a5,65
+ 322 0020 2A84     		mv	s0,a0
+ 323 0022 2685     		mv	a0,s1
+ 324 0024 2306F100 		sb	a5,12(sp)
+ 325 0028 A3050100 		sb	zero,11(sp)
+ 326 002c 97000000 		call	SPI_set_slave_select
+ 326      E7800000 
+ 327 0034 9306B100 		addi	a3,sp,11
+ 328 0038 0547     		li	a4,1
+ 329 003a 0946     		li	a2,2
+ 330 003c 6C00     		addi	a1,sp,12
+ 331 003e 2685     		mv	a0,s1
+ 332 0040 97000000 		call	SPI_transfer_block
+ 332      E7800000 
+ 333 0048 83454401 		lbu	a1,20(s0)
+ 334 004c 2685     		mv	a0,s1
+ 335 004e 97000000 		call	SPI_clear_slave_select
+ 335      E7800000 
+ 336 0056 0345B100 		lbu	a0,11(sp)
+ 337 005a 4101     		addi	sp,sp,16
+ 338 005c 17030000 		tail	__riscv_restore_2
+ 338      67000300 
+ 340              		.section	.text.MCP_wordRead,"ax",@progbits
+ 341              		.align	1
+ 342              		.globl	MCP_wordRead
+ 344              	MCP_wordRead:
+ 345 0000 17030000 		call	t0,__riscv_save_2
+ 345      E7020300 
+ 346 0008 83474506 		lbu	a5,100(a0)
+ 347 000c 4111     		addi	sp,sp,-16
+ 348 000e 91CB     		beqz	a5,.L81
+ 349 0010 97000000 		call	MCP_byteRead
+ 349      E7800000 
+ 350              	.L80:
+ 351 0018 4101     		addi	sp,sp,16
+ 352 001a 17030000 		tail	__riscv_restore_2
+ 352      67000300 
+ 353              	.L81:
+ 354 0022 83470500 		lbu	a5,0(a0)
+ 355 0026 A304B100 		sb	a1,9(sp)
+ 356 002a 83454501 		lbu	a1,20(a0)
+ 357 002e 93048501 		addi	s1,a0,24
+ 358 0032 8607     		slli	a5,a5,1
+ 359 0034 93E71704 		ori	a5,a5,65
+ 360 0038 2A84     		mv	s0,a0
+ 361 003a 2685     		mv	a0,s1
+ 362 003c 2304F100 		sb	a5,8(sp)
+ 363 0040 97000000 		call	SPI_set_slave_select
+ 363      E7800000 
+ 364 0048 0947     		li	a4,2
+ 365 004a 7400     		addi	a3,sp,12
+ 366 004c 0946     		li	a2,2
+ 367 004e 2C00     		addi	a1,sp,8
+ 368 0050 2685     		mv	a0,s1
+ 369 0052 97000000 		call	SPI_transfer_block
+ 369      E7800000 
+ 370 005a 83454401 		lbu	a1,20(s0)
+ 371 005e 2685     		mv	a0,s1
+ 372 0060 97000000 		call	SPI_clear_slave_select
+ 372      E7800000 
+ 373 0068 0355C100 		lhu	a0,12(sp)
+ 374 006c 75B7     		j	.L80
+ 376              		.section	.text.MCP_pinReadAll,"ax",@progbits
+ 377              		.align	1
+ 378              		.globl	MCP_pinReadAll
+ 380              	MCP_pinReadAll:
+ 381 0000 17030000 		call	t0,__riscv_save_0
+ 381      E7020300 
+ 382 0008 83474506 		lbu	a5,100(a0)
+ 383 000c C945     		li	a1,18
+ 384 000e 91C3     		beqz	a5,.L85
+ 385 0010 A545     		li	a1,9
+ 386              	.L85:
+ 387 0012 97000000 		call	MCP_wordRead
+ 387      E7800000 
+ 388 001a 17030000 		tail	__riscv_restore_0
+ 388      67000300 
+ 390              		.section	.text.MCP_pinRead,"ax",@progbits
+ 391              		.align	1
+ 392              		.globl	MCP_pinRead
+ 394              	MCP_pinRead:
+ 395 0000 83464506 		lbu	a3,100(a0)
+ 396 0004 13B71500 		seqz	a4,a1
+ 397 0008 C147     		li	a5,16
+ 398 000a 91C2     		beqz	a3,.L89
+ 399 000c A147     		li	a5,8
+ 400              	.L89:
+ 401 000e 63C7B702 		bgt	a1,a5,.L92
+ 402 0012 0DE7     		bnez	a4,.L92
+ 403 0014 17030000 		call	t0,__riscv_save_1
+ 403      E7020300 
+ 404 001c 2E84     		mv	s0,a1
+ 405 001e 97000000 		call	MCP_pinReadAll
+ 405      E7800000 
+ 406 0026 7D14     		addi	s0,s0,-1
+ 407 0028 8545     		li	a1,1
+ 408 002a B3958500 		sll	a1,a1,s0
+ 409 002e 6D8D     		and	a0,a1,a0
+ 410 0030 3335A000 		snez	a0,a0
+ 411 0034 17030000 		tail	__riscv_restore_1
+ 411      67000300 
+ 412              	.L92:
+ 413 003c 0145     		li	a0,0
+ 414 003e 8280     		ret
+ 416              		.comm	DS28,8,4
+ 417              		.comm	slowamps,384,4
+ 418              		.comm	i2c_slowamps,576,4
+ 419              		.comm	i2c_sensor,24,4
+ 420              		.comm	I2CserialHV,12,4
+ 421              		.comm	I2CserialCal,12,4
+ 422              		.comm	strawsHV,768,4
+ 423              		.comm	strawsCal,768,4
+ 424              		.comm	caldac1,16,4
+ 425              		.comm	caldac0,16,4
+ 426              		.comm	dacs,1536,4
+ 427              		.comm	spi_ambtemp_hv,20,4
+ 428              		.comm	spi_ambtemp_cal,20,4
+ 429              		.comm	spi_sensor,20,4
+ 430              		.comm	sensorMCP,104,4
+ 431              		.comm	preampMCP,1248,4
+ 432              		.comm	pulserOdd,1,1
+ 433              		.comm	dutyCycle,2,2
+ 434              		.comm	pulserDelay,4,4
+ 435              		.comm	pulserOn,1,1
+ 436              		.comm	current_thresholds,64,4
+ 437              		.comm	current_gains,64,4
+ 438              		.comm	registers_0_addr,4,4
+ 439              		.comm	mapped_channel_mask,12,4
+ 440              		.comm	channel_mask,12,4
+ 441              		.ident	"GCC: (Microchip SoftConsole GNU RISC-V Embedded GCC, 64-bit) 8.2.0"
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 MCP23S17.c
+C:\Users\tecchio\AppData\Local\Temp\ccNlAkVW.s:8      .text.MCP_byteWrite:0000000000000000 MCP_byteWrite
+C:\Users\tecchio\AppData\Local\Temp\ccNlAkVW.s:38     .text.MCP_setup:0000000000000000 MCP_setup
+C:\Users\tecchio\AppData\Local\Temp\ccNlAkVW.s:73     .text.MCP_wordWrite:0000000000000000 MCP_wordWrite
+C:\Users\tecchio\AppData\Local\Temp\ccNlAkVW.s:110    .text.MCP_pinMode:0000000000000000 MCP_pinMode
+C:\Users\tecchio\AppData\Local\Temp\ccNlAkVW.s:142    .text.MCP_pinModeAll:0000000000000000 MCP_pinModeAll
+C:\Users\tecchio\AppData\Local\Temp\ccNlAkVW.s:156    .text.MCP_pullupMode:0000000000000000 MCP_pullupMode
+C:\Users\tecchio\AppData\Local\Temp\ccNlAkVW.s:191    .text.MCP_pullupModeAll:0000000000000000 MCP_pullupModeAll
+C:\Users\tecchio\AppData\Local\Temp\ccNlAkVW.s:210    .text.MCP_inputInvert:0000000000000000 MCP_inputInvert
+C:\Users\tecchio\AppData\Local\Temp\ccNlAkVW.s:243    .text.MCP_inputInvertAll:0000000000000000 MCP_inputInvertAll
+C:\Users\tecchio\AppData\Local\Temp\ccNlAkVW.s:259    .text.MCP_pinWrite:0000000000000000 MCP_pinWrite
+C:\Users\tecchio\AppData\Local\Temp\ccNlAkVW.s:294    .text.MCP_pinWriteAll:0000000000000000 MCP_pinWriteAll
+C:\Users\tecchio\AppData\Local\Temp\ccNlAkVW.s:313    .text.MCP_byteRead:0000000000000000 MCP_byteRead
+C:\Users\tecchio\AppData\Local\Temp\ccNlAkVW.s:344    .text.MCP_wordRead:0000000000000000 MCP_wordRead
+C:\Users\tecchio\AppData\Local\Temp\ccNlAkVW.s:380    .text.MCP_pinReadAll:0000000000000000 MCP_pinReadAll
+C:\Users\tecchio\AppData\Local\Temp\ccNlAkVW.s:394    .text.MCP_pinRead:0000000000000000 MCP_pinRead
+                            *COM*:0000000000000008 DS28
+                            *COM*:0000000000000180 slowamps
+                            *COM*:0000000000000240 i2c_slowamps
+                            *COM*:0000000000000018 i2c_sensor
+                            *COM*:000000000000000c I2CserialHV
+                            *COM*:000000000000000c I2CserialCal
+                            *COM*:0000000000000300 strawsHV
+                            *COM*:0000000000000300 strawsCal
+                            *COM*:0000000000000010 caldac1
+                            *COM*:0000000000000010 caldac0
+                            *COM*:0000000000000600 dacs
+                            *COM*:0000000000000014 spi_ambtemp_hv
+                            *COM*:0000000000000014 spi_ambtemp_cal
+                            *COM*:0000000000000014 spi_sensor
+                            *COM*:0000000000000068 sensorMCP
+                            *COM*:00000000000004e0 preampMCP
+                            *COM*:0000000000000001 pulserOdd
+                            *COM*:0000000000000002 dutyCycle
+                            *COM*:0000000000000004 pulserDelay
+                            *COM*:0000000000000001 pulserOn
+                            *COM*:0000000000000040 current_thresholds
+                            *COM*:0000000000000040 current_gains
+                            *COM*:0000000000000004 registers_0_addr
+                            *COM*:000000000000000c mapped_channel_mask
+                            *COM*:000000000000000c channel_mask
+C:\Users\tecchio\AppData\Local\Temp\ccNlAkVW.s:62     .text.MCP_setup:0000000000000048 .L4
+C:\Users\tecchio\AppData\Local\Temp\ccNlAkVW.s:83     .text.MCP_wordWrite:0000000000000026 .L9
+C:\Users\tecchio\AppData\Local\Temp\ccNlAkVW.s:80     .text.MCP_wordWrite:000000000000001c .L8
+C:\Users\tecchio\AppData\Local\Temp\ccNlAkVW.s:116    .text.MCP_pinMode:000000000000000e .L13
+C:\Users\tecchio\AppData\Local\Temp\ccNlAkVW.s:135    .text.MCP_pinMode:000000000000004c .L20
+C:\Users\tecchio\AppData\Local\Temp\ccNlAkVW.s:131    .text.MCP_pinMode:0000000000000042 .L15
+C:\Users\tecchio\AppData\Local\Temp\ccNlAkVW.s:126    .text.MCP_pinMode:000000000000002e .L16
+C:\Users\tecchio\AppData\Local\Temp\ccNlAkVW.s:162    .text.MCP_pullupMode:000000000000000e .L26
+C:\Users\tecchio\AppData\Local\Temp\ccNlAkVW.s:184    .text.MCP_pullupMode:0000000000000050 .L35
+C:\Users\tecchio\AppData\Local\Temp\ccNlAkVW.s:180    .text.MCP_pullupMode:0000000000000046 .L28
+C:\Users\tecchio\AppData\Local\Temp\ccNlAkVW.s:177    .text.MCP_pullupMode:0000000000000036 .L30
+C:\Users\tecchio\AppData\Local\Temp\ccNlAkVW.s:172    .text.MCP_pullupMode:000000000000002e .L29
+C:\Users\tecchio\AppData\Local\Temp\ccNlAkVW.s:199    .text.MCP_pullupModeAll:0000000000000016 .L39
+C:\Users\tecchio\AppData\Local\Temp\ccNlAkVW.s:216    .text.MCP_inputInvert:000000000000000e .L44
+C:\Users\tecchio\AppData\Local\Temp\ccNlAkVW.s:236    .text.MCP_inputInvert:0000000000000050 .L53
+C:\Users\tecchio\AppData\Local\Temp\ccNlAkVW.s:232    .text.MCP_inputInvert:0000000000000046 .L46
+C:\Users\tecchio\AppData\Local\Temp\ccNlAkVW.s:226    .text.MCP_inputInvert:000000000000002e .L47
+C:\Users\tecchio\AppData\Local\Temp\ccNlAkVW.s:265    .text.MCP_pinWrite:000000000000000e .L61
+C:\Users\tecchio\AppData\Local\Temp\ccNlAkVW.s:287    .text.MCP_pinWrite:000000000000004e .L70
+C:\Users\tecchio\AppData\Local\Temp\ccNlAkVW.s:283    .text.MCP_pinWrite:0000000000000046 .L63
+C:\Users\tecchio\AppData\Local\Temp\ccNlAkVW.s:280    .text.MCP_pinWrite:0000000000000036 .L65
+C:\Users\tecchio\AppData\Local\Temp\ccNlAkVW.s:275    .text.MCP_pinWrite:000000000000002e .L64
+C:\Users\tecchio\AppData\Local\Temp\ccNlAkVW.s:302    .text.MCP_pinWriteAll:0000000000000016 .L74
+C:\Users\tecchio\AppData\Local\Temp\ccNlAkVW.s:353    .text.MCP_wordRead:0000000000000022 .L81
+C:\Users\tecchio\AppData\Local\Temp\ccNlAkVW.s:350    .text.MCP_wordRead:0000000000000018 .L80
+C:\Users\tecchio\AppData\Local\Temp\ccNlAkVW.s:386    .text.MCP_pinReadAll:0000000000000012 .L85
+C:\Users\tecchio\AppData\Local\Temp\ccNlAkVW.s:400    .text.MCP_pinRead:000000000000000e .L89
+C:\Users\tecchio\AppData\Local\Temp\ccNlAkVW.s:412    .text.MCP_pinRead:000000000000003c .L92
+
+UNDEFINED SYMBOLS
+__riscv_save_2
+SPI_set_slave_select
+SPI_transfer_block
+SPI_clear_slave_select
+__riscv_restore_2
+memcpy
+__riscv_save_0
+__riscv_restore_0
+__riscv_save_1
+__riscv_restore_1

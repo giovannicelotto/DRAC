@@ -1,0 +1,191 @@
+   1              		.file	"LTC2634.c"
+   2              		.option nopic
+   3              		.text
+   4              		.section	.text.LTC2634_setup,"ax",@progbits
+   5              		.align	1
+   6              		.globl	LTC2634_setup
+   8              	LTC2634_setup:
+   9 0000 17030000 		call	t0,__riscv_save_5
+   9      E7020300 
+  10 0008 2A84     		mv	s0,a0
+  11 000a 2E85     		mv	a0,a1
+  12 000c A306E400 		sb	a4,13(s0)
+  13 0010 23070401 		sb	a6,14(s0)
+  14 0014 54C0     		sw	a3,4(s0)
+  15 0016 1CC4     		sw	a5,8(s0)
+  16 0018 B285     		mv	a1,a2
+  17 001a 2306C400 		sb	a2,12(s0)
+  18 001e 08C0     		sw	a0,0(s0)
+  19 0020 0546     		li	a2,1
+  20 0022 97000000 		call	MCP_pinWrite
+  20      E7800000 
+  21 002a 8345C400 		lbu	a1,12(s0)
+  22 002e 0840     		lw	a0,0(s0)
+  23 0030 0146     		li	a2,0
+  24 0032 DD44     		li	s1,23
+  25 0034 97000000 		call	MCP_pinMode
+  25      E7800000 
+  26 003c 8345D400 		lbu	a1,13(s0)
+  27 0040 4840     		lw	a0,4(s0)
+  28 0042 0146     		li	a2,0
+  29 0044 054A     		li	s4,1
+  30 0046 97000000 		call	MCP_pinWrite
+  30      E7800000 
+  31 004e 8345D400 		lbu	a1,13(s0)
+  32 0052 4840     		lw	a0,4(s0)
+  33 0054 0146     		li	a2,0
+  34 0056 B7097F00 		li	s3,8323072
+  35 005a 97000000 		call	MCP_pinMode
+  35      E7800000 
+  36 0062 8345E400 		lbu	a1,14(s0)
+  37 0066 0844     		lw	a0,8(s0)
+  38 0068 0146     		li	a2,0
+  39 006a 7D59     		li	s2,-1
+  40 006c 97000000 		call	MCP_pinWrite
+  40      E7800000 
+  41 0074 8345E400 		lbu	a1,14(s0)
+  42 0078 0844     		lw	a0,8(s0)
+  43 007a 0146     		li	a2,0
+  44 007c 97000000 		call	MCP_pinMode
+  44      E7800000 
+  45 0084 8345D400 		lbu	a1,13(s0)
+  46 0088 4840     		lw	a0,4(s0)
+  47 008a 0146     		li	a2,0
+  48 008c 97000000 		call	MCP_pinWrite
+  48      E7800000 
+  49 0094 8345C400 		lbu	a1,12(s0)
+  50 0098 0840     		lw	a0,0(s0)
+  51 009a 0146     		li	a2,0
+  52 009c 97000000 		call	MCP_pinWrite
+  52      E7800000 
+  53 00a4 0945     		li	a0,2
+  54 00a6 97000000 		call	delayUs
+  54      E7800000 
+  55              	.L2:
+  56 00ae 8345E400 		lbu	a1,14(s0)
+  57 00b2 33169A00 		sll	a2,s4,s1
+  58 00b6 0844     		lw	a0,8(s0)
+  59 00b8 33763601 		and	a2,a2,s3
+  60 00bc 3336C000 		snez	a2,a2
+  61 00c0 97000000 		call	MCP_pinWrite
+  61      E7800000 
+  62 00c8 0945     		li	a0,2
+  63 00ca 97000000 		call	delayUs
+  63      E7800000 
+  64 00d2 8345D400 		lbu	a1,13(s0)
+  65 00d6 4840     		lw	a0,4(s0)
+  66 00d8 0546     		li	a2,1
+  67 00da FD14     		addi	s1,s1,-1
+  68 00dc 97000000 		call	MCP_pinWrite
+  68      E7800000 
+  69 00e4 0945     		li	a0,2
+  70 00e6 97000000 		call	delayUs
+  70      E7800000 
+  71 00ee 8345D400 		lbu	a1,13(s0)
+  72 00f2 4840     		lw	a0,4(s0)
+  73 00f4 0146     		li	a2,0
+  74 00f6 97000000 		call	MCP_pinWrite
+  74      E7800000 
+  75 00fe 0945     		li	a0,2
+  76 0100 97000000 		call	delayUs
+  76      E7800000 
+  77 0108 E39324FB 		bne	s1,s2,.L2
+  78 010c 8345C400 		lbu	a1,12(s0)
+  79 0110 0840     		lw	a0,0(s0)
+  80 0112 0546     		li	a2,1
+  81 0114 97000000 		call	MCP_pinWrite
+  81      E7800000 
+  82 011c 0945     		li	a0,2
+  83 011e 97000000 		call	delayUs
+  83      E7800000 
+  84 0126 17030000 		tail	__riscv_restore_5
+  84      67000300 
+  86              		.section	.text.LTC2634_write,"ax",@progbits
+  87              		.align	1
+  88              		.globl	LTC2634_write
+  90              	LTC2634_write:
+  91 0000 17030000 		call	t0,__riscv_save_5
+  91      E7020300 
+  92 0008 B7040F00 		li	s1,983040
+  93 000c C205     		slli	a1,a1,16
+  94 000e E58D     		and	a1,a1,s1
+  95 0010 1A06     		slli	a2,a2,6
+  96 0012 D18D     		or	a1,a1,a2
+  97 0014 B7043000 		li	s1,3145728
+  98 0018 2A84     		mv	s0,a0
+  99 001a CD8C     		or	s1,a1,s1
+ 100 001c 8345D500 		lbu	a1,13(a0)
+ 101 0020 4841     		lw	a0,4(a0)
+ 102 0022 0146     		li	a2,0
+ 103 0024 5D49     		li	s2,23
+ 104 0026 97000000 		call	MCP_pinWrite
+ 104      E7800000 
+ 105 002e 8345C400 		lbu	a1,12(s0)
+ 106 0032 0840     		lw	a0,0(s0)
+ 107 0034 0146     		li	a2,0
+ 108 0036 054A     		li	s4,1
+ 109 0038 97000000 		call	MCP_pinWrite
+ 109      E7800000 
+ 110 0040 0945     		li	a0,2
+ 111 0042 97000000 		call	delayUs
+ 111      E7800000 
+ 112 004a FD59     		li	s3,-1
+ 113              	.L6:
+ 114 004c 8345E400 		lbu	a1,14(s0)
+ 115 0050 33162A01 		sll	a2,s4,s2
+ 116 0054 0844     		lw	a0,8(s0)
+ 117 0056 658E     		and	a2,a2,s1
+ 118 0058 3336C000 		snez	a2,a2
+ 119 005c 97000000 		call	MCP_pinWrite
+ 119      E7800000 
+ 120 0064 0945     		li	a0,2
+ 121 0066 97000000 		call	delayUs
+ 121      E7800000 
+ 122 006e 8345D400 		lbu	a1,13(s0)
+ 123 0072 4840     		lw	a0,4(s0)
+ 124 0074 0546     		li	a2,1
+ 125 0076 7D19     		addi	s2,s2,-1
+ 126 0078 97000000 		call	MCP_pinWrite
+ 126      E7800000 
+ 127 0080 0945     		li	a0,2
+ 128 0082 97000000 		call	delayUs
+ 128      E7800000 
+ 129 008a 8345D400 		lbu	a1,13(s0)
+ 130 008e 4840     		lw	a0,4(s0)
+ 131 0090 0146     		li	a2,0
+ 132 0092 97000000 		call	MCP_pinWrite
+ 132      E7800000 
+ 133 009a 0945     		li	a0,2
+ 134 009c 97000000 		call	delayUs
+ 134      E7800000 
+ 135 00a4 E31439FB 		bne	s2,s3,.L6
+ 136 00a8 8345C400 		lbu	a1,12(s0)
+ 137 00ac 0840     		lw	a0,0(s0)
+ 138 00ae 0546     		li	a2,1
+ 139 00b0 97000000 		call	MCP_pinWrite
+ 139      E7800000 
+ 140 00b8 0945     		li	a0,2
+ 141 00ba 97000000 		call	delayUs
+ 141      E7800000 
+ 142 00c2 17030000 		tail	__riscv_restore_5
+ 142      67000300 
+ 144              		.comm	registers_0_addr,4,4
+ 145              		.comm	mapped_channel_mask,12,4
+ 146              		.comm	channel_mask,12,4
+ 147              		.ident	"GCC: (Microchip SoftConsole GNU RISC-V Embedded GCC, 64-bit) 8.2.0"
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 LTC2634.c
+C:\Users\tecchio\AppData\Local\Temp\ccFp0L9I.s:8      .text.LTC2634_setup:0000000000000000 LTC2634_setup
+C:\Users\tecchio\AppData\Local\Temp\ccFp0L9I.s:90     .text.LTC2634_write:0000000000000000 LTC2634_write
+                            *COM*:0000000000000004 registers_0_addr
+                            *COM*:000000000000000c mapped_channel_mask
+                            *COM*:000000000000000c channel_mask
+C:\Users\tecchio\AppData\Local\Temp\ccFp0L9I.s:55     .text.LTC2634_setup:00000000000000ae .L2
+C:\Users\tecchio\AppData\Local\Temp\ccFp0L9I.s:113    .text.LTC2634_write:000000000000004c .L6
+
+UNDEFINED SYMBOLS
+__riscv_save_5
+MCP_pinWrite
+MCP_pinMode
+delayUs
+__riscv_restore_5

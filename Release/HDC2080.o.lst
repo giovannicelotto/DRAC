@@ -1,0 +1,328 @@
+   1              		.file	"HDC2080.c"
+   2              		.option nopic
+   3              		.text
+   4              		.section	.text.hdc2080_open_reg,"ax",@progbits
+   5              		.align	1
+   6              		.globl	hdc2080_open_reg
+   8              	hdc2080_open_reg:
+   9 0000 17030000 		call	t0,__riscv_save_2
+   9      E7020300 
+  10 0008 AE84     		mv	s1,a1
+  11 000a 83450500 		lbu	a1,0(a0)
+  12 000e 2A84     		mv	s0,a0
+  13 0010 4841     		lw	a0,4(a0)
+  14 0012 8605     		slli	a1,a1,1
+  15 0014 93F5E50F 		andi	a1,a1,254
+  16 0018 97000000 		call	I2C_start
+  16      E7800000 
+  17 0020 09ED     		bnez	a0,.L3
+  18 0022 4840     		lw	a0,4(s0)
+  19 0024 A685     		mv	a1,s1
+  20 0026 97000000 		call	I2C_write
+  20      E7800000 
+  21 002e 3335A000 		snez	a0,a0
+  22              	.L2:
+  23 0032 17030000 		tail	__riscv_restore_2
+  23      67000300 
+  24              	.L3:
+  25 003a 0545     		li	a0,1
+  26 003c DDBF     		j	.L2
+  28              		.section	.text.hdc2080_get_reg,"ax",@progbits
+  29              		.align	1
+  30              		.globl	hdc2080_get_reg
+  32              	hdc2080_get_reg:
+  33 0000 17030000 		call	t0,__riscv_save_3
+  33      E7020300 
+  34 0008 2A84     		mv	s0,a0
+  35 000a B284     		mv	s1,a2
+  36 000c 97000000 		call	hdc2080_open_reg
+  36      E7800000 
+  37 0014 19C5     		beqz	a0,.L6
+  38              	.L8:
+  39 0016 0549     		li	s2,1
+  40              	.L7:
+  41 0018 4A85     		mv	a0,s2
+  42 001a 17030000 		tail	__riscv_restore_3
+  42      67000300 
+  43              	.L6:
+  44 0022 83450400 		lbu	a1,0(s0)
+  45 0026 4840     		lw	a0,4(s0)
+  46 0028 8605     		slli	a1,a1,1
+  47 002a 93E51500 		ori	a1,a1,1
+  48 002e 93F5F50F 		andi	a1,a1,0xff
+  49 0032 97000000 		call	I2C_start
+  49      E7800000 
+  50 003a 2A89     		mv	s2,a0
+  51 003c 69FD     		bnez	a0,.L8
+  52 003e 4840     		lw	a0,4(s0)
+  53 0040 8545     		li	a1,1
+  54 0042 97000000 		call	I2C_read
+  54      E7800000 
+  55 004a 8146     		li	a3,0
+  56 004c 0147     		li	a4,0
+  57 004e 8548     		li	a7,1
+  58 0050 1D48     		li	a6,7
+  59 0052 2146     		li	a2,8
+  60              	.L9:
+  61 0054 B397E800 		sll	a5,a7,a4
+  62 0058 E98F     		and	a5,a5,a0
+  63 005a B3D7E740 		sra	a5,a5,a4
+  64 005e B305E840 		sub	a1,a6,a4
+  65 0062 B397B700 		sll	a5,a5,a1
+  66 0066 DD8E     		or	a3,a5,a3
+  67 0068 0507     		addi	a4,a4,1
+  68 006a 93F6F60F 		andi	a3,a3,0xff
+  69 006e E313C7FE 		bne	a4,a2,.L9
+  70 0072 2380D400 		sb	a3,0(s1)
+  71 0076 4840     		lw	a0,4(s0)
+  72 0078 97000000 		call	I2C_stop
+  72      E7800000 
+  73 0080 61BF     		j	.L7
+  75              		.section	.text.hdc2080_set_reg,"ax",@progbits
+  76              		.align	1
+  77              		.globl	hdc2080_set_reg
+  79              	hdc2080_set_reg:
+  80 0000 17030000 		call	t0,__riscv_save_2
+  80      E7020300 
+  81 0008 4111     		addi	sp,sp,-16
+  82 000a 32C6     		sw	a2,12(sp)
+  83 000c AA84     		mv	s1,a0
+  84 000e 97000000 		call	hdc2080_open_reg
+  84      E7800000 
+  85 0016 3246     		lw	a2,12(sp)
+  86 0018 01C9     		beqz	a0,.L13
+  87              	.L15:
+  88 001a 0544     		li	s0,1
+  89              	.L14:
+  90 001c 2285     		mv	a0,s0
+  91 001e 4101     		addi	sp,sp,16
+  92 0020 17030000 		tail	__riscv_restore_2
+  92      67000300 
+  93              	.L13:
+  94 0028 C840     		lw	a0,4(s1)
+  95 002a B285     		mv	a1,a2
+  96 002c 97000000 		call	I2C_write
+  96      E7800000 
+  97 0034 2A84     		mv	s0,a0
+  98 0036 75F1     		bnez	a0,.L15
+  99 0038 C840     		lw	a0,4(s1)
+ 100 003a 97000000 		call	I2C_stop
+ 100      E7800000 
+ 101 0042 E9BF     		j	.L14
+ 103              		.section	.text.hdc2080_read_temp,"ax",@progbits
+ 104              		.align	1
+ 105              		.globl	hdc2080_read_temp
+ 107              	hdc2080_read_temp:
+ 108 0000 17030000 		call	t0,__riscv_save_3
+ 108      E7020300 
+ 109 0008 4111     		addi	sp,sp,-16
+ 110 000a 2E84     		mv	s0,a1
+ 111 000c 1306F100 		addi	a2,sp,15
+ 112 0010 8145     		li	a1,0
+ 113 0012 2A89     		mv	s2,a0
+ 114 0014 97000000 		call	hdc2080_get_reg
+ 114      E7800000 
+ 115 001c 19C5     		beqz	a0,.L18
+ 116              	.L20:
+ 117 001e 0545     		li	a0,1
+ 118              	.L19:
+ 119 0020 4101     		addi	sp,sp,16
+ 120 0022 17030000 		tail	__riscv_restore_3
+ 120      67000300 
+ 121              	.L18:
+ 122 002a 1306F100 		addi	a2,sp,15
+ 123 002e 8545     		li	a1,1
+ 124 0030 4A85     		mv	a0,s2
+ 125 0032 8344F100 		lbu	s1,15(sp)
+ 126 0036 97000000 		call	hdc2080_get_reg
+ 126      E7800000 
+ 127 003e 65F1     		bnez	a0,.L20
+ 128 0040 8347F100 		lbu	a5,15(sp)
+ 129 0044 A207     		slli	a5,a5,8
+ 130 0046 C58F     		or	a5,a5,s1
+ 131 0048 2310F400 		sh	a5,0(s0)
+ 132 004c D1BF     		j	.L19
+ 134              		.section	.text.hdc2080_read_humidity,"ax",@progbits
+ 135              		.align	1
+ 136              		.globl	hdc2080_read_humidity
+ 138              	hdc2080_read_humidity:
+ 139 0000 17030000 		call	t0,__riscv_save_3
+ 139      E7020300 
+ 140 0008 4111     		addi	sp,sp,-16
+ 141 000a 2E84     		mv	s0,a1
+ 142 000c 1306F100 		addi	a2,sp,15
+ 143 0010 8945     		li	a1,2
+ 144 0012 2A89     		mv	s2,a0
+ 145 0014 97000000 		call	hdc2080_get_reg
+ 145      E7800000 
+ 146 001c 19C5     		beqz	a0,.L23
+ 147              	.L25:
+ 148 001e 0545     		li	a0,1
+ 149              	.L24:
+ 150 0020 4101     		addi	sp,sp,16
+ 151 0022 17030000 		tail	__riscv_restore_3
+ 151      67000300 
+ 152              	.L23:
+ 153 002a 1306F100 		addi	a2,sp,15
+ 154 002e 8D45     		li	a1,3
+ 155 0030 4A85     		mv	a0,s2
+ 156 0032 8344F100 		lbu	s1,15(sp)
+ 157 0036 97000000 		call	hdc2080_get_reg
+ 157      E7800000 
+ 158 003e 65F1     		bnez	a0,.L25
+ 159 0040 8347F100 		lbu	a5,15(sp)
+ 160 0044 A207     		slli	a5,a5,8
+ 161 0046 C58F     		or	a5,a5,s1
+ 162 0048 2310F400 		sh	a5,0(s0)
+ 163 004c D1BF     		j	.L24
+ 165              		.section	.text.hdc2080_trigger_measurement,"ax",@progbits
+ 166              		.align	1
+ 167              		.globl	hdc2080_trigger_measurement
+ 169              	hdc2080_trigger_measurement:
+ 170 0000 17030000 		call	t0,__riscv_save_1
+ 170      E7020300 
+ 171 0008 4111     		addi	sp,sp,-16
+ 172 000a 1306F100 		addi	a2,sp,15
+ 173 000e BD45     		li	a1,15
+ 174 0010 2A84     		mv	s0,a0
+ 175 0012 97000000 		call	hdc2080_get_reg
+ 175      E7800000 
+ 176 001a 0DE9     		bnez	a0,.L29
+ 177 001c 0346F100 		lbu	a2,15(sp)
+ 178 0020 2285     		mv	a0,s0
+ 179 0022 BD45     		li	a1,15
+ 180 0024 13661600 		ori	a2,a2,1
+ 181 0028 A307C100 		sb	a2,15(sp)
+ 182 002c 97000000 		call	hdc2080_set_reg
+ 182      E7800000 
+ 183 0034 2A84     		mv	s0,a0
+ 184 0036 0945     		li	a0,2
+ 185 0038 97000000 		call	delay_ms
+ 185      E7800000 
+ 186              	.L28:
+ 187 0040 2285     		mv	a0,s0
+ 188 0042 4101     		addi	sp,sp,16
+ 189 0044 17030000 		tail	__riscv_restore_1
+ 189      67000300 
+ 190              	.L29:
+ 191 004c 0544     		li	s0,1
+ 192 004e CDBF     		j	.L28
+ 194              		.section	.text.hdc2080_reset,"ax",@progbits
+ 195              		.align	1
+ 196              		.globl	hdc2080_reset
+ 198              	hdc2080_reset:
+ 199 0000 17030000 		call	t0,__riscv_save_1
+ 199      E7020300 
+ 200 0008 4111     		addi	sp,sp,-16
+ 201 000a 1306F100 		addi	a2,sp,15
+ 202 000e B945     		li	a1,14
+ 203 0010 2A84     		mv	s0,a0
+ 204 0012 97000000 		call	hdc2080_get_reg
+ 204      E7800000 
+ 205 001a 15E1     		bnez	a0,.L33
+ 206 001c 0346F100 		lbu	a2,15(sp)
+ 207 0020 B945     		li	a1,14
+ 208 0022 2285     		mv	a0,s0
+ 209 0024 13660608 		ori	a2,a2,128
+ 210 0028 A307C100 		sb	a2,15(sp)
+ 211 002c 97000000 		call	hdc2080_set_reg
+ 211      E7800000 
+ 212              	.L32:
+ 213 0034 4101     		addi	sp,sp,16
+ 214 0036 17030000 		tail	__riscv_restore_1
+ 214      67000300 
+ 215              	.L33:
+ 216 003e 0545     		li	a0,1
+ 217 0040 D5BF     		j	.L32
+ 219              		.section	.text.hdc2080_setup,"ax",@progbits
+ 220              		.align	1
+ 221              		.globl	hdc2080_setup
+ 223              	hdc2080_setup:
+ 224 0000 17030000 		call	t0,__riscv_save_1
+ 224      E7020300 
+ 225 0008 4111     		addi	sp,sp,-16
+ 226 000a 50C1     		sw	a2,4(a0)
+ 227 000c 2300B500 		sb	a1,0(a0)
+ 228 0010 2A84     		mv	s0,a0
+ 229 0012 23070100 		sb	zero,14(sp)
+ 230 0016 A3070100 		sb	zero,15(sp)
+ 231 001a 97000000 		call	hdc2080_reset
+ 231      E7800000 
+ 232 0022 2945     		li	a0,10
+ 233 0024 97000000 		call	delay_ms
+ 233      E7800000 
+ 234 002c 1306E100 		addi	a2,sp,14
+ 235 0030 9305E00F 		li	a1,254
+ 236 0034 2285     		mv	a0,s0
+ 237 0036 97000000 		call	hdc2080_get_reg
+ 237      E7800000 
+ 238 003e 15E5     		bnez	a0,.L36
+ 239 0040 1306F100 		addi	a2,sp,15
+ 240 0044 9305F00F 		li	a1,255
+ 241 0048 2285     		mv	a0,s0
+ 242 004a 97000000 		call	hdc2080_get_reg
+ 242      E7800000 
+ 243 0052 01ED     		bnez	a0,.L36
+ 244 0054 0347E100 		lbu	a4,14(sp)
+ 245 0058 9307000D 		li	a5,208
+ 246 005c 6317F700 		bne	a4,a5,.L36
+ 247 0060 0347F100 		lbu	a4,15(sp)
+ 248 0064 9D47     		li	a5,7
+ 249 0066 6303F700 		beq	a4,a5,.L37
+ 250              	.L36:
+ 251 006a 0545     		li	a0,1
+ 252              	.L37:
+ 253 006c 4101     		addi	sp,sp,16
+ 254 006e 17030000 		tail	__riscv_restore_1
+ 254      67000300 
+ 256              		.comm	registers_0_addr,4,4
+ 257              		.comm	mapped_channel_mask,12,4
+ 258              		.comm	channel_mask,12,4
+ 259              		.ident	"GCC: (Microchip SoftConsole GNU RISC-V Embedded GCC, 64-bit) 8.2.0"
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 HDC2080.c
+C:\Users\tecchio\AppData\Local\Temp\ccHCMvCa.s:8      .text.hdc2080_open_reg:0000000000000000 hdc2080_open_reg
+C:\Users\tecchio\AppData\Local\Temp\ccHCMvCa.s:32     .text.hdc2080_get_reg:0000000000000000 hdc2080_get_reg
+C:\Users\tecchio\AppData\Local\Temp\ccHCMvCa.s:79     .text.hdc2080_set_reg:0000000000000000 hdc2080_set_reg
+C:\Users\tecchio\AppData\Local\Temp\ccHCMvCa.s:107    .text.hdc2080_read_temp:0000000000000000 hdc2080_read_temp
+C:\Users\tecchio\AppData\Local\Temp\ccHCMvCa.s:138    .text.hdc2080_read_humidity:0000000000000000 hdc2080_read_humidity
+C:\Users\tecchio\AppData\Local\Temp\ccHCMvCa.s:169    .text.hdc2080_trigger_measurement:0000000000000000 hdc2080_trigger_measurement
+C:\Users\tecchio\AppData\Local\Temp\ccHCMvCa.s:198    .text.hdc2080_reset:0000000000000000 hdc2080_reset
+C:\Users\tecchio\AppData\Local\Temp\ccHCMvCa.s:223    .text.hdc2080_setup:0000000000000000 hdc2080_setup
+                            *COM*:0000000000000004 registers_0_addr
+                            *COM*:000000000000000c mapped_channel_mask
+                            *COM*:000000000000000c channel_mask
+C:\Users\tecchio\AppData\Local\Temp\ccHCMvCa.s:24     .text.hdc2080_open_reg:000000000000003a .L3
+C:\Users\tecchio\AppData\Local\Temp\ccHCMvCa.s:22     .text.hdc2080_open_reg:0000000000000032 .L2
+C:\Users\tecchio\AppData\Local\Temp\ccHCMvCa.s:43     .text.hdc2080_get_reg:0000000000000022 .L6
+C:\Users\tecchio\AppData\Local\Temp\ccHCMvCa.s:38     .text.hdc2080_get_reg:0000000000000016 .L8
+C:\Users\tecchio\AppData\Local\Temp\ccHCMvCa.s:60     .text.hdc2080_get_reg:0000000000000054 .L9
+C:\Users\tecchio\AppData\Local\Temp\ccHCMvCa.s:40     .text.hdc2080_get_reg:0000000000000018 .L7
+C:\Users\tecchio\AppData\Local\Temp\ccHCMvCa.s:93     .text.hdc2080_set_reg:0000000000000028 .L13
+C:\Users\tecchio\AppData\Local\Temp\ccHCMvCa.s:87     .text.hdc2080_set_reg:000000000000001a .L15
+C:\Users\tecchio\AppData\Local\Temp\ccHCMvCa.s:89     .text.hdc2080_set_reg:000000000000001c .L14
+C:\Users\tecchio\AppData\Local\Temp\ccHCMvCa.s:121    .text.hdc2080_read_temp:000000000000002a .L18
+C:\Users\tecchio\AppData\Local\Temp\ccHCMvCa.s:116    .text.hdc2080_read_temp:000000000000001e .L20
+C:\Users\tecchio\AppData\Local\Temp\ccHCMvCa.s:118    .text.hdc2080_read_temp:0000000000000020 .L19
+C:\Users\tecchio\AppData\Local\Temp\ccHCMvCa.s:152    .text.hdc2080_read_humidity:000000000000002a .L23
+C:\Users\tecchio\AppData\Local\Temp\ccHCMvCa.s:147    .text.hdc2080_read_humidity:000000000000001e .L25
+C:\Users\tecchio\AppData\Local\Temp\ccHCMvCa.s:149    .text.hdc2080_read_humidity:0000000000000020 .L24
+C:\Users\tecchio\AppData\Local\Temp\ccHCMvCa.s:190    .text.hdc2080_trigger_measurement:000000000000004c .L29
+C:\Users\tecchio\AppData\Local\Temp\ccHCMvCa.s:186    .text.hdc2080_trigger_measurement:0000000000000040 .L28
+C:\Users\tecchio\AppData\Local\Temp\ccHCMvCa.s:215    .text.hdc2080_reset:000000000000003e .L33
+C:\Users\tecchio\AppData\Local\Temp\ccHCMvCa.s:212    .text.hdc2080_reset:0000000000000034 .L32
+C:\Users\tecchio\AppData\Local\Temp\ccHCMvCa.s:250    .text.hdc2080_setup:000000000000006a .L36
+C:\Users\tecchio\AppData\Local\Temp\ccHCMvCa.s:252    .text.hdc2080_setup:000000000000006c .L37
+
+UNDEFINED SYMBOLS
+__riscv_save_2
+I2C_start
+I2C_write
+__riscv_restore_2
+__riscv_save_3
+__riscv_restore_3
+I2C_read
+I2C_stop
+__riscv_save_1
+delay_ms
+__riscv_restore_1

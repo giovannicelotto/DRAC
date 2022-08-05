@@ -1,0 +1,234 @@
+   1              		.file	"core_uart_apb.c"
+   2              		.option nopic
+   3              		.text
+   4              		.section	.text.UART_init,"ax",@progbits
+   5              		.align	1
+   6              		.globl	UART_init
+   8              	UART_init:
+   9 0000 3DC9     		beqz	a0,.L9
+  10 0002 9D47     		li	a5,7
+  11 0004 63E9D706 		bgtu	a3,a5,.L9
+  12 0008 8967     		li	a5,8192
+  13 000a 6376F606 		bgeu	a2,a5,.L9
+  14 000e 17030000 		call	t0,__riscv_save_4
+  14      E7020300 
+  15 0016 2E89     		mv	s2,a1
+  16 0018 3284     		mv	s0,a2
+  17 001a 9375F60F 		andi	a1,a2,0xff
+  18 001e AA84     		mv	s1,a0
+  19 0020 1584     		srai	s0,s0,5
+  20 0022 13058900 		addi	a0,s2,8
+  21 0026 B689     		mv	s3,a3
+  22 0028 1374847F 		andi	s0,s0,2040
+  23 002c 97000000 		call	HW_set_8bit_reg
+  23      E7800000 
+  24 0034 1305C900 		addi	a0,s2,12
+  25 0038 B3653401 		or	a1,s0,s3
+  26 003c 97000000 		call	HW_set_8bit_reg
+  26      E7800000 
+  27 0044 13050901 		addi	a0,s2,16
+  28 0048 23A02401 		sw	s2,0(s1)
+  29              	.L12:
+  30 004c 97000000 		call	HW_get_8bit_reg
+  30      E7800000 
+  31 0054 0989     		andi	a0,a0,2
+  32 0056 19E5     		bnez	a0,.L4
+  33 0058 23820400 		sb	zero,4(s1)
+  34 005c 17030000 		tail	__riscv_restore_4
+  34      67000300 
+  35              	.L4:
+  36 0064 8840     		lw	a0,0(s1)
+  37 0066 1105     		addi	a0,a0,4
+  38 0068 97000000 		call	HW_get_8bit_reg
+  38      E7800000 
+  39 0070 8840     		lw	a0,0(s1)
+  40 0072 4105     		addi	a0,a0,16
+  41 0074 E1BF     		j	.L12
+  42              	.L9:
+  43 0076 8280     		ret
+  45              		.section	.text.UART_send,"ax",@progbits
+  46              		.align	1
+  47              		.globl	UART_send
+  49              	UART_send:
+  50 0000 21C5     		beqz	a0,.L28
+  51 0002 B9C1     		beqz	a1,.L28
+  52 0004 31C2     		beqz	a2,.L28
+  53 0006 17030000 		call	t0,__riscv_save_3
+  53      E7020300 
+  54 000e 2A89     		mv	s2,a0
+  55 0010 2E84     		mv	s0,a1
+  56 0012 B384C500 		add	s1,a1,a2
+  57              	.L16:
+  58 0016 63169400 		bne	s0,s1,.L17
+  59 001a 17030000 		tail	__riscv_restore_3
+  59      67000300 
+  60              	.L17:
+  61 0022 03250900 		lw	a0,0(s2)
+  62 0026 4105     		addi	a0,a0,16
+  63 0028 97000000 		call	HW_get_8bit_reg
+  63      E7800000 
+  64 0030 0589     		andi	a0,a0,1
+  65 0032 65D9     		beqz	a0,.L17
+  66 0034 83450400 		lbu	a1,0(s0)
+  67 0038 03250900 		lw	a0,0(s2)
+  68 003c 0504     		addi	s0,s0,1
+  69 003e 97000000 		call	HW_set_8bit_reg
+  69      E7800000 
+  70 0046 C1BF     		j	.L16
+  71              	.L28:
+  72 0048 8280     		ret
+  74              		.section	.text.UART_fill_tx_fifo,"ax",@progbits
+  75              		.align	1
+  76              		.globl	UART_fill_tx_fifo
+  78              	UART_fill_tx_fifo:
+  79 0000 17030000 		call	t0,__riscv_save_4
+  79      E7020300 
+  80 0008 21C9     		beqz	a0,.L32
+  81 000a B9C5     		beqz	a1,.L32
+  82 000c 31C6     		beqz	a2,.L32
+  83 000e AA84     		mv	s1,a0
+  84 0010 0841     		lw	a0,0(a0)
+  85 0012 3289     		mv	s2,a2
+  86 0014 AE89     		mv	s3,a1
+  87 0016 4105     		addi	a0,a0,16
+  88 0018 97000000 		call	HW_get_8bit_reg
+  88      E7800000 
+  89 0020 0589     		andi	a0,a0,1
+  90 0022 1DC9     		beqz	a0,.L32
+  91 0024 0144     		li	s0,0
+  92              	.L34:
+  93 0026 B3878900 		add	a5,s3,s0
+  94 002a 83C50700 		lbu	a1,0(a5)
+  95 002e 8840     		lw	a0,0(s1)
+  96 0030 0504     		addi	s0,s0,1
+  97 0032 97000000 		call	HW_set_8bit_reg
+  97      E7800000 
+  98 003a 8840     		lw	a0,0(s1)
+  99 003c 4105     		addi	a0,a0,16
+ 100 003e 97000000 		call	HW_get_8bit_reg
+ 100      E7800000 
+ 101 0046 0589     		andi	a0,a0,1
+ 102 0048 19C1     		beqz	a0,.L31
+ 103 004a E31E89FC 		bne	s2,s0,.L34
+ 104              	.L31:
+ 105 004e 2285     		mv	a0,s0
+ 106 0050 17030000 		tail	__riscv_restore_4
+ 106      67000300 
+ 107              	.L32:
+ 108 0058 0144     		li	s0,0
+ 109 005a D5BF     		j	.L31
+ 111              		.section	.text.UART_get_rx,"ax",@progbits
+ 112              		.align	1
+ 113              		.globl	UART_get_rx
+ 115              	UART_get_rx:
+ 116 0000 17030000 		call	t0,__riscv_save_4
+ 116      E7020300 
+ 117 0008 8144     		li	s1,0
+ 118 000a 0DC5     		beqz	a0,.L52
+ 119 000c 85C5     		beqz	a1,.L52
+ 120 000e 1DC2     		beqz	a2,.L52
+ 121 0010 3289     		mv	s2,a2
+ 122 0012 AE89     		mv	s3,a1
+ 123 0014 2A84     		mv	s0,a0
+ 124              	.L64:
+ 125 0016 0840     		lw	a0,0(s0)
+ 126 0018 4105     		addi	a0,a0,16
+ 127 001a 97000000 		call	HW_get_8bit_reg
+ 127      E7800000 
+ 128 0022 83474400 		lbu	a5,4(s0)
+ 129 0026 C98F     		or	a5,a0,a5
+ 130 0028 2302F400 		sb	a5,4(s0)
+ 131 002c 0989     		andi	a0,a0,2
+ 132 002e 19C1     		beqz	a0,.L52
+ 133 0030 63972401 		bne	s1,s2,.L55
+ 134              	.L52:
+ 135 0034 2685     		mv	a0,s1
+ 136 0036 17030000 		tail	__riscv_restore_4
+ 136      67000300 
+ 137              	.L55:
+ 138 003e 0840     		lw	a0,0(s0)
+ 139 0040 1105     		addi	a0,a0,4
+ 140 0042 97000000 		call	HW_get_8bit_reg
+ 140      E7800000 
+ 141 004a B3879900 		add	a5,s3,s1
+ 142 004e 2380A700 		sb	a0,0(a5)
+ 143 0052 8504     		addi	s1,s1,1
+ 144 0054 C9B7     		j	.L64
+ 146              		.section	.text.UART_polled_tx_string,"ax",@progbits
+ 147              		.align	1
+ 148              		.globl	UART_polled_tx_string
+ 150              	UART_polled_tx_string:
+ 151 0000 21C1     		beqz	a0,.L77
+ 152 0002 9DCD     		beqz	a1,.L77
+ 153 0004 17030000 		call	t0,__riscv_save_2
+ 153      E7020300 
+ 154 000c AA84     		mv	s1,a0
+ 155 000e 2E84     		mv	s0,a1
+ 156              	.L68:
+ 157 0010 83470400 		lbu	a5,0(s0)
+ 158 0014 89E7     		bnez	a5,.L69
+ 159 0016 17030000 		tail	__riscv_restore_2
+ 159      67000300 
+ 160              	.L69:
+ 161 001e 8840     		lw	a0,0(s1)
+ 162 0020 4105     		addi	a0,a0,16
+ 163 0022 97000000 		call	HW_get_8bit_reg
+ 163      E7800000 
+ 164 002a 0589     		andi	a0,a0,1
+ 165 002c 6DD9     		beqz	a0,.L69
+ 166 002e 83450400 		lbu	a1,0(s0)
+ 167 0032 8840     		lw	a0,0(s1)
+ 168 0034 0504     		addi	s0,s0,1
+ 169 0036 97000000 		call	HW_set_8bit_reg
+ 169      E7800000 
+ 170 003e C9BF     		j	.L68
+ 171              	.L77:
+ 172 0040 8280     		ret
+ 174              		.section	.text.UART_get_rx_status,"ax",@progbits
+ 175              		.align	1
+ 176              		.globl	UART_get_rx_status
+ 178              	UART_get_rx_status:
+ 179 0000 9307F00F 		li	a5,255
+ 180 0004 19C5     		beqz	a0,.L81
+ 181 0006 83474500 		lbu	a5,4(a0)
+ 182 000a 23020500 		sb	zero,4(a0)
+ 183 000e 8987     		srai	a5,a5,2
+ 184 0010 9D8B     		andi	a5,a5,7
+ 185              	.L81:
+ 186 0012 3E85     		mv	a0,a5
+ 187 0014 8280     		ret
+ 189              		.ident	"GCC: (Microchip SoftConsole GNU RISC-V Embedded GCC, 64-bit) 8.2.0"
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 core_uart_apb.c
+C:\Users\tecchio\AppData\Local\Temp\ccGJdQIb.s:8      .text.UART_init:0000000000000000 UART_init
+C:\Users\tecchio\AppData\Local\Temp\ccGJdQIb.s:49     .text.UART_send:0000000000000000 UART_send
+C:\Users\tecchio\AppData\Local\Temp\ccGJdQIb.s:78     .text.UART_fill_tx_fifo:0000000000000000 UART_fill_tx_fifo
+C:\Users\tecchio\AppData\Local\Temp\ccGJdQIb.s:115    .text.UART_get_rx:0000000000000000 UART_get_rx
+C:\Users\tecchio\AppData\Local\Temp\ccGJdQIb.s:150    .text.UART_polled_tx_string:0000000000000000 UART_polled_tx_string
+C:\Users\tecchio\AppData\Local\Temp\ccGJdQIb.s:178    .text.UART_get_rx_status:0000000000000000 UART_get_rx_status
+C:\Users\tecchio\AppData\Local\Temp\ccGJdQIb.s:42     .text.UART_init:0000000000000076 .L9
+C:\Users\tecchio\AppData\Local\Temp\ccGJdQIb.s:35     .text.UART_init:0000000000000064 .L4
+C:\Users\tecchio\AppData\Local\Temp\ccGJdQIb.s:29     .text.UART_init:000000000000004c .L12
+C:\Users\tecchio\AppData\Local\Temp\ccGJdQIb.s:71     .text.UART_send:0000000000000048 .L28
+C:\Users\tecchio\AppData\Local\Temp\ccGJdQIb.s:60     .text.UART_send:0000000000000022 .L17
+C:\Users\tecchio\AppData\Local\Temp\ccGJdQIb.s:57     .text.UART_send:0000000000000016 .L16
+C:\Users\tecchio\AppData\Local\Temp\ccGJdQIb.s:107    .text.UART_fill_tx_fifo:0000000000000058 .L32
+C:\Users\tecchio\AppData\Local\Temp\ccGJdQIb.s:104    .text.UART_fill_tx_fifo:000000000000004e .L31
+C:\Users\tecchio\AppData\Local\Temp\ccGJdQIb.s:92     .text.UART_fill_tx_fifo:0000000000000026 .L34
+C:\Users\tecchio\AppData\Local\Temp\ccGJdQIb.s:134    .text.UART_get_rx:0000000000000034 .L52
+C:\Users\tecchio\AppData\Local\Temp\ccGJdQIb.s:137    .text.UART_get_rx:000000000000003e .L55
+C:\Users\tecchio\AppData\Local\Temp\ccGJdQIb.s:124    .text.UART_get_rx:0000000000000016 .L64
+C:\Users\tecchio\AppData\Local\Temp\ccGJdQIb.s:171    .text.UART_polled_tx_string:0000000000000040 .L77
+C:\Users\tecchio\AppData\Local\Temp\ccGJdQIb.s:160    .text.UART_polled_tx_string:000000000000001e .L69
+C:\Users\tecchio\AppData\Local\Temp\ccGJdQIb.s:156    .text.UART_polled_tx_string:0000000000000010 .L68
+C:\Users\tecchio\AppData\Local\Temp\ccGJdQIb.s:185    .text.UART_get_rx_status:0000000000000012 .L81
+
+UNDEFINED SYMBOLS
+__riscv_save_4
+HW_set_8bit_reg
+HW_get_8bit_reg
+__riscv_restore_4
+__riscv_save_3
+__riscv_restore_3
+__riscv_save_2
+__riscv_restore_2

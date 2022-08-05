@@ -1,0 +1,672 @@
+   1              		.file	"core_sysservices_pf.c"
+   2              		.option nopic
+   3              		.text
+   4              		.section	.text.execute_ss_command,"ax",@progbits
+   5              		.align	1
+   7              	execute_ss_command:
+   8 0000 17030000 		call	t0,__riscv_save_9
+   8      E7020300 
+   9 0008 37040000 		lui	s0,%hi(.LANCHOR0)
+  10 000c 2A8C     		mv	s8,a0
+  11 000e 03250400 		lw	a0,%lo(.LANCHOR0)(s0)
+  12 0012 2E8B     		mv	s6,a1
+  13 0014 3289     		mv	s2,a2
+  14 0016 8945     		li	a1,2
+  15 0018 1146     		li	a2,4
+  16 001a 3105     		addi	a0,a0,12
+  17 001c B68A     		mv	s5,a3
+  18 001e BA84     		mv	s1,a4
+  19 0020 3E8A     		mv	s4,a5
+  20 0022 C28B     		mv	s7,a6
+  21 0024 97000000 		call	HW_get_32bit_reg_field
+  21      E7800000 
+  22 002c 63110512 		bnez	a0,.L14
+  23 0030 13040400 		addi	s0,s0,%lo(.LANCHOR0)
+  24 0034 0840     		lw	a0,0(s0)
+  25 0036 0946     		li	a2,2
+  26 0038 8545     		li	a1,1
+  27 003a 3105     		addi	a0,a0,12
+  28 003c 97000000 		call	HW_get_32bit_reg_field
+  28      E7800000 
+  29 0044 AA89     		mv	s3,a0
+  30 0046 0545     		li	a0,1
+  31 0048 6393090A 		bnez	s3,.L2
+  32 004c 93157A00 		slli	a1,s4,7
+  33 0050 137CFC07 		andi	s8,s8,127
+  34 0054 0840     		lw	a0,0(s0)
+  35 0056 B3E58501 		or	a1,a1,s8
+  36 005a C205     		slli	a1,a1,16
+  37 005c C181     		srli	a1,a1,16
+  38 005e 1105     		addi	a0,a0,4
+  39 0060 97000000 		call	HW_set_32bit_reg
+  39      E7800000 
+  40 0068 63010902 		beqz	s2,.L3
+  41 006c 0840     		lw	a0,0(s0)
+  42 006e 93552900 		srli	a1,s2,2
+  43 0072 5105     		addi	a0,a0,20
+  44 0074 97000000 		call	HW_set_32bit_reg
+  44      E7800000 
+  45 007c 0840     		lw	a0,0(s0)
+  46 007e D285     		mv	a1,s4
+  47 0080 7105     		addi	a0,a0,28
+  48 0082 97000000 		call	HW_set_32bit_reg
+  48      E7800000 
+  49              	.L3:
+  50 008a 95C0     		beqz	s1,.L4
+  51 008c 0840     		lw	a0,0(s0)
+  52 008e 93D52400 		srli	a1,s1,2
+  53 0092 6105     		addi	a0,a0,24
+  54 0094 97000000 		call	HW_set_32bit_reg
+  54      E7800000 
+  55 009c 0840     		lw	a0,0(s0)
+  56 009e B3854B01 		add	a1,s7,s4
+  57 00a2 13050502 		addi	a0,a0,32
+  58 00a6 97000000 		call	HW_set_32bit_reg
+  58      E7800000 
+  59              	.L4:
+  60 00ae 0840     		lw	a0,0(s0)
+  61 00b0 8546     		li	a3,1
+  62 00b2 0546     		li	a2,1
+  63 00b4 8145     		li	a1,0
+  64 00b6 3105     		addi	a0,a0,12
+  65 00b8 97000000 		call	HW_set_32bit_reg_field
+  65      E7800000 
+  66 00c0 631B0902 		bnez	s2,.L5
+  67              	.L10:
+  68 00c4 B9E8     		bnez	s1,.L6
+  69              	.L11:
+  70 00c6 0840     		lw	a0,0(s0)
+  71 00c8 0546     		li	a2,1
+  72 00ca 8145     		li	a1,0
+  73 00cc 13050503 		addi	a0,a0,48
+  74 00d0 97000000 		call	HW_get_32bit_reg_field
+  74      E7800000 
+  75 00d8 8547     		li	a5,1
+  76 00da E306F5FE 		beq	a0,a5,.L11
+  77 00de 0840     		lw	a0,0(s0)
+  78 00e0 2105     		addi	a0,a0,8
+  79 00e2 97000000 		call	HW_get_32bit_reg
+  79      E7800000 
+  80 00ea 1375F50F 		andi	a0,a0,0xff
+  81              	.L2:
+  82 00ee 17030000 		tail	__riscv_restore_9
+  82      67000300 
+  83              	.L5:
+  84 00f6 13592900 		srli	s2,s2,2
+  85 00fa 014A     		li	s4,0
+  86              	.L8:
+  87 00fc 0840     		lw	a0,0(s0)
+  88 00fe E3732AFD 		bgeu	s4,s2,.L10
+  89 0102 93172A00 		slli	a5,s4,2
+  90 0106 DA97     		add	a5,s6,a5
+  91 0108 8C43     		lw	a1,0(a5)
+  92 010a 13058502 		addi	a0,a0,40
+  93 010e 050A     		addi	s4,s4,1
+  94 0110 97000000 		call	HW_set_32bit_reg
+  94      E7800000 
+  95 0118 D5B7     		j	.L8
+  96              	.L6:
+  97 011a 8980     		srli	s1,s1,2
+  98              	.L12:
+  99 011c E3F599FA 		bgeu	s3,s1,.L11
+ 100              	.L13:
+ 101 0120 0840     		lw	a0,0(s0)
+ 102 0122 0946     		li	a2,2
+ 103 0124 8545     		li	a1,1
+ 104 0126 13050503 		addi	a0,a0,48
+ 105 012a 97000000 		call	HW_get_32bit_reg_field
+ 105      E7800000 
+ 106 0132 7DD5     		beqz	a0,.L13
+ 107 0134 0840     		lw	a0,0(s0)
+ 108 0136 1305C502 		addi	a0,a0,44
+ 109 013a 97000000 		call	HW_get_32bit_reg
+ 109      E7800000 
+ 110 0142 93972900 		slli	a5,s3,2
+ 111 0146 D697     		add	a5,s5,a5
+ 112 0148 88C3     		sw	a0,0(a5)
+ 113 014a 8509     		addi	s3,s3,1
+ 114 014c C1BF     		j	.L12
+ 115              	.L14:
+ 116 014e 0945     		li	a0,2
+ 117 0150 79BF     		j	.L2
+ 119              		.section	.text.SYS_init,"ax",@progbits
+ 120              		.align	1
+ 121              		.globl	SYS_init
+ 123              	SYS_init:
+ 124 0000 B7070000 		lui	a5,%hi(.LANCHOR0)
+ 125 0004 23A0A700 		sw	a0,%lo(.LANCHOR0)(a5)
+ 126 0008 8280     		ret
+ 128              		.section	.text.SYS_get_serial_number,"ax",@progbits
+ 129              		.align	1
+ 130              		.globl	SYS_get_serial_number
+ 132              	SYS_get_serial_number:
+ 133 0000 17030000 		call	t0,__riscv_save_0
+ 133      E7020300 
+ 134 0008 AE87     		mv	a5,a1
+ 135 000a AA86     		mv	a3,a0
+ 136 000c 0148     		li	a6,0
+ 137 000e 4147     		li	a4,16
+ 138 0010 0146     		li	a2,0
+ 139 0012 8145     		li	a1,0
+ 140 0014 0145     		li	a0,0
+ 141 0016 97000000 		call	execute_ss_command
+ 141      E7800000 
+ 142 001e 17030000 		tail	__riscv_restore_0
+ 142      67000300 
+ 144              		.section	.text.SYS_get_user_code,"ax",@progbits
+ 145              		.align	1
+ 146              		.globl	SYS_get_user_code
+ 148              	SYS_get_user_code:
+ 149 0000 17030000 		call	t0,__riscv_save_0
+ 149      E7020300 
+ 150 0008 AE87     		mv	a5,a1
+ 151 000a AA86     		mv	a3,a0
+ 152 000c 0148     		li	a6,0
+ 153 000e 1147     		li	a4,4
+ 154 0010 0146     		li	a2,0
+ 155 0012 8145     		li	a1,0
+ 156 0014 0545     		li	a0,1
+ 157 0016 97000000 		call	execute_ss_command
+ 157      E7800000 
+ 158 001e 17030000 		tail	__riscv_restore_0
+ 158      67000300 
+ 160              		.section	.text.SYS_get_design_info,"ax",@progbits
+ 161              		.align	1
+ 162              		.globl	SYS_get_design_info
+ 164              	SYS_get_design_info:
+ 165 0000 17030000 		call	t0,__riscv_save_0
+ 165      E7020300 
+ 166 0008 AE87     		mv	a5,a1
+ 167 000a AA86     		mv	a3,a0
+ 168 000c 0148     		li	a6,0
+ 169 000e 13074002 		li	a4,36
+ 170 0012 0146     		li	a2,0
+ 171 0014 8145     		li	a1,0
+ 172 0016 0945     		li	a0,2
+ 173 0018 97000000 		call	execute_ss_command
+ 173      E7800000 
+ 174 0020 17030000 		tail	__riscv_restore_0
+ 174      67000300 
+ 176              		.section	.text.SYS_get_device_certificate,"ax",@progbits
+ 177              		.align	1
+ 178              		.globl	SYS_get_device_certificate
+ 180              	SYS_get_device_certificate:
+ 181 0000 17030000 		call	t0,__riscv_save_0
+ 181      E7020300 
+ 182 0008 AE87     		mv	a5,a1
+ 183 000a AA86     		mv	a3,a0
+ 184 000c 0148     		li	a6,0
+ 185 000e 13070040 		li	a4,1024
+ 186 0012 0146     		li	a2,0
+ 187 0014 8145     		li	a1,0
+ 188 0016 0D45     		li	a0,3
+ 189 0018 97000000 		call	execute_ss_command
+ 189      E7800000 
+ 190 0020 17030000 		tail	__riscv_restore_0
+ 190      67000300 
+ 192              		.section	.text.SYS_read_digest,"ax",@progbits
+ 193              		.align	1
+ 194              		.globl	SYS_read_digest
+ 196              	SYS_read_digest:
+ 197 0000 17030000 		call	t0,__riscv_save_0
+ 197      E7020300 
+ 198 0008 AE87     		mv	a5,a1
+ 199 000a AA86     		mv	a3,a0
+ 200 000c 0148     		li	a6,0
+ 201 000e 1307001A 		li	a4,416
+ 202 0012 0146     		li	a2,0
+ 203 0014 8145     		li	a1,0
+ 204 0016 1145     		li	a0,4
+ 205 0018 97000000 		call	execute_ss_command
+ 205      E7800000 
+ 206 0020 17030000 		tail	__riscv_restore_0
+ 206      67000300 
+ 208              		.section	.text.SYS_query_security,"ax",@progbits
+ 209              		.align	1
+ 210              		.globl	SYS_query_security
+ 212              	SYS_query_security:
+ 213 0000 17030000 		call	t0,__riscv_save_1
+ 213      E7020300 
+ 214 0008 4111     		addi	sp,sp,-16
+ 215 000a AE87     		mv	a5,a1
+ 216 000c 3147     		li	a4,12
+ 217 000e 2A84     		mv	s0,a0
+ 218 0010 0148     		li	a6,0
+ 219 0012 5400     		addi	a3,sp,4
+ 220 0014 0146     		li	a2,0
+ 221 0016 8145     		li	a1,0
+ 222 0018 1545     		li	a0,5
+ 223 001a 02C2     		sw	zero,4(sp)
+ 224 001c 02C4     		sw	zero,8(sp)
+ 225 001e 02C6     		sw	zero,12(sp)
+ 226 0020 97000000 		call	execute_ss_command
+ 226      E7800000 
+ 227 0028 8147     		li	a5,0
+ 228 002a 2547     		li	a4,9
+ 229              	.L39:
+ 230 002c 5000     		addi	a2,sp,4
+ 231 002e 3E96     		add	a2,a2,a5
+ 232 0030 03460600 		lbu	a2,0(a2)
+ 233 0034 B306F400 		add	a3,s0,a5
+ 234 0038 8507     		addi	a5,a5,1
+ 235 003a 2380C600 		sb	a2,0(a3)
+ 236 003e E397E7FE 		bne	a5,a4,.L39
+ 237 0042 4101     		addi	sp,sp,16
+ 238 0044 17030000 		tail	__riscv_restore_1
+ 238      67000300 
+ 240              		.section	.text.SYS_read_debug_info,"ax",@progbits
+ 241              		.align	1
+ 242              		.globl	SYS_read_debug_info
+ 244              	SYS_read_debug_info:
+ 245 0000 17030000 		call	t0,__riscv_save_0
+ 245      E7020300 
+ 246 0008 AE87     		mv	a5,a1
+ 247 000a AA86     		mv	a3,a0
+ 248 000c 0148     		li	a6,0
+ 249 000e 1307C004 		li	a4,76
+ 250 0012 0146     		li	a2,0
+ 251 0014 8145     		li	a1,0
+ 252 0016 1945     		li	a0,6
+ 253 0018 97000000 		call	execute_ss_command
+ 253      E7800000 
+ 254 0020 17030000 		tail	__riscv_restore_0
+ 254      67000300 
+ 256              		.section	.text.SYS_puf_emulation_service,"ax",@progbits
+ 257              		.align	1
+ 258              		.globl	SYS_puf_emulation_service
+ 260              	SYS_puf_emulation_service:
+ 261 0000 17030000 		call	t0,__riscv_save_0
+ 261      E7020300 
+ 262 0008 0111     		addi	sp,sp,-32
+ 263 000a 02C6     		sw	zero,12(sp)
+ 264 000c 1308C100 		addi	a6,sp,12
+ 265 0010 B687     		mv	a5,a3
+ 266 0012 2306B100 		sb	a1,12(sp)
+ 267 0016 02C8     		sw	zero,16(sp)
+ 268 0018 02CA     		sw	zero,20(sp)
+ 269 001a 02CC     		sw	zero,24(sp)
+ 270 001c 02CE     		sw	zero,28(sp)
+ 271 001e 0147     		li	a4,0
+ 272 0020 C285     		mv	a1,a6
+ 273 0022 C146     		li	a3,16
+ 274              	.L45:
+ 275 0024 B308E500 		add	a7,a0,a4
+ 276 0028 83C80800 		lbu	a7,0(a7)
+ 277 002c 0507     		addi	a4,a4,1
+ 278 002e 0508     		addi	a6,a6,1
+ 279 0030 A3011801 		sb	a7,3(a6)
+ 280 0034 E318D7FE 		bne	a4,a3,.L45
+ 281 0038 B286     		mv	a3,a2
+ 282 003a 1548     		li	a6,5
+ 283 003c 13070002 		li	a4,32
+ 284 0040 5146     		li	a2,20
+ 285 0042 13050002 		li	a0,32
+ 286 0046 97000000 		call	execute_ss_command
+ 286      E7800000 
+ 287 004e 0561     		addi	sp,sp,32
+ 288 0050 17030000 		tail	__riscv_restore_0
+ 288      67000300 
+ 290              		.section	.text.SYS_digital_signature_service,"ax",@progbits
+ 291              		.align	1
+ 292              		.globl	SYS_digital_signature_service
+ 294              	SYS_digital_signature_service:
+ 295 0000 17030000 		call	t0,__riscv_save_0
+ 295      E7020300 
+ 296 0008 6547     		li	a4,25
+ 297 000a B687     		mv	a5,a3
+ 298 000c 3148     		li	a6,12
+ 299 000e 6391E502 		bne	a1,a4,.L49
+ 300 0012 B286     		mv	a3,a2
+ 301 0014 AA85     		mv	a1,a0
+ 302 0016 13070006 		li	a4,96
+ 303 001a 13060003 		li	a2,48
+ 304 001e 6545     		li	a0,25
+ 305              	.L52:
+ 306 0020 97000000 		call	execute_ss_command
+ 306      E7800000 
+ 307 0028 17030000 		tail	__riscv_restore_0
+ 307      67000300 
+ 308              	.L49:
+ 309 0030 B286     		mv	a3,a2
+ 310 0032 AA85     		mv	a1,a0
+ 311 0034 13078006 		li	a4,104
+ 312 0038 13060003 		li	a2,48
+ 313 003c 6945     		li	a0,26
+ 314 003e CDB7     		j	.L52
+ 316              		.section	.text.SYS_secure_nvm_write,"ax",@progbits
+ 317              		.align	1
+ 318              		.globl	SYS_secure_nvm_write
+ 320              	SYS_secure_nvm_write:
+ 321 0000 17030000 		call	t0,__riscv_save_3
+ 321      E7020300 
+ 322 0008 6D71     		addi	sp,sp,-272
+ 323 000a 2A84     		mv	s0,a0
+ 324 000c 2E89     		mv	s2,a1
+ 325 000e B284     		mv	s1,a2
+ 326 0010 8145     		li	a1,0
+ 327 0012 13060010 		li	a2,256
+ 328 0016 0808     		addi	a0,sp,16
+ 329 0018 3AC4     		sw	a4,8(sp)
+ 330 001a 36C6     		sw	a3,12(sp)
+ 331 001c 97000000 		call	memset
+ 331      E7800000 
+ 332 0024 1306F4FE 		addi	a2,s0,-17
+ 333 0028 23082101 		sb	s2,16(sp)
+ 334 002c 1376F60F 		andi	a2,a2,0xff
+ 335 0030 0547     		li	a4,1
+ 336 0032 A247     		lw	a5,8(sp)
+ 337 0034 636EC704 		bgtu	a2,a4,.L54
+ 338 0038 B246     		lw	a3,12(sp)
+ 339 003a 0C08     		addi	a1,sp,16
+ 340 003c 2E85     		mv	a0,a1
+ 341 003e 0146     		li	a2,0
+ 342 0040 1307000F 		li	a4,240
+ 343              	.L55:
+ 344 0044 3388C400 		add	a6,s1,a2
+ 345 0048 03480800 		lbu	a6,0(a6)
+ 346 004c 0506     		addi	a2,a2,1
+ 347 004e 0505     		addi	a0,a0,1
+ 348 0050 A3010501 		sb	a6,3(a0)
+ 349 0054 E318E6FE 		bne	a2,a4,.L55
+ 350 0058 0146     		li	a2,0
+ 351 005a 3147     		li	a4,12
+ 352              	.L56:
+ 353 005c 3385C600 		add	a0,a3,a2
+ 354 0060 03450500 		lbu	a0,0(a0)
+ 355 0064 0506     		addi	a2,a2,1
+ 356 0066 8505     		addi	a1,a1,1
+ 357 0068 A389A50E 		sb	a0,243(a1)
+ 358 006c E318E6FE 		bne	a2,a4,.L56
+ 359 0070 0148     		li	a6,0
+ 360 0072 0147     		li	a4,0
+ 361 0074 8146     		li	a3,0
+ 362 0076 1306C00F 		li	a2,252
+ 363              	.L63:
+ 364 007a 0C08     		addi	a1,sp,16
+ 365 007c 2285     		mv	a0,s0
+ 366 007e 97000000 		call	execute_ss_command
+ 366      E7800000 
+ 367 0086 5161     		addi	sp,sp,272
+ 368 0088 17030000 		tail	__riscv_restore_3
+ 368      67000300 
+ 369              	.L54:
+ 370 0090 1008     		addi	a2,sp,16
+ 371 0092 8146     		li	a3,0
+ 372 0094 1307C00F 		li	a4,252
+ 373              	.L58:
+ 374 0098 B385D400 		add	a1,s1,a3
+ 375 009c 83C50500 		lbu	a1,0(a1)
+ 376 00a0 8506     		addi	a3,a3,1
+ 377 00a2 0506     		addi	a2,a2,1
+ 378 00a4 A301B600 		sb	a1,3(a2)
+ 379 00a8 E398E6FE 		bne	a3,a4,.L58
+ 380 00ac 0148     		li	a6,0
+ 381 00ae 0147     		li	a4,0
+ 382 00b0 8146     		li	a3,0
+ 383 00b2 13060010 		li	a2,256
+ 384 00b6 D1B7     		j	.L63
+ 386              		.section	.text.SYS_secure_nvm_read,"ax",@progbits
+ 387              		.align	1
+ 388              		.globl	SYS_secure_nvm_read
+ 390              	SYS_secure_nvm_read:
+ 391 0000 17030000 		call	t0,__riscv_save_5
+ 391      E7020300 
+ 392 0008 2D71     		addi	sp,sp,-288
+ 393 000a 2A8A     		mv	s4,a0
+ 394 000c AE89     		mv	s3,a1
+ 395 000e 3289     		mv	s2,a2
+ 396 0010 8145     		li	a1,0
+ 397 0012 13060010 		li	a2,256
+ 398 0016 0810     		addi	a0,sp,32
+ 399 0018 3A84     		mv	s0,a4
+ 400 001a 3EC6     		sw	a5,12(sp)
+ 401 001c B684     		mv	s1,a3
+ 402 001e 02C8     		sw	zero,16(sp)
+ 403 0020 02CA     		sw	zero,20(sp)
+ 404 0022 02CC     		sw	zero,24(sp)
+ 405 0024 02CE     		sw	zero,28(sp)
+ 406 0026 97000000 		call	memset
+ 406      E7800000 
+ 407 002e 1307C00E 		li	a4,236
+ 408 0032 23084101 		sb	s4,16(sp)
+ 409 0036 B247     		lw	a5,12(sp)
+ 410 0038 631FE400 		bne	s0,a4,.L65
+ 411 003c 1408     		addi	a3,sp,16
+ 412 003e 0147     		li	a4,0
+ 413 0040 3146     		li	a2,12
+ 414              	.L66:
+ 415 0042 B385E900 		add	a1,s3,a4
+ 416 0046 83C50500 		lbu	a1,0(a1)
+ 417 004a 0507     		addi	a4,a4,1
+ 418 004c 8506     		addi	a3,a3,1
+ 419 004e A381B600 		sb	a1,3(a3)
+ 420 0052 E318C7FE 		bne	a4,a2,.L66
+ 421              	.L65:
+ 422 0056 13074400 		addi	a4,s0,4
+ 423 005a 4207     		slli	a4,a4,16
+ 424 005c 1148     		li	a6,4
+ 425 005e 4183     		srli	a4,a4,16
+ 426 0060 1410     		addi	a3,sp,32
+ 427 0062 4146     		li	a2,16
+ 428 0064 0C08     		addi	a1,sp,16
+ 429 0066 6145     		li	a0,24
+ 430 0068 97000000 		call	execute_ss_command
+ 430      E7800000 
+ 431 0070 15E1     		bnez	a0,.L74
+ 432 0072 8147     		li	a5,0
+ 433 0074 1147     		li	a4,4
+ 434              	.L67:
+ 435 0076 1010     		addi	a2,sp,32
+ 436 0078 3E96     		add	a2,a2,a5
+ 437 007a 03460600 		lbu	a2,0(a2)
+ 438 007e B306F900 		add	a3,s2,a5
+ 439 0082 8507     		addi	a5,a5,1
+ 440 0084 2380C600 		sb	a2,0(a3)
+ 441 0088 E397E7FE 		bne	a5,a4,.L67
+ 442 008c 9147     		li	a5,4
+ 443 008e 0D04     		addi	s0,s0,3
+ 444              	.L68:
+ 445 0090 6357F400 		bge	s0,a5,.L69
+ 446              	.L74:
+ 447 0094 1561     		addi	sp,sp,288
+ 448 0096 17030000 		tail	__riscv_restore_5
+ 448      67000300 
+ 449              	.L69:
+ 450 009e 1412     		addi	a3,sp,288
+ 451 00a0 BE96     		add	a3,a3,a5
+ 452 00a2 83C606F0 		lbu	a3,-256(a3)
+ 453 00a6 3387F400 		add	a4,s1,a5
+ 454 00aa 8507     		addi	a5,a5,1
+ 455 00ac C207     		slli	a5,a5,16
+ 456 00ae 230ED7FE 		sb	a3,-4(a4)
+ 457 00b2 C183     		srli	a5,a5,16
+ 458 00b4 F1BF     		j	.L68
+ 460              		.section	.text.SYS_nonce_service,"ax",@progbits
+ 461              		.align	1
+ 462              		.globl	SYS_nonce_service
+ 464              	SYS_nonce_service:
+ 465 0000 17030000 		call	t0,__riscv_save_0
+ 465      E7020300 
+ 466 0008 AE87     		mv	a5,a1
+ 467 000a AA86     		mv	a3,a0
+ 468 000c 0148     		li	a6,0
+ 469 000e 13070002 		li	a4,32
+ 470 0012 0146     		li	a2,0
+ 471 0014 8145     		li	a1,0
+ 472 0016 13051002 		li	a0,33
+ 473 001a 97000000 		call	execute_ss_command
+ 473      E7800000 
+ 474 0022 17030000 		tail	__riscv_restore_0
+ 474      67000300 
+ 476              		.section	.text.SYS_flash_freeze_service,"ax",@progbits
+ 477              		.align	1
+ 478              		.globl	SYS_flash_freeze_service
+ 480              	SYS_flash_freeze_service:
+ 481 0000 17030000 		call	t0,__riscv_save_0
+ 481      E7020300 
+ 482 0008 4111     		addi	sp,sp,-16
+ 483 000a 2AC6     		sw	a0,12(sp)
+ 484 000c 3335A000 		snez	a0,a0
+ 485 0010 AE87     		mv	a5,a1
+ 486 0012 0148     		li	a6,0
+ 487 0014 6C00     		addi	a1,sp,12
+ 488 0016 0147     		li	a4,0
+ 489 0018 8146     		li	a3,0
+ 490 001a 1146     		li	a2,4
+ 491 001c 13050504 		addi	a0,a0,64
+ 492 0020 97000000 		call	execute_ss_command
+ 492      E7800000 
+ 493 0028 4101     		addi	sp,sp,16
+ 494 002a 17030000 		tail	__riscv_restore_0
+ 494      67000300 
+ 496              		.section	.text.SYS_bitstream_authenticate_service,"ax",@progbits
+ 497              		.align	1
+ 498              		.globl	SYS_bitstream_authenticate_service
+ 500              	SYS_bitstream_authenticate_service:
+ 501 0000 17030000 		call	t0,__riscv_save_0
+ 501      E7020300 
+ 502 0008 4111     		addi	sp,sp,-16
+ 503 000a 2AC6     		sw	a0,12(sp)
+ 504 000c AE87     		mv	a5,a1
+ 505 000e 0148     		li	a6,0
+ 506 0010 6C00     		addi	a1,sp,12
+ 507 0012 0147     		li	a4,0
+ 508 0014 8146     		li	a3,0
+ 509 0016 1146     		li	a2,4
+ 510 0018 13053002 		li	a0,35
+ 511 001c 97000000 		call	execute_ss_command
+ 511      E7800000 
+ 512 0024 4101     		addi	sp,sp,16
+ 513 0026 17030000 		tail	__riscv_restore_0
+ 513      67000300 
+ 515              		.section	.text.SYS_IAP_image_authenticate_service,"ax",@progbits
+ 516              		.align	1
+ 517              		.globl	SYS_IAP_image_authenticate_service
+ 519              	SYS_IAP_image_authenticate_service:
+ 520 0000 17030000 		call	t0,__riscv_save_0
+ 520      E7020300 
+ 521 0008 93170501 		slli	a5,a0,16
+ 522 000c 0148     		li	a6,0
+ 523 000e C183     		srli	a5,a5,16
+ 524 0010 0147     		li	a4,0
+ 525 0012 8146     		li	a3,0
+ 526 0014 0146     		li	a2,0
+ 527 0016 8145     		li	a1,0
+ 528 0018 13052002 		li	a0,34
+ 529 001c 97000000 		call	execute_ss_command
+ 529      E7800000 
+ 530 0024 17030000 		tail	__riscv_restore_0
+ 530      67000300 
+ 532              		.section	.text.SYS_digest_check_service,"ax",@progbits
+ 533              		.align	1
+ 534              		.globl	SYS_digest_check_service
+ 536              	SYS_digest_check_service:
+ 537 0000 17030000 		call	t0,__riscv_save_0
+ 537      E7020300 
+ 538 0008 4111     		addi	sp,sp,-16
+ 539 000a 2AC6     		sw	a0,12(sp)
+ 540 000c AE87     		mv	a5,a1
+ 541 000e 0148     		li	a6,0
+ 542 0010 6C00     		addi	a1,sp,12
+ 543 0012 0147     		li	a4,0
+ 544 0014 8146     		li	a3,0
+ 545 0016 1146     		li	a2,4
+ 546 0018 13057004 		li	a0,71
+ 547 001c 97000000 		call	execute_ss_command
+ 547      E7800000 
+ 548 0024 4101     		addi	sp,sp,16
+ 549 0026 17030000 		tail	__riscv_restore_0
+ 549      67000300 
+ 551              		.section	.text.SYS_iap_service,"ax",@progbits
+ 552              		.align	1
+ 553              		.globl	SYS_iap_service
+ 555              	SYS_iap_service:
+ 556 0000 17030000 		call	t0,__riscv_save_0
+ 556      E7020300 
+ 557 0008 4111     		addi	sp,sp,-16
+ 558 000a 93970501 		slli	a5,a1,16
+ 559 000e 2EC6     		sw	a1,12(sp)
+ 560 0010 0148     		li	a6,0
+ 561 0012 6C00     		addi	a1,sp,12
+ 562 0014 C183     		srli	a5,a5,16
+ 563 0016 0147     		li	a4,0
+ 564 0018 8146     		li	a3,0
+ 565 001a 1146     		li	a2,4
+ 566 001c 97000000 		call	execute_ss_command
+ 566      E7800000 
+ 567 0024 4101     		addi	sp,sp,16
+ 568 0026 17030000 		tail	__riscv_restore_0
+ 568      67000300 
+ 570              		.globl	g_css_pf_base_addr
+ 571              		.section	.sbss.g_css_pf_base_addr,"aw",@nobits
+ 572              		.align	2
+ 573              		.set	.LANCHOR0,. + 0
+ 576              	g_css_pf_base_addr:
+ 577 0000 00000000 		.zero	4
+ 578              		.ident	"GCC: (Microchip SoftConsole GNU RISC-V Embedded GCC, 64-bit) 8.2.0"
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 core_sysservices_pf.c
+C:\Users\tecchio\AppData\Local\Temp\ccRwrqsA.s:7      .text.execute_ss_command:0000000000000000 execute_ss_command
+C:\Users\tecchio\AppData\Local\Temp\ccRwrqsA.s:123    .text.SYS_init:0000000000000000 SYS_init
+C:\Users\tecchio\AppData\Local\Temp\ccRwrqsA.s:132    .text.SYS_get_serial_number:0000000000000000 SYS_get_serial_number
+C:\Users\tecchio\AppData\Local\Temp\ccRwrqsA.s:148    .text.SYS_get_user_code:0000000000000000 SYS_get_user_code
+C:\Users\tecchio\AppData\Local\Temp\ccRwrqsA.s:164    .text.SYS_get_design_info:0000000000000000 SYS_get_design_info
+C:\Users\tecchio\AppData\Local\Temp\ccRwrqsA.s:180    .text.SYS_get_device_certificate:0000000000000000 SYS_get_device_certificate
+C:\Users\tecchio\AppData\Local\Temp\ccRwrqsA.s:196    .text.SYS_read_digest:0000000000000000 SYS_read_digest
+C:\Users\tecchio\AppData\Local\Temp\ccRwrqsA.s:212    .text.SYS_query_security:0000000000000000 SYS_query_security
+C:\Users\tecchio\AppData\Local\Temp\ccRwrqsA.s:244    .text.SYS_read_debug_info:0000000000000000 SYS_read_debug_info
+C:\Users\tecchio\AppData\Local\Temp\ccRwrqsA.s:260    .text.SYS_puf_emulation_service:0000000000000000 SYS_puf_emulation_service
+C:\Users\tecchio\AppData\Local\Temp\ccRwrqsA.s:294    .text.SYS_digital_signature_service:0000000000000000 SYS_digital_signature_service
+C:\Users\tecchio\AppData\Local\Temp\ccRwrqsA.s:320    .text.SYS_secure_nvm_write:0000000000000000 SYS_secure_nvm_write
+C:\Users\tecchio\AppData\Local\Temp\ccRwrqsA.s:390    .text.SYS_secure_nvm_read:0000000000000000 SYS_secure_nvm_read
+C:\Users\tecchio\AppData\Local\Temp\ccRwrqsA.s:464    .text.SYS_nonce_service:0000000000000000 SYS_nonce_service
+C:\Users\tecchio\AppData\Local\Temp\ccRwrqsA.s:480    .text.SYS_flash_freeze_service:0000000000000000 SYS_flash_freeze_service
+C:\Users\tecchio\AppData\Local\Temp\ccRwrqsA.s:500    .text.SYS_bitstream_authenticate_service:0000000000000000 SYS_bitstream_authenticate_service
+C:\Users\tecchio\AppData\Local\Temp\ccRwrqsA.s:519    .text.SYS_IAP_image_authenticate_service:0000000000000000 SYS_IAP_image_authenticate_service
+C:\Users\tecchio\AppData\Local\Temp\ccRwrqsA.s:536    .text.SYS_digest_check_service:0000000000000000 SYS_digest_check_service
+C:\Users\tecchio\AppData\Local\Temp\ccRwrqsA.s:555    .text.SYS_iap_service:0000000000000000 SYS_iap_service
+C:\Users\tecchio\AppData\Local\Temp\ccRwrqsA.s:576    .sbss.g_css_pf_base_addr:0000000000000000 g_css_pf_base_addr
+C:\Users\tecchio\AppData\Local\Temp\ccRwrqsA.s:573    .sbss.g_css_pf_base_addr:0000000000000000 .LANCHOR0
+C:\Users\tecchio\AppData\Local\Temp\ccRwrqsA.s:115    .text.execute_ss_command:000000000000014e .L14
+C:\Users\tecchio\AppData\Local\Temp\ccRwrqsA.s:81     .text.execute_ss_command:00000000000000ee .L2
+C:\Users\tecchio\AppData\Local\Temp\ccRwrqsA.s:49     .text.execute_ss_command:000000000000008a .L3
+C:\Users\tecchio\AppData\Local\Temp\ccRwrqsA.s:59     .text.execute_ss_command:00000000000000ae .L4
+C:\Users\tecchio\AppData\Local\Temp\ccRwrqsA.s:83     .text.execute_ss_command:00000000000000f6 .L5
+C:\Users\tecchio\AppData\Local\Temp\ccRwrqsA.s:96     .text.execute_ss_command:000000000000011a .L6
+C:\Users\tecchio\AppData\Local\Temp\ccRwrqsA.s:69     .text.execute_ss_command:00000000000000c6 .L11
+C:\Users\tecchio\AppData\Local\Temp\ccRwrqsA.s:67     .text.execute_ss_command:00000000000000c4 .L10
+C:\Users\tecchio\AppData\Local\Temp\ccRwrqsA.s:86     .text.execute_ss_command:00000000000000fc .L8
+C:\Users\tecchio\AppData\Local\Temp\ccRwrqsA.s:100    .text.execute_ss_command:0000000000000120 .L13
+C:\Users\tecchio\AppData\Local\Temp\ccRwrqsA.s:98     .text.execute_ss_command:000000000000011c .L12
+C:\Users\tecchio\AppData\Local\Temp\ccRwrqsA.s:229    .text.SYS_query_security:000000000000002c .L39
+C:\Users\tecchio\AppData\Local\Temp\ccRwrqsA.s:274    .text.SYS_puf_emulation_service:0000000000000024 .L45
+C:\Users\tecchio\AppData\Local\Temp\ccRwrqsA.s:308    .text.SYS_digital_signature_service:0000000000000030 .L49
+C:\Users\tecchio\AppData\Local\Temp\ccRwrqsA.s:305    .text.SYS_digital_signature_service:0000000000000020 .L52
+C:\Users\tecchio\AppData\Local\Temp\ccRwrqsA.s:369    .text.SYS_secure_nvm_write:0000000000000090 .L54
+C:\Users\tecchio\AppData\Local\Temp\ccRwrqsA.s:343    .text.SYS_secure_nvm_write:0000000000000044 .L55
+C:\Users\tecchio\AppData\Local\Temp\ccRwrqsA.s:352    .text.SYS_secure_nvm_write:000000000000005c .L56
+C:\Users\tecchio\AppData\Local\Temp\ccRwrqsA.s:373    .text.SYS_secure_nvm_write:0000000000000098 .L58
+C:\Users\tecchio\AppData\Local\Temp\ccRwrqsA.s:363    .text.SYS_secure_nvm_write:000000000000007a .L63
+C:\Users\tecchio\AppData\Local\Temp\ccRwrqsA.s:421    .text.SYS_secure_nvm_read:0000000000000056 .L65
+C:\Users\tecchio\AppData\Local\Temp\ccRwrqsA.s:414    .text.SYS_secure_nvm_read:0000000000000042 .L66
+C:\Users\tecchio\AppData\Local\Temp\ccRwrqsA.s:446    .text.SYS_secure_nvm_read:0000000000000094 .L74
+C:\Users\tecchio\AppData\Local\Temp\ccRwrqsA.s:434    .text.SYS_secure_nvm_read:0000000000000076 .L67
+C:\Users\tecchio\AppData\Local\Temp\ccRwrqsA.s:449    .text.SYS_secure_nvm_read:000000000000009e .L69
+C:\Users\tecchio\AppData\Local\Temp\ccRwrqsA.s:444    .text.SYS_secure_nvm_read:0000000000000090 .L68
+
+UNDEFINED SYMBOLS
+__riscv_save_9
+HW_get_32bit_reg_field
+HW_set_32bit_reg
+HW_set_32bit_reg_field
+HW_get_32bit_reg
+__riscv_restore_9
+__riscv_save_0
+__riscv_restore_0
+__riscv_save_1
+__riscv_restore_1
+__riscv_save_3
+memset
+__riscv_restore_3
+__riscv_save_5
+__riscv_restore_5

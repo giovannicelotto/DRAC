@@ -1,0 +1,239 @@
+   1              		.file	"bme280_SPI_daisy.c"
+   2              		.option nopic
+   3              		.text
+   4              		.section	.text.bme280_set_regs,"ax",@progbits
+   5              		.align	1
+   6              		.globl	bme280_set_regs
+   8              	bme280_set_regs:
+   9 0000 17030000 		call	t0,__riscv_save_3
+   9      E7020300 
+  10 0008 4111     		addi	sp,sp,-16
+  11 000a 3800     		addi	a4,sp,8
+  12 000c 2A84     		mv	s0,a0
+  13 000e AE84     		mv	s1,a1
+  14 0010 02C4     		sw	zero,8(sp)
+  15 0012 02C6     		sw	zero,12(sp)
+  16 0014 8147     		li	a5,0
+  17 0016 3A89     		mv	s2,a4
+  18              	.L2:
+  19 0018 93F5F70F 		andi	a1,a5,0xff
+  20 001c 63E69504 		bgtu	s1,a1,.L3
+  21 0020 83453401 		lbu	a1,19(s0)
+  22 0024 4844     		lw	a0,12(s0)
+  23 0026 0146     		li	a2,0
+  24 0028 97000000 		call	MCP_pinWrite
+  24      E7800000 
+  25 0030 0945     		li	a0,2
+  26 0032 97000000 		call	hwdelay
+  26      E7800000 
+  27 003a 93951400 		slli	a1,s1,1
+  28 003e 4A86     		mv	a2,s2
+  29 0040 2285     		mv	a0,s0
+  30 0042 93F5E50F 		andi	a1,a1,254
+  31 0046 97000000 		call	SPI_daisy_write
+  31      E7800000 
+  32 004e 83453401 		lbu	a1,19(s0)
+  33 0052 4844     		lw	a0,12(s0)
+  34 0054 0546     		li	a2,1
+  35 0056 97000000 		call	MCP_pinWrite
+  35      E7800000 
+  36 005e 4101     		addi	sp,sp,16
+  37 0060 17030000 		tail	__riscv_restore_3
+  37      67000300 
+  38              	.L3:
+  39 0068 B305F600 		add	a1,a2,a5
+  40 006c 83C50500 		lbu	a1,0(a1)
+  41 0070 0907     		addi	a4,a4,2
+  42 0072 93F5F507 		andi	a1,a1,127
+  43 0076 230FB7FE 		sb	a1,-2(a4)
+  44 007a B385F600 		add	a1,a3,a5
+  45 007e 83C50500 		lbu	a1,0(a1)
+  46 0082 8507     		addi	a5,a5,1
+  47 0084 A30FB7FE 		sb	a1,-1(a4)
+  48 0088 41BF     		j	.L2
+  50              		.section	.text.bme280_get_regs,"ax",@progbits
+  51              		.align	1
+  52              		.globl	bme280_get_regs
+  54              	bme280_get_regs:
+  55 0000 17030000 		call	t0,__riscv_save_0
+  55      E7020300 
+  56 0008 4111     		addi	sp,sp,-16
+  57 000a 93E505F8 		ori	a1,a1,-128
+  58 000e A307B100 		sb	a1,15(sp)
+  59 0012 3687     		mv	a4,a3
+  60 0014 8545     		li	a1,1
+  61 0016 B286     		mv	a3,a2
+  62 0018 1306F100 		addi	a2,sp,15
+  63 001c 97000000 		call	SPI_daisy_rw_cycle
+  63      E7800000 
+  64 0024 4101     		addi	sp,sp,16
+  65 0026 17030000 		tail	__riscv_restore_0
+  65      67000300 
+  67              		.section	.text.bme280_init_settings,"ax",@progbits
+  68              		.align	1
+  69              		.globl	bme280_init_settings
+  71              	bme280_init_settings:
+  72 0000 17030000 		call	t0,__riscv_save_1
+  72      E7020300 
+  73 0008 4111     		addi	sp,sp,-16
+  74 000a 93061100 		addi	a3,sp,1
+  75 000e 0546     		li	a2,1
+  76 0010 9305000D 		li	a1,208
+  77 0014 2A84     		mv	s0,a0
+  78 0016 A3000100 		sb	zero,1(sp)
+  79 001a 97000000 		call	bme280_get_regs
+  79      E7800000 
+  80 0022 8157     		li	a5,-32
+  81 0024 93063100 		addi	a3,sp,3
+  82 0028 13062100 		addi	a2,sp,2
+  83 002c 8545     		li	a1,1
+  84 002e 2301F100 		sb	a5,2(sp)
+  85 0032 2285     		mv	a0,s0
+  86 0034 930760FB 		li	a5,-74
+  87 0038 A301F100 		sb	a5,3(sp)
+  88 003c 97000000 		call	bme280_set_regs
+  88      E7800000 
+  89 0044 0945     		li	a0,2
+  90 0046 97000000 		call	delay_ms
+  90      E7800000 
+  91 004e B7070000 		lui	a5,%hi(.LC0)
+  92 0052 03D70700 		lhu	a4,%lo(.LC0)(a5)
+  93 0056 93870700 		addi	a5,a5,%lo(.LC0)
+  94 005a 83C72700 		lbu	a5,2(a5)
+  95 005e 3400     		addi	a3,sp,8
+  96 0060 5000     		addi	a2,sp,4
+  97 0062 2303F100 		sb	a5,6(sp)
+  98 0066 93070011 		li	a5,272
+  99 006a 8D45     		li	a1,3
+ 100 006c 2314F100 		sh	a5,8(sp)
+ 101 0070 2285     		mv	a0,s0
+ 102 0072 93074005 		li	a5,84
+ 103 0076 2312E100 		sh	a4,4(sp)
+ 104 007a 2305F100 		sb	a5,10(sp)
+ 105 007e 97000000 		call	bme280_set_regs
+ 105      E7800000 
+ 106 0086 13052003 		li	a0,50
+ 107 008a 97000000 		call	hwdelay
+ 107      E7800000 
+ 108 0092 2285     		mv	a0,s0
+ 109 0094 7400     		addi	a3,sp,12
+ 110 0096 1146     		li	a2,4
+ 111 0098 9305200F 		li	a1,242
+ 112 009c 02C6     		sw	zero,12(sp)
+ 113 009e 97000000 		call	bme280_get_regs
+ 113      E7800000 
+ 114 00a6 0347C100 		lbu	a4,12(sp)
+ 115 00aa 83479100 		lbu	a5,9(sp)
+ 116 00ae 0545     		li	a0,1
+ 117 00b0 6310F702 		bne	a4,a5,.L8
+ 118 00b4 0347E100 		lbu	a4,14(sp)
+ 119 00b8 8347A100 		lbu	a5,10(sp)
+ 120 00bc 0545     		li	a0,1
+ 121 00be 6319F700 		bne	a4,a5,.L8
+ 122 00c2 0345F100 		lbu	a0,15(sp)
+ 123 00c6 83478100 		lbu	a5,8(sp)
+ 124 00ca 1D8D     		sub	a0,a0,a5
+ 125 00cc 3335A000 		snez	a0,a0
+ 126              	.L8:
+ 127 00d0 4101     		addi	sp,sp,16
+ 128 00d2 17030000 		tail	__riscv_restore_1
+ 128      67000300 
+ 130              		.section	.text.bme280_get_calib,"ax",@progbits
+ 131              		.align	1
+ 132              		.globl	bme280_get_calib
+ 134              	bme280_get_calib:
+ 135 0000 17030000 		call	t0,__riscv_save_2
+ 135      E7020300 
+ 136 0008 B284     		mv	s1,a2
+ 137 000a AE86     		mv	a3,a1
+ 138 000c 6946     		li	a2,26
+ 139 000e 93058008 		li	a1,136
+ 140 0012 2A84     		mv	s0,a0
+ 141 0014 97000000 		call	bme280_get_regs
+ 141      E7800000 
+ 142 001c A686     		mv	a3,s1
+ 143 001e 1D46     		li	a2,7
+ 144 0020 9305100E 		li	a1,225
+ 145 0024 2285     		mv	a0,s0
+ 146 0026 97000000 		call	bme280_get_regs
+ 146      E7800000 
+ 147 002e 17030000 		tail	__riscv_restore_2
+ 147      67000300 
+ 149              		.section	.text.bme280_get_htp,"ax",@progbits
+ 150              		.align	1
+ 151              		.globl	bme280_get_htp
+ 153              	bme280_get_htp:
+ 154 0000 17030000 		call	t0,__riscv_save_2
+ 154      E7020300 
+ 155 0008 4111     		addi	sp,sp,-16
+ 156 000a AE84     		mv	s1,a1
+ 157 000c D157     		li	a5,-12
+ 158 000e 9306E100 		addi	a3,sp,14
+ 159 0012 0546     		li	a2,1
+ 160 0014 9305400F 		li	a1,244
+ 161 0018 2A84     		mv	s0,a0
+ 162 001a A307F100 		sb	a5,15(sp)
+ 163 001e 23070100 		sb	zero,14(sp)
+ 164 0022 97000000 		call	bme280_get_regs
+ 164      E7800000 
+ 165 002a 8347E100 		lbu	a5,14(sp)
+ 166 002e 9306E100 		addi	a3,sp,14
+ 167 0032 1306F100 		addi	a2,sp,15
+ 168 0036 93E71700 		ori	a5,a5,1
+ 169 003a 8545     		li	a1,1
+ 170 003c 2285     		mv	a0,s0
+ 171 003e 2307F100 		sb	a5,14(sp)
+ 172 0042 97000000 		call	bme280_set_regs
+ 172      E7800000 
+ 173 004a 37252600 		li	a0,2498560
+ 174 004e 1305055A 		addi	a0,a0,1440
+ 175 0052 97000000 		call	hwdelay
+ 175      E7800000 
+ 176 005a A686     		mv	a3,s1
+ 177 005c 2146     		li	a2,8
+ 178 005e 9305700F 		li	a1,247
+ 179 0062 2285     		mv	a0,s0
+ 180 0064 97000000 		call	bme280_get_regs
+ 180      E7800000 
+ 181 006c 4101     		addi	sp,sp,16
+ 182 006e 17030000 		tail	__riscv_restore_2
+ 182      67000300 
+ 184              		.comm	registers_0_addr,4,4
+ 185              		.comm	mapped_channel_mask,12,4
+ 186              		.comm	channel_mask,12,4
+ 187              		.section	.srodata,"a"
+ 188              		.align	2
+ 189              	.LC0:
+ 190 0000 F5       		.byte	-11
+ 191 0001 F2       		.byte	-14
+ 192 0002 F4       		.byte	-12
+ 193              		.ident	"GCC: (Microchip SoftConsole GNU RISC-V Embedded GCC, 64-bit) 8.2.0"
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 bme280_SPI_daisy.c
+C:\Users\tecchio\AppData\Local\Temp\ccSFNeQP.s:8      .text.bme280_set_regs:0000000000000000 bme280_set_regs
+C:\Users\tecchio\AppData\Local\Temp\ccSFNeQP.s:54     .text.bme280_get_regs:0000000000000000 bme280_get_regs
+C:\Users\tecchio\AppData\Local\Temp\ccSFNeQP.s:71     .text.bme280_init_settings:0000000000000000 bme280_init_settings
+C:\Users\tecchio\AppData\Local\Temp\ccSFNeQP.s:134    .text.bme280_get_calib:0000000000000000 bme280_get_calib
+C:\Users\tecchio\AppData\Local\Temp\ccSFNeQP.s:153    .text.bme280_get_htp:0000000000000000 bme280_get_htp
+                            *COM*:0000000000000004 registers_0_addr
+                            *COM*:000000000000000c mapped_channel_mask
+                            *COM*:000000000000000c channel_mask
+C:\Users\tecchio\AppData\Local\Temp\ccSFNeQP.s:38     .text.bme280_set_regs:0000000000000068 .L3
+C:\Users\tecchio\AppData\Local\Temp\ccSFNeQP.s:18     .text.bme280_set_regs:0000000000000018 .L2
+C:\Users\tecchio\AppData\Local\Temp\ccSFNeQP.s:189    .srodata:0000000000000000 .LC0
+C:\Users\tecchio\AppData\Local\Temp\ccSFNeQP.s:126    .text.bme280_init_settings:00000000000000d0 .L8
+
+UNDEFINED SYMBOLS
+__riscv_save_3
+MCP_pinWrite
+hwdelay
+SPI_daisy_write
+__riscv_restore_3
+__riscv_save_0
+SPI_daisy_rw_cycle
+__riscv_restore_0
+__riscv_save_1
+delay_ms
+__riscv_restore_1
+__riscv_save_2
+__riscv_restore_2

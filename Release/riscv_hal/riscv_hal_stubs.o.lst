@@ -1,0 +1,250 @@
+   1              		.file	"riscv_hal_stubs.c"
+   2              		.option nopic
+   3              		.text
+   4              		.section	.text.Software_IRQHandler,"ax",@progbits
+   5              		.align	1
+   6              		.weak	Software_IRQHandler
+   8              	Software_IRQHandler:
+   9 0000 17030000 		call	t0,__riscv_save_0
+   9      E7020300 
+  10 0008 2945     		li	a0,10
+  11 000a 97000000 		call	_exit
+  11      E7800000 
+  13              		.section	.text.SysTick_Handler,"ax",@progbits
+  14              		.align	1
+  15              		.weak	SysTick_Handler
+  17              	SysTick_Handler:
+  18 0000 8280     		ret
+  20              		.section	.text.Invalid_IRQHandler,"ax",@progbits
+  21              		.align	1
+  22              		.weak	Invalid_IRQHandler
+  24              	Invalid_IRQHandler:
+  25 0000 0145     		li	a0,0
+  26 0002 8280     		ret
+  28              		.section	.text.External_1_IRQHandler,"ax",@progbits
+  29              		.align	1
+  30              		.weak	External_1_IRQHandler
+  32              	External_1_IRQHandler:
+  33 0000 0145     		li	a0,0
+  34 0002 8280     		ret
+  36              		.section	.text.External_2_IRQHandler,"ax",@progbits
+  37              		.align	1
+  38              		.weak	External_2_IRQHandler
+  40              	External_2_IRQHandler:
+  41 0000 0145     		li	a0,0
+  42 0002 8280     		ret
+  44              		.section	.text.External_3_IRQHandler,"ax",@progbits
+  45              		.align	1
+  46              		.weak	External_3_IRQHandler
+  48              	External_3_IRQHandler:
+  49 0000 0145     		li	a0,0
+  50 0002 8280     		ret
+  52              		.section	.text.External_4_IRQHandler,"ax",@progbits
+  53              		.align	1
+  54              		.weak	External_4_IRQHandler
+  56              	External_4_IRQHandler:
+  57 0000 0145     		li	a0,0
+  58 0002 8280     		ret
+  60              		.section	.text.External_5_IRQHandler,"ax",@progbits
+  61              		.align	1
+  62              		.weak	External_5_IRQHandler
+  64              	External_5_IRQHandler:
+  65 0000 0145     		li	a0,0
+  66 0002 8280     		ret
+  68              		.section	.text.External_6_IRQHandler,"ax",@progbits
+  69              		.align	1
+  70              		.weak	External_6_IRQHandler
+  72              	External_6_IRQHandler:
+  73 0000 0145     		li	a0,0
+  74 0002 8280     		ret
+  76              		.section	.text.External_7_IRQHandler,"ax",@progbits
+  77              		.align	1
+  78              		.weak	External_7_IRQHandler
+  80              	External_7_IRQHandler:
+  81 0000 0145     		li	a0,0
+  82 0002 8280     		ret
+  84              		.section	.text.External_8_IRQHandler,"ax",@progbits
+  85              		.align	1
+  86              		.weak	External_8_IRQHandler
+  88              	External_8_IRQHandler:
+  89 0000 0145     		li	a0,0
+  90 0002 8280     		ret
+  92              		.section	.text.External_9_IRQHandler,"ax",@progbits
+  93              		.align	1
+  94              		.weak	External_9_IRQHandler
+  96              	External_9_IRQHandler:
+  97 0000 0145     		li	a0,0
+  98 0002 8280     		ret
+ 100              		.section	.text.External_10_IRQHandler,"ax",@progbits
+ 101              		.align	1
+ 102              		.weak	External_10_IRQHandler
+ 104              	External_10_IRQHandler:
+ 105 0000 0145     		li	a0,0
+ 106 0002 8280     		ret
+ 108              		.section	.text.External_11_IRQHandler,"ax",@progbits
+ 109              		.align	1
+ 110              		.weak	External_11_IRQHandler
+ 112              	External_11_IRQHandler:
+ 113 0000 0145     		li	a0,0
+ 114 0002 8280     		ret
+ 116              		.section	.text.External_12_IRQHandler,"ax",@progbits
+ 117              		.align	1
+ 118              		.weak	External_12_IRQHandler
+ 120              	External_12_IRQHandler:
+ 121 0000 0145     		li	a0,0
+ 122 0002 8280     		ret
+ 124              		.section	.text.External_13_IRQHandler,"ax",@progbits
+ 125              		.align	1
+ 126              		.weak	External_13_IRQHandler
+ 128              	External_13_IRQHandler:
+ 129 0000 0145     		li	a0,0
+ 130 0002 8280     		ret
+ 132              		.section	.text.External_14_IRQHandler,"ax",@progbits
+ 133              		.align	1
+ 134              		.weak	External_14_IRQHandler
+ 136              	External_14_IRQHandler:
+ 137 0000 0145     		li	a0,0
+ 138 0002 8280     		ret
+ 140              		.section	.text.External_15_IRQHandler,"ax",@progbits
+ 141              		.align	1
+ 142              		.weak	External_15_IRQHandler
+ 144              	External_15_IRQHandler:
+ 145 0000 0145     		li	a0,0
+ 146 0002 8280     		ret
+ 148              		.section	.text.External_16_IRQHandler,"ax",@progbits
+ 149              		.align	1
+ 150              		.weak	External_16_IRQHandler
+ 152              	External_16_IRQHandler:
+ 153 0000 0145     		li	a0,0
+ 154 0002 8280     		ret
+ 156              		.section	.text.External_17_IRQHandler,"ax",@progbits
+ 157              		.align	1
+ 158              		.weak	External_17_IRQHandler
+ 160              	External_17_IRQHandler:
+ 161 0000 0145     		li	a0,0
+ 162 0002 8280     		ret
+ 164              		.section	.text.External_18_IRQHandler,"ax",@progbits
+ 165              		.align	1
+ 166              		.weak	External_18_IRQHandler
+ 168              	External_18_IRQHandler:
+ 169 0000 0145     		li	a0,0
+ 170 0002 8280     		ret
+ 172              		.section	.text.External_19_IRQHandler,"ax",@progbits
+ 173              		.align	1
+ 174              		.weak	External_19_IRQHandler
+ 176              	External_19_IRQHandler:
+ 177 0000 0145     		li	a0,0
+ 178 0002 8280     		ret
+ 180              		.section	.text.External_20_IRQHandler,"ax",@progbits
+ 181              		.align	1
+ 182              		.weak	External_20_IRQHandler
+ 184              	External_20_IRQHandler:
+ 185 0000 0145     		li	a0,0
+ 186 0002 8280     		ret
+ 188              		.section	.text.External_21_IRQHandler,"ax",@progbits
+ 189              		.align	1
+ 190              		.weak	External_21_IRQHandler
+ 192              	External_21_IRQHandler:
+ 193 0000 0145     		li	a0,0
+ 194 0002 8280     		ret
+ 196              		.section	.text.External_22_IRQHandler,"ax",@progbits
+ 197              		.align	1
+ 198              		.weak	External_22_IRQHandler
+ 200              	External_22_IRQHandler:
+ 201 0000 0145     		li	a0,0
+ 202 0002 8280     		ret
+ 204              		.section	.text.External_23_IRQHandler,"ax",@progbits
+ 205              		.align	1
+ 206              		.weak	External_23_IRQHandler
+ 208              	External_23_IRQHandler:
+ 209 0000 0145     		li	a0,0
+ 210 0002 8280     		ret
+ 212              		.section	.text.External_24_IRQHandler,"ax",@progbits
+ 213              		.align	1
+ 214              		.weak	External_24_IRQHandler
+ 216              	External_24_IRQHandler:
+ 217 0000 0145     		li	a0,0
+ 218 0002 8280     		ret
+ 220              		.section	.text.External_25_IRQHandler,"ax",@progbits
+ 221              		.align	1
+ 222              		.weak	External_25_IRQHandler
+ 224              	External_25_IRQHandler:
+ 225 0000 0145     		li	a0,0
+ 226 0002 8280     		ret
+ 228              		.section	.text.External_26_IRQHandler,"ax",@progbits
+ 229              		.align	1
+ 230              		.weak	External_26_IRQHandler
+ 232              	External_26_IRQHandler:
+ 233 0000 0145     		li	a0,0
+ 234 0002 8280     		ret
+ 236              		.section	.text.External_27_IRQHandler,"ax",@progbits
+ 237              		.align	1
+ 238              		.weak	External_27_IRQHandler
+ 240              	External_27_IRQHandler:
+ 241 0000 0145     		li	a0,0
+ 242 0002 8280     		ret
+ 244              		.section	.text.External_28_IRQHandler,"ax",@progbits
+ 245              		.align	1
+ 246              		.weak	External_28_IRQHandler
+ 248              	External_28_IRQHandler:
+ 249 0000 0145     		li	a0,0
+ 250 0002 8280     		ret
+ 252              		.section	.text.External_29_IRQHandler,"ax",@progbits
+ 253              		.align	1
+ 254              		.weak	External_29_IRQHandler
+ 256              	External_29_IRQHandler:
+ 257 0000 0145     		li	a0,0
+ 258 0002 8280     		ret
+ 260              		.section	.text.External_30_IRQHandler,"ax",@progbits
+ 261              		.align	1
+ 262              		.weak	External_30_IRQHandler
+ 264              	External_30_IRQHandler:
+ 265 0000 0145     		li	a0,0
+ 266 0002 8280     		ret
+ 268              		.section	.text.External_31_IRQHandler,"ax",@progbits
+ 269              		.align	1
+ 270              		.weak	External_31_IRQHandler
+ 272              	External_31_IRQHandler:
+ 273 0000 0145     		li	a0,0
+ 274 0002 8280     		ret
+ 276              		.ident	"GCC: (Microchip SoftConsole GNU RISC-V Embedded GCC, 64-bit) 8.2.0"
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 riscv_hal_stubs.c
+C:\Users\tecchio\AppData\Local\Temp\1\ccGoO4ZG.s:8      .text.Software_IRQHandler:0000000000000000 Software_IRQHandler
+C:\Users\tecchio\AppData\Local\Temp\1\ccGoO4ZG.s:17     .text.SysTick_Handler:0000000000000000 SysTick_Handler
+C:\Users\tecchio\AppData\Local\Temp\1\ccGoO4ZG.s:24     .text.Invalid_IRQHandler:0000000000000000 Invalid_IRQHandler
+C:\Users\tecchio\AppData\Local\Temp\1\ccGoO4ZG.s:32     .text.External_1_IRQHandler:0000000000000000 External_1_IRQHandler
+C:\Users\tecchio\AppData\Local\Temp\1\ccGoO4ZG.s:40     .text.External_2_IRQHandler:0000000000000000 External_2_IRQHandler
+C:\Users\tecchio\AppData\Local\Temp\1\ccGoO4ZG.s:48     .text.External_3_IRQHandler:0000000000000000 External_3_IRQHandler
+C:\Users\tecchio\AppData\Local\Temp\1\ccGoO4ZG.s:56     .text.External_4_IRQHandler:0000000000000000 External_4_IRQHandler
+C:\Users\tecchio\AppData\Local\Temp\1\ccGoO4ZG.s:64     .text.External_5_IRQHandler:0000000000000000 External_5_IRQHandler
+C:\Users\tecchio\AppData\Local\Temp\1\ccGoO4ZG.s:72     .text.External_6_IRQHandler:0000000000000000 External_6_IRQHandler
+C:\Users\tecchio\AppData\Local\Temp\1\ccGoO4ZG.s:80     .text.External_7_IRQHandler:0000000000000000 External_7_IRQHandler
+C:\Users\tecchio\AppData\Local\Temp\1\ccGoO4ZG.s:88     .text.External_8_IRQHandler:0000000000000000 External_8_IRQHandler
+C:\Users\tecchio\AppData\Local\Temp\1\ccGoO4ZG.s:96     .text.External_9_IRQHandler:0000000000000000 External_9_IRQHandler
+C:\Users\tecchio\AppData\Local\Temp\1\ccGoO4ZG.s:104    .text.External_10_IRQHandler:0000000000000000 External_10_IRQHandler
+C:\Users\tecchio\AppData\Local\Temp\1\ccGoO4ZG.s:112    .text.External_11_IRQHandler:0000000000000000 External_11_IRQHandler
+C:\Users\tecchio\AppData\Local\Temp\1\ccGoO4ZG.s:120    .text.External_12_IRQHandler:0000000000000000 External_12_IRQHandler
+C:\Users\tecchio\AppData\Local\Temp\1\ccGoO4ZG.s:128    .text.External_13_IRQHandler:0000000000000000 External_13_IRQHandler
+C:\Users\tecchio\AppData\Local\Temp\1\ccGoO4ZG.s:136    .text.External_14_IRQHandler:0000000000000000 External_14_IRQHandler
+C:\Users\tecchio\AppData\Local\Temp\1\ccGoO4ZG.s:144    .text.External_15_IRQHandler:0000000000000000 External_15_IRQHandler
+C:\Users\tecchio\AppData\Local\Temp\1\ccGoO4ZG.s:152    .text.External_16_IRQHandler:0000000000000000 External_16_IRQHandler
+C:\Users\tecchio\AppData\Local\Temp\1\ccGoO4ZG.s:160    .text.External_17_IRQHandler:0000000000000000 External_17_IRQHandler
+C:\Users\tecchio\AppData\Local\Temp\1\ccGoO4ZG.s:168    .text.External_18_IRQHandler:0000000000000000 External_18_IRQHandler
+C:\Users\tecchio\AppData\Local\Temp\1\ccGoO4ZG.s:176    .text.External_19_IRQHandler:0000000000000000 External_19_IRQHandler
+C:\Users\tecchio\AppData\Local\Temp\1\ccGoO4ZG.s:184    .text.External_20_IRQHandler:0000000000000000 External_20_IRQHandler
+C:\Users\tecchio\AppData\Local\Temp\1\ccGoO4ZG.s:192    .text.External_21_IRQHandler:0000000000000000 External_21_IRQHandler
+C:\Users\tecchio\AppData\Local\Temp\1\ccGoO4ZG.s:200    .text.External_22_IRQHandler:0000000000000000 External_22_IRQHandler
+C:\Users\tecchio\AppData\Local\Temp\1\ccGoO4ZG.s:208    .text.External_23_IRQHandler:0000000000000000 External_23_IRQHandler
+C:\Users\tecchio\AppData\Local\Temp\1\ccGoO4ZG.s:216    .text.External_24_IRQHandler:0000000000000000 External_24_IRQHandler
+C:\Users\tecchio\AppData\Local\Temp\1\ccGoO4ZG.s:224    .text.External_25_IRQHandler:0000000000000000 External_25_IRQHandler
+C:\Users\tecchio\AppData\Local\Temp\1\ccGoO4ZG.s:232    .text.External_26_IRQHandler:0000000000000000 External_26_IRQHandler
+C:\Users\tecchio\AppData\Local\Temp\1\ccGoO4ZG.s:240    .text.External_27_IRQHandler:0000000000000000 External_27_IRQHandler
+C:\Users\tecchio\AppData\Local\Temp\1\ccGoO4ZG.s:248    .text.External_28_IRQHandler:0000000000000000 External_28_IRQHandler
+C:\Users\tecchio\AppData\Local\Temp\1\ccGoO4ZG.s:256    .text.External_29_IRQHandler:0000000000000000 External_29_IRQHandler
+C:\Users\tecchio\AppData\Local\Temp\1\ccGoO4ZG.s:264    .text.External_30_IRQHandler:0000000000000000 External_30_IRQHandler
+C:\Users\tecchio\AppData\Local\Temp\1\ccGoO4ZG.s:272    .text.External_31_IRQHandler:0000000000000000 External_31_IRQHandler
+
+UNDEFINED SYMBOLS
+__riscv_save_0
+_exit

@@ -1,0 +1,467 @@
+   1              		.file	"I2C.c"
+   2              		.option nopic
+   3              		.text
+   4              		.section	.text.I2C_setup,"ax",@progbits
+   5              		.align	1
+   6              		.globl	I2C_setup
+   8              	I2C_setup:
+   9 0000 17030000 		call	t0,__riscv_save_1
+   9      E7020300 
+  10 0008 2A84     		mv	s0,a0
+  11 000a 2E85     		mv	a0,a1
+  12 000c 14C0     		sw	a3,0(s0)
+  13 000e A304E400 		sb	a4,9(s0)
+  14 0012 B285     		mv	a1,a2
+  15 0014 48C0     		sw	a0,4(s0)
+  16 0016 2304C400 		sb	a2,8(s0)
+  17 001a 0546     		li	a2,1
+  18 001c 97000000 		call	MCP_pinWrite
+  18      E7800000 
+  19 0024 83458400 		lbu	a1,8(s0)
+  20 0028 4840     		lw	a0,4(s0)
+  21 002a 0146     		li	a2,0
+  22 002c 97000000 		call	MCP_pinMode
+  22      E7800000 
+  23 0034 83459400 		lbu	a1,9(s0)
+  24 0038 0840     		lw	a0,0(s0)
+  25 003a 0546     		li	a2,1
+  26 003c 97000000 		call	MCP_pinWrite
+  26      E7800000 
+  27 0044 83459400 		lbu	a1,9(s0)
+  28 0048 0840     		lw	a0,0(s0)
+  29 004a 0146     		li	a2,0
+  30 004c 97000000 		call	MCP_pinMode
+  30      E7800000 
+  31 0054 17030000 		tail	__riscv_restore_1
+  31      67000300 
+  33              		.section	.text.I2C_read,"ax",@progbits
+  34              		.align	1
+  35              		.globl	I2C_read
+  37              	I2C_read:
+  38 0000 17030000 		call	t0,__riscv_save_5
+  38      E7020300 
+  39 0008 2A84     		mv	s0,a0
+  40 000a AE89     		mv	s3,a1
+  41 000c 83458500 		lbu	a1,8(a0)
+  42 0010 4841     		lw	a0,4(a0)
+  43 0012 0546     		li	a2,1
+  44 0014 0149     		li	s2,0
+  45 0016 97000000 		call	MCP_pinWrite
+  45      E7800000 
+  46 001e 83458400 		lbu	a1,8(s0)
+  47 0022 4840     		lw	a0,4(s0)
+  48 0024 0546     		li	a2,1
+  49 0026 8144     		li	s1,0
+  50 0028 97000000 		call	MCP_pinMode
+  50      E7800000 
+  51 0030 214A     		li	s4,8
+  52              	.L5:
+  53 0032 1145     		li	a0,4
+  54 0034 97000000 		call	delayUs
+  54      E7800000 
+  55 003c 83459400 		lbu	a1,9(s0)
+  56 0040 0840     		lw	a0,0(s0)
+  57 0042 0546     		li	a2,1
+  58 0044 97000000 		call	MCP_pinWrite
+  58      E7800000 
+  59 004c 83458400 		lbu	a1,8(s0)
+  60 0050 4840     		lw	a0,4(s0)
+  61 0052 97000000 		call	MCP_pinRead
+  61      E7800000 
+  62 005a 19C5     		beqz	a0,.L4
+  63 005c 8547     		li	a5,1
+  64 005e B3972701 		sll	a5,a5,s2
+  65 0062 DD8C     		or	s1,a5,s1
+  66 0064 93F4F40F 		andi	s1,s1,0xff
+  67              	.L4:
+  68 0068 83459400 		lbu	a1,9(s0)
+  69 006c 0840     		lw	a0,0(s0)
+  70 006e 0146     		li	a2,0
+  71 0070 0509     		addi	s2,s2,1
+  72 0072 97000000 		call	MCP_pinWrite
+  72      E7800000 
+  73 007a E31C49FB 		bne	s2,s4,.L5
+  74 007e 83458400 		lbu	a1,8(s0)
+  75 0082 4840     		lw	a0,4(s0)
+  76 0084 0146     		li	a2,0
+  77 0086 97000000 		call	MCP_pinMode
+  77      E7800000 
+  78 008e 83458400 		lbu	a1,8(s0)
+  79 0092 4840     		lw	a0,4(s0)
+  80 0094 4E86     		mv	a2,s3
+  81 0096 97000000 		call	MCP_pinWrite
+  81      E7800000 
+  82 009e 83459400 		lbu	a1,9(s0)
+  83 00a2 0840     		lw	a0,0(s0)
+  84 00a4 0546     		li	a2,1
+  85 00a6 97000000 		call	MCP_pinWrite
+  85      E7800000 
+  86 00ae 1145     		li	a0,4
+  87 00b0 97000000 		call	delayUs
+  87      E7800000 
+  88 00b8 83459400 		lbu	a1,9(s0)
+  89 00bc 0840     		lw	a0,0(s0)
+  90 00be 0146     		li	a2,0
+  91 00c0 97000000 		call	MCP_pinWrite
+  91      E7800000 
+  92 00c8 4840     		lw	a0,4(s0)
+  93 00ca 83458400 		lbu	a1,8(s0)
+  94 00ce 0146     		li	a2,0
+  95 00d0 97000000 		call	MCP_pinWrite
+  95      E7800000 
+  96 00d8 2685     		mv	a0,s1
+  97 00da 17030000 		tail	__riscv_restore_5
+  97      67000300 
+  99              		.section	.text.I2C_stop,"ax",@progbits
+ 100              		.align	1
+ 101              		.globl	I2C_stop
+ 103              	I2C_stop:
+ 104 0000 17030000 		call	t0,__riscv_save_1
+ 104      E7020300 
+ 105 0008 2A84     		mv	s0,a0
+ 106 000a 83458500 		lbu	a1,8(a0)
+ 107 000e 4841     		lw	a0,4(a0)
+ 108 0010 0146     		li	a2,0
+ 109 0012 97000000 		call	MCP_pinWrite
+ 109      E7800000 
+ 110 001a 1145     		li	a0,4
+ 111 001c 97000000 		call	delayUs
+ 111      E7800000 
+ 112 0024 83459400 		lbu	a1,9(s0)
+ 113 0028 0840     		lw	a0,0(s0)
+ 114 002a 0546     		li	a2,1
+ 115 002c 97000000 		call	MCP_pinWrite
+ 115      E7800000 
+ 116 0034 1145     		li	a0,4
+ 117 0036 97000000 		call	delayUs
+ 117      E7800000 
+ 118 003e 83458400 		lbu	a1,8(s0)
+ 119 0042 4840     		lw	a0,4(s0)
+ 120 0044 0546     		li	a2,1
+ 121 0046 97000000 		call	MCP_pinWrite
+ 121      E7800000 
+ 122 004e 1145     		li	a0,4
+ 123 0050 97000000 		call	delayUs
+ 123      E7800000 
+ 124 0058 17030000 		tail	__riscv_restore_1
+ 124      67000300 
+ 126              		.section	.text.I2Cs_stop,"ax",@progbits
+ 127              		.align	1
+ 128              		.globl	I2Cs_stop
+ 130              	I2Cs_stop:
+ 131 0000 17030000 		call	t0,__riscv_save_3
+ 131      E7020300 
+ 132 0008 AA84     		mv	s1,a0
+ 133 000a B9ED     		bnez	a1,.L15
+ 134 000c 4949     		li	s2,18
+ 135 000e 4D44     		li	s0,19
+ 136              	.L14:
+ 137 0010 1374F40F 		andi	s0,s0,0xff
+ 138 0014 A285     		mv	a1,s0
+ 139 0016 0146     		li	a2,0
+ 140 0018 2685     		mv	a0,s1
+ 141 001a 97000000 		call	MCP_byteWrite
+ 141      E7800000 
+ 142 0022 1145     		li	a0,4
+ 143 0024 97000000 		call	delayUs
+ 143      E7800000 
+ 144 002c CA85     		mv	a1,s2
+ 145 002e 1306F00F 		li	a2,255
+ 146 0032 2685     		mv	a0,s1
+ 147 0034 97000000 		call	MCP_byteWrite
+ 147      E7800000 
+ 148 003c 1145     		li	a0,4
+ 149 003e 97000000 		call	delayUs
+ 149      E7800000 
+ 150 0046 1306F00F 		li	a2,255
+ 151 004a A285     		mv	a1,s0
+ 152 004c 2685     		mv	a0,s1
+ 153 004e 97000000 		call	MCP_byteWrite
+ 153      E7800000 
+ 154 0056 1145     		li	a0,4
+ 155 0058 97000000 		call	delayUs
+ 155      E7800000 
+ 156 0060 17030000 		tail	__riscv_restore_3
+ 156      67000300 
+ 157              	.L15:
+ 158 0068 4D49     		li	s2,19
+ 159 006a 4944     		li	s0,18
+ 160 006c 55B7     		j	.L14
+ 162              		.section	.text.I2C_write,"ax",@progbits
+ 163              		.align	1
+ 164              		.globl	I2C_write
+ 166              	I2C_write:
+ 167 0000 17030000 		call	t0,__riscv_save_4
+ 167      E7020300 
+ 168 0008 2A84     		mv	s0,a0
+ 169 000a AE89     		mv	s3,a1
+ 170 000c A144     		li	s1,8
+ 171 000e 13090008 		li	s2,128
+ 172              	.L18:
+ 173 0012 83458400 		lbu	a1,8(s0)
+ 174 0016 4840     		lw	a0,4(s0)
+ 175 0018 33F62901 		and	a2,s3,s2
+ 176 001c FD14     		addi	s1,s1,-1
+ 177 001e 97000000 		call	MCP_pinWrite
+ 177      E7800000 
+ 178 0026 83459400 		lbu	a1,9(s0)
+ 179 002a 0840     		lw	a0,0(s0)
+ 180 002c 0546     		li	a2,1
+ 181 002e 13591900 		srli	s2,s2,1
+ 182 0032 97000000 		call	MCP_pinWrite
+ 182      E7800000 
+ 183 003a 1145     		li	a0,4
+ 184 003c 97000000 		call	delayUs
+ 184      E7800000 
+ 185 0044 83459400 		lbu	a1,9(s0)
+ 186 0048 0840     		lw	a0,0(s0)
+ 187 004a 0146     		li	a2,0
+ 188 004c 97000000 		call	MCP_pinWrite
+ 188      E7800000 
+ 189 0054 DDFC     		bnez	s1,.L18
+ 190 0056 83458400 		lbu	a1,8(s0)
+ 191 005a 4840     		lw	a0,4(s0)
+ 192 005c 0546     		li	a2,1
+ 193 005e 97000000 		call	MCP_pinMode
+ 193      E7800000 
+ 194 0066 83459400 		lbu	a1,9(s0)
+ 195 006a 0840     		lw	a0,0(s0)
+ 196 006c 0546     		li	a2,1
+ 197 006e 97000000 		call	MCP_pinWrite
+ 197      E7800000 
+ 198 0076 83458400 		lbu	a1,8(s0)
+ 199 007a 4840     		lw	a0,4(s0)
+ 200 007c 97000000 		call	MCP_pinRead
+ 200      E7800000 
+ 201 0084 83459400 		lbu	a1,9(s0)
+ 202 0088 0840     		lw	a0,0(s0)
+ 203 008a 0146     		li	a2,0
+ 204 008c 97000000 		call	MCP_pinWrite
+ 204      E7800000 
+ 205 0094 83458400 		lbu	a1,8(s0)
+ 206 0098 4840     		lw	a0,4(s0)
+ 207 009a 0146     		li	a2,0
+ 208 009c 97000000 		call	MCP_pinMode
+ 208      E7800000 
+ 209 00a4 4840     		lw	a0,4(s0)
+ 210 00a6 83458400 		lbu	a1,8(s0)
+ 211 00aa 0146     		li	a2,0
+ 212 00ac 97000000 		call	MCP_pinWrite
+ 212      E7800000 
+ 213 00b4 0145     		li	a0,0
+ 214 00b6 17030000 		tail	__riscv_restore_4
+ 214      67000300 
+ 216              		.section	.text.I2C_start,"ax",@progbits
+ 217              		.align	1
+ 218              		.globl	I2C_start
+ 220              	I2C_start:
+ 221 0000 17030000 		call	t0,__riscv_save_2
+ 221      E7020300 
+ 222 0008 2A84     		mv	s0,a0
+ 223 000a AE84     		mv	s1,a1
+ 224 000c 83459500 		lbu	a1,9(a0)
+ 225 0010 0841     		lw	a0,0(a0)
+ 226 0012 0546     		li	a2,1
+ 227 0014 97000000 		call	MCP_pinWrite
+ 227      E7800000 
+ 228 001c 83458400 		lbu	a1,8(s0)
+ 229 0020 4840     		lw	a0,4(s0)
+ 230 0022 0546     		li	a2,1
+ 231 0024 97000000 		call	MCP_pinWrite
+ 231      E7800000 
+ 232 002c 1145     		li	a0,4
+ 233 002e 97000000 		call	delayUs
+ 233      E7800000 
+ 234 0036 83458400 		lbu	a1,8(s0)
+ 235 003a 4840     		lw	a0,4(s0)
+ 236 003c 0146     		li	a2,0
+ 237 003e 97000000 		call	MCP_pinWrite
+ 237      E7800000 
+ 238 0046 1145     		li	a0,4
+ 239 0048 97000000 		call	delayUs
+ 239      E7800000 
+ 240 0050 83459400 		lbu	a1,9(s0)
+ 241 0054 0840     		lw	a0,0(s0)
+ 242 0056 0146     		li	a2,0
+ 243 0058 97000000 		call	MCP_pinWrite
+ 243      E7800000 
+ 244 0060 A685     		mv	a1,s1
+ 245 0062 2285     		mv	a0,s0
+ 246 0064 97000000 		call	I2C_write
+ 246      E7800000 
+ 247 006c 17030000 		tail	__riscv_restore_2
+ 247      67000300 
+ 249              		.section	.text.I2Cs_write,"ax",@progbits
+ 250              		.align	1
+ 251              		.globl	I2Cs_write
+ 253              	I2Cs_write:
+ 254 0000 17030000 		call	t0,__riscv_save_8
+ 254      E7020300 
+ 255 0008 2A84     		mv	s0,a0
+ 256 000a 2E8B     		mv	s6,a1
+ 257 000c 65E2     		bnez	a2,.L28
+ 258 000e C944     		li	s1,18
+ 259 0010 8549     		li	s3,1
+ 260 0012 4D49     		li	s2,19
+ 261              	.L24:
+ 262 0014 A14A     		li	s5,8
+ 263 0016 130A0008 		li	s4,128
+ 264 001a A14B     		li	s7,8
+ 265 001c 1379F90F 		andi	s2,s2,0xff
+ 266 0020 93F4F40F 		andi	s1,s1,0xff
+ 267              	.L25:
+ 268 0024 0146     		li	a2,0
+ 269 0026 0147     		li	a4,0
+ 270              	.L26:
+ 271 0028 B307EB00 		add	a5,s6,a4
+ 272 002c 83C70700 		lbu	a5,0(a5)
+ 273 0030 B377FA00 		and	a5,s4,a5
+ 274 0034 B337F000 		snez	a5,a5
+ 275 0038 B397E700 		sll	a5,a5,a4
+ 276 003c 5D8E     		or	a2,a5,a2
+ 277 003e 0507     		addi	a4,a4,1
+ 278 0040 1376F60F 		andi	a2,a2,0xff
+ 279 0044 E31277FF 		bne	a4,s7,.L26
+ 280 0048 CA85     		mv	a1,s2
+ 281 004a 2285     		mv	a0,s0
+ 282 004c 97000000 		call	MCP_byteWrite
+ 282      E7800000 
+ 283 0054 1306F00F 		li	a2,255
+ 284 0058 A685     		mv	a1,s1
+ 285 005a 2285     		mv	a0,s0
+ 286 005c 97000000 		call	MCP_byteWrite
+ 286      E7800000 
+ 287 0064 1145     		li	a0,4
+ 288 0066 97000000 		call	delayUs
+ 288      E7800000 
+ 289 006e 0146     		li	a2,0
+ 290 0070 A685     		mv	a1,s1
+ 291 0072 2285     		mv	a0,s0
+ 292 0074 FD1A     		addi	s5,s5,-1
+ 293 0076 97000000 		call	MCP_byteWrite
+ 293      E7800000 
+ 294 007e 135A1A00 		srli	s4,s4,1
+ 295 0082 E3910AFA 		bnez	s5,.L25
+ 296 0086 93F9F90F 		andi	s3,s3,0xff
+ 297 008a CE85     		mv	a1,s3
+ 298 008c 2285     		mv	a0,s0
+ 299 008e 1306F00F 		li	a2,255
+ 300 0092 97000000 		call	MCP_byteWrite
+ 300      E7800000 
+ 301 009a 1306F00F 		li	a2,255
+ 302 009e A685     		mv	a1,s1
+ 303 00a0 2285     		mv	a0,s0
+ 304 00a2 97000000 		call	MCP_byteWrite
+ 304      E7800000 
+ 305 00aa CA85     		mv	a1,s2
+ 306 00ac 2285     		mv	a0,s0
+ 307 00ae 97000000 		call	MCP_byteRead
+ 307      E7800000 
+ 308 00b6 2A8A     		mv	s4,a0
+ 309 00b8 A685     		mv	a1,s1
+ 310 00ba 2285     		mv	a0,s0
+ 311 00bc 0146     		li	a2,0
+ 312 00be 97000000 		call	MCP_byteWrite
+ 312      E7800000 
+ 313 00c6 CE85     		mv	a1,s3
+ 314 00c8 2285     		mv	a0,s0
+ 315 00ca 0146     		li	a2,0
+ 316 00cc 97000000 		call	MCP_byteWrite
+ 316      E7800000 
+ 317 00d4 2285     		mv	a0,s0
+ 318 00d6 0146     		li	a2,0
+ 319 00d8 CA85     		mv	a1,s2
+ 320 00da 97000000 		call	MCP_byteWrite
+ 320      E7800000 
+ 321 00e2 5285     		mv	a0,s4
+ 322 00e4 17030000 		tail	__riscv_restore_8
+ 322      67000300 
+ 323              	.L28:
+ 324 00ec CD44     		li	s1,19
+ 325 00ee 8149     		li	s3,0
+ 326 00f0 4949     		li	s2,18
+ 327 00f2 0DB7     		j	.L24
+ 329              		.section	.text.I2Cs_start,"ax",@progbits
+ 330              		.align	1
+ 331              		.globl	I2Cs_start
+ 333              	I2Cs_start:
+ 334 0000 17030000 		call	t0,__riscv_save_4
+ 334      E7020300 
+ 335 0008 2A84     		mv	s0,a0
+ 336 000a AE89     		mv	s3,a1
+ 337 000c B284     		mv	s1,a2
+ 338 000e 21E2     		bnez	a2,.L33
+ 339 0010 4949     		li	s2,18
+ 340 0012 CD45     		li	a1,19
+ 341              	.L32:
+ 342 0014 0146     		li	a2,0
+ 343 0016 2285     		mv	a0,s0
+ 344 0018 97000000 		call	MCP_byteWrite
+ 344      E7800000 
+ 345 0020 1145     		li	a0,4
+ 346 0022 97000000 		call	delayUs
+ 346      E7800000 
+ 347 002a CA85     		mv	a1,s2
+ 348 002c 2285     		mv	a0,s0
+ 349 002e 0146     		li	a2,0
+ 350 0030 97000000 		call	MCP_byteWrite
+ 350      E7800000 
+ 351 0038 2686     		mv	a2,s1
+ 352 003a CE85     		mv	a1,s3
+ 353 003c 2285     		mv	a0,s0
+ 354 003e 97000000 		call	I2Cs_write
+ 354      E7800000 
+ 355 0046 17030000 		tail	__riscv_restore_4
+ 355      67000300 
+ 356              	.L33:
+ 357 004e 4D49     		li	s2,19
+ 358 0050 C945     		li	a1,18
+ 359 0052 C9B7     		j	.L32
+ 361              		.comm	registers_0_addr,4,4
+ 362              		.comm	mapped_channel_mask,12,4
+ 363              		.comm	channel_mask,12,4
+ 364              		.ident	"GCC: (Microchip SoftConsole GNU RISC-V Embedded GCC, 64-bit) 8.2.0"
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 I2C.c
+C:\Users\tecchio\AppData\Local\Temp\ccR7c9Rs.s:8      .text.I2C_setup:0000000000000000 I2C_setup
+C:\Users\tecchio\AppData\Local\Temp\ccR7c9Rs.s:37     .text.I2C_read:0000000000000000 I2C_read
+C:\Users\tecchio\AppData\Local\Temp\ccR7c9Rs.s:103    .text.I2C_stop:0000000000000000 I2C_stop
+C:\Users\tecchio\AppData\Local\Temp\ccR7c9Rs.s:130    .text.I2Cs_stop:0000000000000000 I2Cs_stop
+C:\Users\tecchio\AppData\Local\Temp\ccR7c9Rs.s:166    .text.I2C_write:0000000000000000 I2C_write
+C:\Users\tecchio\AppData\Local\Temp\ccR7c9Rs.s:220    .text.I2C_start:0000000000000000 I2C_start
+C:\Users\tecchio\AppData\Local\Temp\ccR7c9Rs.s:253    .text.I2Cs_write:0000000000000000 I2Cs_write
+C:\Users\tecchio\AppData\Local\Temp\ccR7c9Rs.s:333    .text.I2Cs_start:0000000000000000 I2Cs_start
+                            *COM*:0000000000000004 registers_0_addr
+                            *COM*:000000000000000c mapped_channel_mask
+                            *COM*:000000000000000c channel_mask
+C:\Users\tecchio\AppData\Local\Temp\ccR7c9Rs.s:67     .text.I2C_read:0000000000000068 .L4
+C:\Users\tecchio\AppData\Local\Temp\ccR7c9Rs.s:52     .text.I2C_read:0000000000000032 .L5
+C:\Users\tecchio\AppData\Local\Temp\ccR7c9Rs.s:157    .text.I2Cs_stop:0000000000000068 .L15
+C:\Users\tecchio\AppData\Local\Temp\ccR7c9Rs.s:136    .text.I2Cs_stop:0000000000000010 .L14
+C:\Users\tecchio\AppData\Local\Temp\ccR7c9Rs.s:172    .text.I2C_write:0000000000000012 .L18
+C:\Users\tecchio\AppData\Local\Temp\ccR7c9Rs.s:323    .text.I2Cs_write:00000000000000ec .L28
+C:\Users\tecchio\AppData\Local\Temp\ccR7c9Rs.s:270    .text.I2Cs_write:0000000000000028 .L26
+C:\Users\tecchio\AppData\Local\Temp\ccR7c9Rs.s:267    .text.I2Cs_write:0000000000000024 .L25
+C:\Users\tecchio\AppData\Local\Temp\ccR7c9Rs.s:261    .text.I2Cs_write:0000000000000014 .L24
+C:\Users\tecchio\AppData\Local\Temp\ccR7c9Rs.s:356    .text.I2Cs_start:000000000000004e .L33
+C:\Users\tecchio\AppData\Local\Temp\ccR7c9Rs.s:341    .text.I2Cs_start:0000000000000014 .L32
+
+UNDEFINED SYMBOLS
+__riscv_save_1
+MCP_pinWrite
+MCP_pinMode
+__riscv_restore_1
+__riscv_save_5
+delayUs
+MCP_pinRead
+__riscv_restore_5
+__riscv_save_3
+MCP_byteWrite
+__riscv_restore_3
+__riscv_save_4
+__riscv_restore_4
+__riscv_save_2
+__riscv_restore_2
+__riscv_save_8
+MCP_byteRead
+__riscv_restore_8

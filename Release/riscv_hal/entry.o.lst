@@ -1,0 +1,180 @@
+   1              	# 1 "../riscv_hal/entry.S"
+   1              	/*******************************************************************************
+   0              	
+   0              	
+   2              	 * (c) Copyright 2016-2018 Microsemi SoC Products Group.  All rights reserved.
+   3              	 *
+   4              	 * @file entry.S
+   5              	 * @author Microsemi SoC Products Group
+   6              	 * @brief Mi-V soft processor vectors, trap handling and startup code.
+   7              	 *
+   8              	 * SVN $Revision: 9661 $
+   9              	 * SVN $Date: 2018-01-15 16:13:33 +0530 (Mon, 15 Jan 2018) $
+  10              	 */
+  11              	#ifndef ENTRY_S
+  12              	#define ENTRY_S
+  13              	
+  14              	#include "encoding.h"
+   1              	/*******************************************************************************
+  15              	
+  16              	#if __riscv_xlen == 64
+  17              	# define LREG ld
+  18              	# define SREG sd
+  19              	# define REGBYTES 8
+  20              	#else
+  21              	# define LREG lw
+  22              	# define SREG sw
+  23              	# define REGBYTES 4
+  24              	#endif
+  25              	
+  26              	  .section      .text.entry
+  27              	  .globl _start
+  28              	
+  29              	_start:
+  30 0000 19A0     	  j handle_reset
+  31              	
+  32              	nmi_vector:
+  33 0002 01A0     	  j nmi_vector
+  34              	
+  35              	trap_vector:
+  36 0004 2DA0     	  j trap_entry
+  37              	
+  38              	handle_reset:
+  39 0006 97020000 	  la t0, trap_entry
+  39      93820200 
+  40 000e 73905230 	  csrw mtvec, t0
+  41 0012 73500030 	  csrwi mstatus, 0
+  42 0016 73504030 	  csrwi mie, 0
+  43              	
+  44              	/*Flaoting point support configuration*/
+  45              	
+  46              	#ifdef __riscv_flen
+  47              	  csrr t0, mstatus
+  48              	  lui t1, 0xffffa
+  49              	  addi t1, t1, -1
+  50              	  and t0, t0, t1
+  51              	  lui t1, 0x4
+  52              	  or t1, t0, t1
+  53              	  csrw mstatus, t1
+  54              	
+  55              	  lui t0, 0x0
+  56              	  fscsr t0
+  57              	#endif
+  58              	.option push
+  59              	
+  60              	# Ensure the instruction is not optimized, since gp is not yet set
+  61              	
+  62              	.option norelax
+  63              	  # initialize global pointer
+  64 001a 97010000 	  la gp, __global_pointer$
+  64      93810100 
+  65              	
+  66              	.option pop
+  67              	
+  68              	  # initialize stack pointer
+  69 0022 17010000 	  la sp, __stack_top
+  69      13010100 
+  70              	
+  71              	  # perform the rest of initialization in C
+  72 002a 6FF07FFD 	  j _init
+  73              	
+  74              	
+  75              	trap_entry:
+  76 002e 1971     	  addi sp, sp, -32*REGBYTES
+  77              	
+  78 0030 06C0     	  SREG x1, 0 * REGBYTES(sp)
+  79 0032 0AC2     	  SREG x2, 1 * REGBYTES(sp)
+  80 0034 0EC4     	  SREG x3, 2 * REGBYTES(sp)
+  81 0036 12C6     	  SREG x4, 3 * REGBYTES(sp)
+  82 0038 16C8     	  SREG x5, 4 * REGBYTES(sp)
+  83 003a 1ACA     	  SREG x6, 5 * REGBYTES(sp)
+  84 003c 1ECC     	  SREG x7, 6 * REGBYTES(sp)
+  85 003e 22CE     	  SREG x8, 7 * REGBYTES(sp)
+  86 0040 26D0     	  SREG x9, 8 * REGBYTES(sp)
+  87 0042 2AD2     	  SREG x10, 9 * REGBYTES(sp)
+  88 0044 2ED4     	  SREG x11, 10 * REGBYTES(sp)
+  89 0046 32D6     	  SREG x12, 11 * REGBYTES(sp)
+  90 0048 36D8     	  SREG x13, 12 * REGBYTES(sp)
+  91 004a 3ADA     	  SREG x14, 13 * REGBYTES(sp)
+  92 004c 3EDC     	  SREG x15, 14 * REGBYTES(sp)
+  93 004e 42DE     	  SREG x16, 15 * REGBYTES(sp)
+  94 0050 C6C0     	  SREG x17, 16 * REGBYTES(sp)
+  95 0052 CAC2     	  SREG x18, 17 * REGBYTES(sp)
+  96 0054 CEC4     	  SREG x19, 18 * REGBYTES(sp)
+  97 0056 D2C6     	  SREG x20, 19 * REGBYTES(sp)
+  98 0058 D6C8     	  SREG x21, 20 * REGBYTES(sp)
+  99 005a DACA     	  SREG x22, 21 * REGBYTES(sp)
+ 100 005c DECC     	  SREG x23, 22 * REGBYTES(sp)
+ 101 005e E2CE     	  SREG x24, 23 * REGBYTES(sp)
+ 102 0060 E6D0     	  SREG x25, 24 * REGBYTES(sp)
+ 103 0062 EAD2     	  SREG x26, 25 * REGBYTES(sp)
+ 104 0064 EED4     	  SREG x27, 26 * REGBYTES(sp)
+ 105 0066 F2D6     	  SREG x28, 27 * REGBYTES(sp)
+ 106 0068 F6D8     	  SREG x29, 28 * REGBYTES(sp)
+ 107 006a FADA     	  SREG x30, 29 * REGBYTES(sp)
+ 108 006c FEDC     	  SREG x31, 30 * REGBYTES(sp)
+ 109              	
+ 110              	
+ 111 006e F3221034 	  csrr t0, mepc
+ 112 0072 96DE     	  SREG t0, 31 * REGBYTES(sp)
+ 113              	
+ 114 0074 73252034 	  csrr a0, mcause
+ 115 0078 F3251034 	  csrr a1, mepc
+ 116 007c 0A86     	  mv a2, sp
+ 117 007e EFF03FF8 	  jal handle_trap
+ 118 0082 73101534 	  csrw mepc, a0
+ 119              	
+ 120              	  # Remain in M-mode after mret
+ 121 0086 B7220000 	  li t0, MSTATUS_MPP
+ 121      93820280 
+ 122 008e 73A00230 	  csrs mstatus, t0
+ 123              	
+ 124 0092 8240     	  LREG x1, 0 * REGBYTES(sp)
+ 125 0094 1241     	  LREG x2, 1 * REGBYTES(sp)
+ 126 0096 A241     	  LREG x3, 2 * REGBYTES(sp)
+ 127 0098 3242     	  LREG x4, 3 * REGBYTES(sp)
+ 128 009a C242     	  LREG x5, 4 * REGBYTES(sp)
+ 129 009c 5243     	  LREG x6, 5 * REGBYTES(sp)
+ 130 009e E243     	  LREG x7, 6 * REGBYTES(sp)
+ 131 00a0 7244     	  LREG x8, 7 * REGBYTES(sp)
+ 132 00a2 8254     	  LREG x9, 8 * REGBYTES(sp)
+ 133 00a4 1255     	  LREG x10, 9 * REGBYTES(sp)
+ 134 00a6 A255     	  LREG x11, 10 * REGBYTES(sp)
+ 135 00a8 3256     	  LREG x12, 11 * REGBYTES(sp)
+ 136 00aa C256     	  LREG x13, 12 * REGBYTES(sp)
+ 137 00ac 5257     	  LREG x14, 13 * REGBYTES(sp)
+ 138 00ae E257     	  LREG x15, 14 * REGBYTES(sp)
+ 139 00b0 7258     	  LREG x16, 15 * REGBYTES(sp)
+ 140 00b2 8648     	  LREG x17, 16 * REGBYTES(sp)
+ 141 00b4 1649     	  LREG x18, 17 * REGBYTES(sp)
+ 142 00b6 A649     	  LREG x19, 18 * REGBYTES(sp)
+ 143 00b8 364A     	  LREG x20, 19 * REGBYTES(sp)
+ 144 00ba C64A     	  LREG x21, 20 * REGBYTES(sp)
+ 145 00bc 564B     	  LREG x22, 21 * REGBYTES(sp)
+ 146 00be E64B     	  LREG x23, 22 * REGBYTES(sp)
+ 147 00c0 764C     	  LREG x24, 23 * REGBYTES(sp)
+ 148 00c2 865C     	  LREG x25, 24 * REGBYTES(sp)
+ 149 00c4 165D     	  LREG x26, 25 * REGBYTES(sp)
+ 150 00c6 A65D     	  LREG x27, 26 * REGBYTES(sp)
+ 151 00c8 365E     	  LREG x28, 27 * REGBYTES(sp)
+ 152 00ca C65E     	  LREG x29, 28 * REGBYTES(sp)
+ 153 00cc 565F     	  LREG x30, 29 * REGBYTES(sp)
+ 154 00ce E65F     	  LREG x31, 30 * REGBYTES(sp)
+ 155              	
+ 156 00d0 0961     	  addi sp, sp, 32*REGBYTES
+ 157 00d2 73002030 	  mret
+DEFINED SYMBOLS
+../riscv_hal/entry.S:29     .text.entry:0000000000000000 _start
+../riscv_hal/entry.S:38     .text.entry:0000000000000006 handle_reset
+../riscv_hal/entry.S:32     .text.entry:0000000000000002 nmi_vector
+../riscv_hal/entry.S:35     .text.entry:0000000000000004 trap_vector
+../riscv_hal/entry.S:75     .text.entry:000000000000002e trap_entry
+../riscv_hal/entry.S:39     .text.entry:0000000000000006 .L0 
+../riscv_hal/entry.S:64     .text.entry:000000000000001a .L0 
+../riscv_hal/entry.S:69     .text.entry:0000000000000022 .L0 
+
+UNDEFINED SYMBOLS
+__global_pointer$
+__stack_top
+_init
+handle_trap

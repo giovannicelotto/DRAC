@@ -1,0 +1,678 @@
+   1              		.file	"core_gpio.c"
+   2              		.option nopic
+   3              		.text
+   4              		.section	.text.GPIO_init,"ax",@progbits
+   5              		.align	1
+   6              		.globl	GPIO_init
+   8              	GPIO_init:
+   9 0000 17030000 		call	t0,__riscv_save_3
+   9      E7020300 
+  10 0008 2A84     		mv	s0,a0
+  11 000a 0CC0     		sw	a1,0(s0)
+  12 000c AE84     		mv	s1,a1
+  13 000e 50C1     		sw	a2,4(a0)
+  14 0010 13890508 		addi	s2,a1,128
+  15              	.L2:
+  16 0014 2685     		mv	a0,s1
+  17 0016 8145     		li	a1,0
+  18 0018 9104     		addi	s1,s1,4
+  19 001a 97000000 		call	HW_set_8bit_reg
+  19      E7800000 
+  20 0022 E39924FF 		bne	s1,s2,.L2
+  21 0026 5C40     		lw	a5,4(s0)
+  22 0028 0547     		li	a4,1
+  23 002a 6382E702 		beq	a5,a4,.L3
+  24 002e A1C7     		beqz	a5,.L4
+  25 0030 0947     		li	a4,2
+  26 0032 639AE700 		bne	a5,a4,.L1
+  27 0036 0840     		lw	a0,0(s0)
+  28 0038 FD55     		li	a1,-1
+  29 003a 13050508 		addi	a0,a0,128
+  30 003e 97000000 		call	HW_set_32bit_reg
+  30      E7800000 
+  31              	.L1:
+  32 0046 17030000 		tail	__riscv_restore_3
+  32      67000300 
+  33              	.L3:
+  34 004e 0840     		lw	a0,0(s0)
+  35 0050 C164     		li	s1,65536
+  36 0052 9385F4FF 		addi	a1,s1,-1
+  37 0056 13050508 		addi	a0,a0,128
+  38 005a 97000000 		call	HW_set_16bit_reg
+  38      E7800000 
+  39 0062 0840     		lw	a0,0(s0)
+  40 0064 9385F4FF 		addi	a1,s1,-1
+  41 0068 13054508 		addi	a0,a0,132
+  42 006c 97000000 		call	HW_set_16bit_reg
+  42      E7800000 
+  43 0074 C9BF     		j	.L1
+  44              	.L4:
+  45 0076 0840     		lw	a0,0(s0)
+  46 0078 9305F00F 		li	a1,255
+  47 007c 13050508 		addi	a0,a0,128
+  48 0080 97000000 		call	HW_set_8bit_reg
+  48      E7800000 
+  49 0088 0840     		lw	a0,0(s0)
+  50 008a 9305F00F 		li	a1,255
+  51 008e 13054508 		addi	a0,a0,132
+  52 0092 97000000 		call	HW_set_8bit_reg
+  52      E7800000 
+  53 009a 0840     		lw	a0,0(s0)
+  54 009c 9305F00F 		li	a1,255
+  55 00a0 13058508 		addi	a0,a0,136
+  56 00a4 97000000 		call	HW_set_8bit_reg
+  56      E7800000 
+  57 00ac 0840     		lw	a0,0(s0)
+  58 00ae 9305F00F 		li	a1,255
+  59 00b2 1305C508 		addi	a0,a0,140
+  60 00b6 97000000 		call	HW_set_8bit_reg
+  60      E7800000 
+  61 00be 61B7     		j	.L1
+  63              		.section	.text.GPIO_config,"ax",@progbits
+  64              		.align	1
+  65              		.globl	GPIO_config
+  67              	GPIO_config:
+  68 0000 7D47     		li	a4,31
+  69 0002 6363B702 		bgtu	a1,a4,.L11
+  70 0006 17030000 		call	t0,__riscv_save_0
+  70      E7020300 
+  71 000e 0841     		lw	a0,0(a0)
+  72 0010 AE87     		mv	a5,a1
+  73 0012 8A07     		slli	a5,a5,2
+  74 0014 B285     		mv	a1,a2
+  75 0016 3E95     		add	a0,a5,a0
+  76 0018 97000000 		call	HW_set_32bit_reg
+  76      E7800000 
+  77 0020 17030000 		tail	__riscv_restore_0
+  77      67000300 
+  78              	.L11:
+  79 0028 8280     		ret
+  81              		.section	.text.GPIO_set_outputs,"ax",@progbits
+  82              		.align	1
+  83              		.globl	GPIO_set_outputs
+  85              	GPIO_set_outputs:
+  86 0000 17030000 		call	t0,__riscv_save_2
+  86      E7020300 
+  87 0008 5C41     		lw	a5,4(a0)
+  88 000a 0547     		li	a4,1
+  89 000c 2A84     		mv	s0,a0
+  90 000e AE84     		mv	s1,a1
+  91 0010 6381E702 		beq	a5,a4,.L15
+  92 0014 B1C3     		beqz	a5,.L16
+  93 0016 0947     		li	a4,2
+  94 0018 6399E700 		bne	a5,a4,.L14
+  95 001c 0841     		lw	a0,0(a0)
+  96 001e 1305050A 		addi	a0,a0,160
+  97 0022 97000000 		call	HW_set_32bit_reg
+  97      E7800000 
+  98              	.L14:
+  99 002a 17030000 		tail	__riscv_restore_2
+  99      67000300 
+ 100              	.L15:
+ 101 0032 0841     		lw	a0,0(a0)
+ 102 0034 C205     		slli	a1,a1,16
+ 103 0036 C181     		srli	a1,a1,16
+ 104 0038 1305050A 		addi	a0,a0,160
+ 105 003c 97000000 		call	HW_set_16bit_reg
+ 105      E7800000 
+ 106 0044 0840     		lw	a0,0(s0)
+ 107 0046 93D50401 		srli	a1,s1,16
+ 108 004a 1305450A 		addi	a0,a0,164
+ 109 004e 97000000 		call	HW_set_16bit_reg
+ 109      E7800000 
+ 110 0056 D1BF     		j	.L14
+ 111              	.L16:
+ 112 0058 0841     		lw	a0,0(a0)
+ 113 005a 93F5F50F 		andi	a1,a1,0xff
+ 114 005e 1305050A 		addi	a0,a0,160
+ 115 0062 97000000 		call	HW_set_8bit_reg
+ 115      E7800000 
+ 116 006a 0840     		lw	a0,0(s0)
+ 117 006c 93D58400 		srli	a1,s1,8
+ 118 0070 93F5F50F 		andi	a1,a1,0xff
+ 119 0074 1305450A 		addi	a0,a0,164
+ 120 0078 97000000 		call	HW_set_8bit_reg
+ 120      E7800000 
+ 121 0080 0840     		lw	a0,0(s0)
+ 122 0082 93D50401 		srli	a1,s1,16
+ 123 0086 93F5F50F 		andi	a1,a1,0xff
+ 124 008a 1305850A 		addi	a0,a0,168
+ 125 008e 97000000 		call	HW_set_8bit_reg
+ 125      E7800000 
+ 126 0096 0840     		lw	a0,0(s0)
+ 127 0098 93D58401 		srli	a1,s1,24
+ 128 009c 1305C50A 		addi	a0,a0,172
+ 129 00a0 97000000 		call	HW_set_8bit_reg
+ 129      E7800000 
+ 130 00a8 49B7     		j	.L14
+ 132              		.section	.text.GPIO_get_inputs,"ax",@progbits
+ 133              		.align	1
+ 134              		.globl	GPIO_get_inputs
+ 136              	GPIO_get_inputs:
+ 137 0000 17030000 		call	t0,__riscv_save_3
+ 137      E7020300 
+ 138 0008 5C41     		lw	a5,4(a0)
+ 139 000a 0547     		li	a4,1
+ 140 000c 2A84     		mv	s0,a0
+ 141 000e 6382E702 		beq	a5,a4,.L20
+ 142 0012 B1C3     		beqz	a5,.L21
+ 143 0014 0947     		li	a4,2
+ 144 0016 0145     		li	a0,0
+ 145 0018 6399E700 		bne	a5,a4,.L19
+ 146 001c 0840     		lw	a0,0(s0)
+ 147 001e 13050509 		addi	a0,a0,144
+ 148 0022 97000000 		call	HW_get_32bit_reg
+ 148      E7800000 
+ 149              	.L19:
+ 150 002a 17030000 		tail	__riscv_restore_3
+ 150      67000300 
+ 151              	.L20:
+ 152 0032 0841     		lw	a0,0(a0)
+ 153 0034 13050509 		addi	a0,a0,144
+ 154 0038 97000000 		call	HW_get_16bit_reg
+ 154      E7800000 
+ 155 0040 AA84     		mv	s1,a0
+ 156 0042 0840     		lw	a0,0(s0)
+ 157 0044 13054509 		addi	a0,a0,148
+ 158 0048 97000000 		call	HW_get_16bit_reg
+ 158      E7800000 
+ 159 0050 4205     		slli	a0,a0,16
+ 160              	.L25:
+ 161 0052 458D     		or	a0,a0,s1
+ 162 0054 D9BF     		j	.L19
+ 163              	.L21:
+ 164 0056 0841     		lw	a0,0(a0)
+ 165 0058 13050509 		addi	a0,a0,144
+ 166 005c 97000000 		call	HW_get_8bit_reg
+ 166      E7800000 
+ 167 0064 AA84     		mv	s1,a0
+ 168 0066 0840     		lw	a0,0(s0)
+ 169 0068 13054509 		addi	a0,a0,148
+ 170 006c 97000000 		call	HW_get_8bit_reg
+ 170      E7800000 
+ 171 0074 2A89     		mv	s2,a0
+ 172 0076 0840     		lw	a0,0(s0)
+ 173 0078 2209     		slli	s2,s2,8
+ 174 007a 13058509 		addi	a0,a0,152
+ 175 007e 97000000 		call	HW_get_8bit_reg
+ 175      E7800000 
+ 176 0086 4205     		slli	a0,a0,16
+ 177 0088 3369A900 		or	s2,s2,a0
+ 178 008c 0840     		lw	a0,0(s0)
+ 179 008e B3649900 		or	s1,s2,s1
+ 180 0092 1305C509 		addi	a0,a0,156
+ 181 0096 97000000 		call	HW_get_8bit_reg
+ 181      E7800000 
+ 182 009e 6205     		slli	a0,a0,24
+ 183 00a0 4DBF     		j	.L25
+ 185              		.section	.text.GPIO_get_outputs,"ax",@progbits
+ 186              		.align	1
+ 187              		.globl	GPIO_get_outputs
+ 189              	GPIO_get_outputs:
+ 190 0000 17030000 		call	t0,__riscv_save_3
+ 190      E7020300 
+ 191 0008 5C41     		lw	a5,4(a0)
+ 192 000a 0547     		li	a4,1
+ 193 000c 2A84     		mv	s0,a0
+ 194 000e 6382E702 		beq	a5,a4,.L27
+ 195 0012 B1C3     		beqz	a5,.L28
+ 196 0014 0947     		li	a4,2
+ 197 0016 0145     		li	a0,0
+ 198 0018 6399E700 		bne	a5,a4,.L26
+ 199 001c 0840     		lw	a0,0(s0)
+ 200 001e 1305050A 		addi	a0,a0,160
+ 201 0022 97000000 		call	HW_get_32bit_reg
+ 201      E7800000 
+ 202              	.L26:
+ 203 002a 17030000 		tail	__riscv_restore_3
+ 203      67000300 
+ 204              	.L27:
+ 205 0032 0841     		lw	a0,0(a0)
+ 206 0034 1305050A 		addi	a0,a0,160
+ 207 0038 97000000 		call	HW_get_16bit_reg
+ 207      E7800000 
+ 208 0040 AA84     		mv	s1,a0
+ 209 0042 0840     		lw	a0,0(s0)
+ 210 0044 1305450A 		addi	a0,a0,164
+ 211 0048 97000000 		call	HW_get_16bit_reg
+ 211      E7800000 
+ 212 0050 4205     		slli	a0,a0,16
+ 213              	.L32:
+ 214 0052 458D     		or	a0,a0,s1
+ 215 0054 D9BF     		j	.L26
+ 216              	.L28:
+ 217 0056 0841     		lw	a0,0(a0)
+ 218 0058 1305050A 		addi	a0,a0,160
+ 219 005c 97000000 		call	HW_get_16bit_reg
+ 219      E7800000 
+ 220 0064 AA84     		mv	s1,a0
+ 221 0066 0840     		lw	a0,0(s0)
+ 222 0068 1305450A 		addi	a0,a0,164
+ 223 006c 97000000 		call	HW_get_16bit_reg
+ 223      E7800000 
+ 224 0074 2A89     		mv	s2,a0
+ 225 0076 0840     		lw	a0,0(s0)
+ 226 0078 2209     		slli	s2,s2,8
+ 227 007a 1305850A 		addi	a0,a0,168
+ 228 007e 97000000 		call	HW_get_16bit_reg
+ 228      E7800000 
+ 229 0086 4205     		slli	a0,a0,16
+ 230 0088 3369A900 		or	s2,s2,a0
+ 231 008c 0840     		lw	a0,0(s0)
+ 232 008e B3649900 		or	s1,s2,s1
+ 233 0092 1305C50A 		addi	a0,a0,172
+ 234 0096 97000000 		call	HW_get_16bit_reg
+ 234      E7800000 
+ 235 009e 6205     		slli	a0,a0,24
+ 236 00a0 4DBF     		j	.L32
+ 238              		.section	.text.GPIO_set_output,"ax",@progbits
+ 239              		.align	1
+ 240              		.globl	GPIO_set_output
+ 242              	GPIO_set_output:
+ 243 0000 17030000 		call	t0,__riscv_save_6
+ 243      E7020300 
+ 244 0008 4441     		lw	s1,4(a0)
+ 245 000a 0544     		li	s0,1
+ 246 000c AA8A     		mv	s5,a0
+ 247 000e 2E89     		mv	s2,a1
+ 248 0010 B289     		mv	s3,a2
+ 249 0012 63838404 		beq	s1,s0,.L34
+ 250 0016 D9C0     		beqz	s1,.L35
+ 251 0018 8947     		li	a5,2
+ 252 001a 639BF402 		bne	s1,a5,.L33
+ 253 001e 0841     		lw	a0,0(a0)
+ 254 0020 33142401 		sll	s0,s0,s2
+ 255 0024 1305050A 		addi	a0,a0,160
+ 256 0028 97000000 		call	HW_get_32bit_reg
+ 256      E7800000 
+ 257 0030 B365A400 		or	a1,s0,a0
+ 258 0034 63960900 		bnez	s3,.L38
+ 259 0038 1344F4FF 		not	s0,s0
+ 260 003c B375A400 		and	a1,s0,a0
+ 261              	.L38:
+ 262 0040 03A50A00 		lw	a0,0(s5)
+ 263 0044 1305050A 		addi	a0,a0,160
+ 264 0048 97000000 		call	HW_set_32bit_reg
+ 264      E7800000 
+ 265              	.L33:
+ 266 0050 17030000 		tail	__riscv_restore_6
+ 266      67000300 
+ 267              	.L34:
+ 268 0058 1C41     		lw	a5,0(a0)
+ 269 005a 13DA4500 		srli	s4,a1,4
+ 270 005e 0A0A     		slli	s4,s4,2
+ 271 0060 130A0A0A 		addi	s4,s4,160
+ 272 0064 1374F900 		andi	s0,s2,15
+ 273 0068 3E9A     		add	s4,s4,a5
+ 274 006a B3948400 		sll	s1,s1,s0
+ 275 006e 5285     		mv	a0,s4
+ 276 0070 C204     		slli	s1,s1,16
+ 277 0072 97000000 		call	HW_get_16bit_reg
+ 277      E7800000 
+ 278 007a C184     		srai	s1,s1,16
+ 279 007c 639E0900 		bnez	s3,.L39
+ 280 0080 93C4F4FF 		not	s1,s1
+ 281 0084 E98C     		and	s1,s1,a0
+ 282              	.L44:
+ 283 0086 93950401 		slli	a1,s1,16
+ 284 008a C181     		srli	a1,a1,16
+ 285 008c 5285     		mv	a0,s4
+ 286 008e 97000000 		call	HW_set_16bit_reg
+ 286      E7800000 
+ 287 0096 6DBF     		j	.L33
+ 288              	.L39:
+ 289 0098 C98C     		or	s1,s1,a0
+ 290 009a F5B7     		j	.L44
+ 291              	.L35:
+ 292 009c 1C41     		lw	a5,0(a0)
+ 293 009e 93D43500 		srli	s1,a1,3
+ 294 00a2 8A04     		slli	s1,s1,2
+ 295 00a4 9384040A 		addi	s1,s1,160
+ 296 00a8 13797900 		andi	s2,s2,7
+ 297 00ac BE94     		add	s1,s1,a5
+ 298 00ae 33142401 		sll	s0,s0,s2
+ 299 00b2 2685     		mv	a0,s1
+ 300 00b4 6204     		slli	s0,s0,24
+ 301 00b6 97000000 		call	HW_get_8bit_reg
+ 301      E7800000 
+ 302 00be 6184     		srai	s0,s0,24
+ 303 00c0 639D0900 		bnez	s3,.L41
+ 304 00c4 1344F4FF 		not	s0,s0
+ 305 00c8 698C     		and	s0,s0,a0
+ 306              	.L45:
+ 307 00ca 9375F40F 		andi	a1,s0,0xff
+ 308 00ce 2685     		mv	a0,s1
+ 309 00d0 97000000 		call	HW_set_8bit_reg
+ 309      E7800000 
+ 310 00d8 A5BF     		j	.L33
+ 311              	.L41:
+ 312 00da 498C     		or	s0,s0,a0
+ 313 00dc FDB7     		j	.L45
+ 315              		.section	.text.GPIO_drive_inout,"ax",@progbits
+ 316              		.align	1
+ 317              		.globl	GPIO_drive_inout
+ 319              	GPIO_drive_inout:
+ 320 0000 17030000 		call	t0,__riscv_save_2
+ 320      E7020300 
+ 321 0008 0547     		li	a4,1
+ 322 000a AA84     		mv	s1,a0
+ 323 000c 2E84     		mv	s0,a1
+ 324 000e 630AE600 		beq	a2,a4,.L48
+ 325 0012 01CA     		beqz	a2,.L48
+ 326 0014 0947     		li	a4,2
+ 327 0016 630CE602 		beq	a2,a4,.L49
+ 328              	.L46:
+ 329 001a 17030000 		tail	__riscv_restore_2
+ 329      67000300 
+ 330              	.L48:
+ 331 0022 97000000 		call	GPIO_set_output
+ 331      E7800000 
+ 332 002a 9C40     		lw	a5,0(s1)
+ 333 002c 0A04     		slli	s0,s0,2
+ 334 002e 3E94     		add	s0,s0,a5
+ 335 0030 2285     		mv	a0,s0
+ 336 0032 97000000 		call	HW_get_8bit_reg
+ 336      E7800000 
+ 337 003a 93654500 		ori	a1,a0,4
+ 338 003e 93F5F50F 		andi	a1,a1,0xff
+ 339              	.L52:
+ 340 0042 2285     		mv	a0,s0
+ 341 0044 97000000 		call	HW_set_8bit_reg
+ 341      E7800000 
+ 342 004c F9B7     		j	.L46
+ 343              	.L49:
+ 344 004e 1C41     		lw	a5,0(a0)
+ 345 0050 13942500 		slli	s0,a1,2
+ 346 0054 3E94     		add	s0,s0,a5
+ 347 0056 2285     		mv	a0,s0
+ 348 0058 97000000 		call	HW_get_8bit_reg
+ 348      E7800000 
+ 349 0060 9375B5FF 		andi	a1,a0,-5
+ 350 0064 F9BF     		j	.L52
+ 352              		.section	.text.GPIO_enable_irq,"ax",@progbits
+ 353              		.align	1
+ 354              		.globl	GPIO_enable_irq
+ 356              	GPIO_enable_irq:
+ 357 0000 FD47     		li	a5,31
+ 358 0002 63EBB702 		bgtu	a1,a5,.L56
+ 359 0006 17030000 		call	t0,__riscv_save_1
+ 359      E7020300 
+ 360 000e 0041     		lw	s0,0(a0)
+ 361 0010 8A05     		slli	a1,a1,2
+ 362 0012 2E94     		add	s0,a1,s0
+ 363 0014 2285     		mv	a0,s0
+ 364 0016 97000000 		call	HW_get_8bit_reg
+ 364      E7800000 
+ 365 001e 93658500 		ori	a1,a0,8
+ 366 0022 93F5F50F 		andi	a1,a1,0xff
+ 367 0026 2285     		mv	a0,s0
+ 368 0028 97000000 		call	HW_set_8bit_reg
+ 368      E7800000 
+ 369 0030 17030000 		tail	__riscv_restore_1
+ 369      67000300 
+ 370              	.L56:
+ 371 0038 8280     		ret
+ 373              		.section	.text.GPIO_disable_irq,"ax",@progbits
+ 374              		.align	1
+ 375              		.globl	GPIO_disable_irq
+ 377              	GPIO_disable_irq:
+ 378 0000 FD47     		li	a5,31
+ 379 0002 63E9B702 		bgtu	a1,a5,.L62
+ 380 0006 17030000 		call	t0,__riscv_save_1
+ 380      E7020300 
+ 381 000e 0041     		lw	s0,0(a0)
+ 382 0010 8A05     		slli	a1,a1,2
+ 383 0012 2E94     		add	s0,a1,s0
+ 384 0014 2285     		mv	a0,s0
+ 385 0016 97000000 		call	HW_get_8bit_reg
+ 385      E7800000 
+ 386 001e 937575FF 		andi	a1,a0,-9
+ 387 0022 2285     		mv	a0,s0
+ 388 0024 97000000 		call	HW_set_8bit_reg
+ 388      E7800000 
+ 389 002c 17030000 		tail	__riscv_restore_1
+ 389      67000300 
+ 390              	.L62:
+ 391 0034 8280     		ret
+ 393              		.section	.text.GPIO_clear_irq,"ax",@progbits
+ 394              		.align	1
+ 395              		.globl	GPIO_clear_irq
+ 397              	GPIO_clear_irq:
+ 398 0000 17030000 		call	t0,__riscv_save_2
+ 398      E7020300 
+ 399 0008 5C41     		lw	a5,4(a0)
+ 400 000a 0547     		li	a4,1
+ 401 000c 2A84     		mv	s0,a0
+ 402 000e B314B700 		sll	s1,a4,a1
+ 403 0012 6382E702 		beq	a5,a4,.L66
+ 404 0016 B1C3     		beqz	a5,.L67
+ 405 0018 0947     		li	a4,2
+ 406 001a 639AE700 		bne	a5,a4,.L65
+ 407 001e 0841     		lw	a0,0(a0)
+ 408 0020 A685     		mv	a1,s1
+ 409 0022 13050508 		addi	a0,a0,128
+ 410 0026 97000000 		call	HW_set_32bit_reg
+ 410      E7800000 
+ 411              	.L65:
+ 412 002e 17030000 		tail	__riscv_restore_2
+ 412      67000300 
+ 413              	.L66:
+ 414 0036 0841     		lw	a0,0(a0)
+ 415 0038 A685     		mv	a1,s1
+ 416 003a 13050508 		addi	a0,a0,128
+ 417 003e 97000000 		call	HW_set_16bit_reg
+ 417      E7800000 
+ 418 0046 0840     		lw	a0,0(s0)
+ 419 0048 93D50401 		srli	a1,s1,16
+ 420 004c 13054508 		addi	a0,a0,132
+ 421 0050 97000000 		call	HW_set_16bit_reg
+ 421      E7800000 
+ 422 0058 D9BF     		j	.L65
+ 423              	.L67:
+ 424 005a 0841     		lw	a0,0(a0)
+ 425 005c A685     		mv	a1,s1
+ 426 005e 13050508 		addi	a0,a0,128
+ 427 0062 97000000 		call	HW_set_8bit_reg
+ 427      E7800000 
+ 428 006a 0840     		lw	a0,0(s0)
+ 429 006c 93D58400 		srli	a1,s1,8
+ 430 0070 13054508 		addi	a0,a0,132
+ 431 0074 97000000 		call	HW_set_8bit_reg
+ 431      E7800000 
+ 432 007c 0840     		lw	a0,0(s0)
+ 433 007e 93D50401 		srli	a1,s1,16
+ 434 0082 13058508 		addi	a0,a0,136
+ 435 0086 97000000 		call	HW_set_8bit_reg
+ 435      E7800000 
+ 436 008e 0840     		lw	a0,0(s0)
+ 437 0090 93D58401 		srli	a1,s1,24
+ 438 0094 1305C508 		addi	a0,a0,140
+ 439 0098 97000000 		call	HW_set_8bit_reg
+ 439      E7800000 
+ 440 00a0 79B7     		j	.L65
+ 442              		.section	.text.GPIO_get_irq_sources,"ax",@progbits
+ 443              		.align	1
+ 444              		.globl	GPIO_get_irq_sources
+ 446              	GPIO_get_irq_sources:
+ 447 0000 17030000 		call	t0,__riscv_save_3
+ 447      E7020300 
+ 448 0008 5C41     		lw	a5,4(a0)
+ 449 000a 0547     		li	a4,1
+ 450 000c 2A84     		mv	s0,a0
+ 451 000e 6382E702 		beq	a5,a4,.L71
+ 452 0012 B1C3     		beqz	a5,.L72
+ 453 0014 0947     		li	a4,2
+ 454 0016 0145     		li	a0,0
+ 455 0018 6399E700 		bne	a5,a4,.L70
+ 456 001c 0840     		lw	a0,0(s0)
+ 457 001e 13050508 		addi	a0,a0,128
+ 458 0022 97000000 		call	HW_get_32bit_reg
+ 458      E7800000 
+ 459              	.L70:
+ 460 002a 17030000 		tail	__riscv_restore_3
+ 460      67000300 
+ 461              	.L71:
+ 462 0032 0841     		lw	a0,0(a0)
+ 463 0034 13050508 		addi	a0,a0,128
+ 464 0038 97000000 		call	HW_get_16bit_reg
+ 464      E7800000 
+ 465 0040 AA84     		mv	s1,a0
+ 466 0042 0840     		lw	a0,0(s0)
+ 467 0044 13054508 		addi	a0,a0,132
+ 468 0048 97000000 		call	HW_get_16bit_reg
+ 468      E7800000 
+ 469 0050 4205     		slli	a0,a0,16
+ 470              	.L76:
+ 471 0052 458D     		or	a0,a0,s1
+ 472 0054 D9BF     		j	.L70
+ 473              	.L72:
+ 474 0056 0841     		lw	a0,0(a0)
+ 475 0058 13050508 		addi	a0,a0,128
+ 476 005c 97000000 		call	HW_get_16bit_reg
+ 476      E7800000 
+ 477 0064 AA84     		mv	s1,a0
+ 478 0066 0840     		lw	a0,0(s0)
+ 479 0068 13054508 		addi	a0,a0,132
+ 480 006c 97000000 		call	HW_get_16bit_reg
+ 480      E7800000 
+ 481 0074 2A89     		mv	s2,a0
+ 482 0076 0840     		lw	a0,0(s0)
+ 483 0078 2209     		slli	s2,s2,8
+ 484 007a 13058508 		addi	a0,a0,136
+ 485 007e 97000000 		call	HW_get_16bit_reg
+ 485      E7800000 
+ 486 0086 4205     		slli	a0,a0,16
+ 487 0088 3369A900 		or	s2,s2,a0
+ 488 008c 0840     		lw	a0,0(s0)
+ 489 008e B3649900 		or	s1,s2,s1
+ 490 0092 1305C508 		addi	a0,a0,140
+ 491 0096 97000000 		call	HW_get_16bit_reg
+ 491      E7800000 
+ 492 009e 6205     		slli	a0,a0,24
+ 493 00a0 4DBF     		j	.L76
+ 495              		.section	.text.GPIO_clear_all_irq_sources,"ax",@progbits
+ 496              		.align	1
+ 497              		.globl	GPIO_clear_all_irq_sources
+ 499              	GPIO_clear_all_irq_sources:
+ 500 0000 17030000 		call	t0,__riscv_save_2
+ 500      E7020300 
+ 501 0008 5C41     		lw	a5,4(a0)
+ 502 000a 0547     		li	a4,1
+ 503 000c 2A84     		mv	s0,a0
+ 504 000e AE84     		mv	s1,a1
+ 505 0010 6381E702 		beq	a5,a4,.L78
+ 506 0014 A1C3     		beqz	a5,.L79
+ 507 0016 0947     		li	a4,2
+ 508 0018 6399E700 		bne	a5,a4,.L77
+ 509 001c 0841     		lw	a0,0(a0)
+ 510 001e 13050508 		addi	a0,a0,128
+ 511 0022 97000000 		call	HW_set_32bit_reg
+ 511      E7800000 
+ 512              	.L77:
+ 513 002a 17030000 		tail	__riscv_restore_2
+ 513      67000300 
+ 514              	.L78:
+ 515 0032 0841     		lw	a0,0(a0)
+ 516 0034 13050508 		addi	a0,a0,128
+ 517 0038 97000000 		call	HW_set_16bit_reg
+ 517      E7800000 
+ 518 0040 0840     		lw	a0,0(s0)
+ 519 0042 93D50401 		srli	a1,s1,16
+ 520 0046 13054508 		addi	a0,a0,132
+ 521 004a 97000000 		call	HW_set_16bit_reg
+ 521      E7800000 
+ 522 0052 E1BF     		j	.L77
+ 523              	.L79:
+ 524 0054 0841     		lw	a0,0(a0)
+ 525 0056 13050508 		addi	a0,a0,128
+ 526 005a 97000000 		call	HW_set_8bit_reg
+ 526      E7800000 
+ 527 0062 0840     		lw	a0,0(s0)
+ 528 0064 93D58400 		srli	a1,s1,8
+ 529 0068 13054508 		addi	a0,a0,132
+ 530 006c 97000000 		call	HW_set_8bit_reg
+ 530      E7800000 
+ 531 0074 0840     		lw	a0,0(s0)
+ 532 0076 93D50401 		srli	a1,s1,16
+ 533 007a 13058508 		addi	a0,a0,136
+ 534 007e 97000000 		call	HW_set_8bit_reg
+ 534      E7800000 
+ 535 0086 0840     		lw	a0,0(s0)
+ 536 0088 93D58401 		srli	a1,s1,24
+ 537 008c 1305C508 		addi	a0,a0,140
+ 538 0090 97000000 		call	HW_set_8bit_reg
+ 538      E7800000 
+ 539 0098 49BF     		j	.L77
+ 541              		.ident	"GCC: (Microchip SoftConsole GNU RISC-V Embedded GCC, 64-bit) 8.2.0"
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 core_gpio.c
+C:\Users\tecchio\AppData\Local\Temp\cckpPPNo.s:8      .text.GPIO_init:0000000000000000 GPIO_init
+C:\Users\tecchio\AppData\Local\Temp\cckpPPNo.s:67     .text.GPIO_config:0000000000000000 GPIO_config
+C:\Users\tecchio\AppData\Local\Temp\cckpPPNo.s:85     .text.GPIO_set_outputs:0000000000000000 GPIO_set_outputs
+C:\Users\tecchio\AppData\Local\Temp\cckpPPNo.s:136    .text.GPIO_get_inputs:0000000000000000 GPIO_get_inputs
+C:\Users\tecchio\AppData\Local\Temp\cckpPPNo.s:189    .text.GPIO_get_outputs:0000000000000000 GPIO_get_outputs
+C:\Users\tecchio\AppData\Local\Temp\cckpPPNo.s:242    .text.GPIO_set_output:0000000000000000 GPIO_set_output
+C:\Users\tecchio\AppData\Local\Temp\cckpPPNo.s:319    .text.GPIO_drive_inout:0000000000000000 GPIO_drive_inout
+C:\Users\tecchio\AppData\Local\Temp\cckpPPNo.s:356    .text.GPIO_enable_irq:0000000000000000 GPIO_enable_irq
+C:\Users\tecchio\AppData\Local\Temp\cckpPPNo.s:377    .text.GPIO_disable_irq:0000000000000000 GPIO_disable_irq
+C:\Users\tecchio\AppData\Local\Temp\cckpPPNo.s:397    .text.GPIO_clear_irq:0000000000000000 GPIO_clear_irq
+C:\Users\tecchio\AppData\Local\Temp\cckpPPNo.s:446    .text.GPIO_get_irq_sources:0000000000000000 GPIO_get_irq_sources
+C:\Users\tecchio\AppData\Local\Temp\cckpPPNo.s:499    .text.GPIO_clear_all_irq_sources:0000000000000000 GPIO_clear_all_irq_sources
+C:\Users\tecchio\AppData\Local\Temp\cckpPPNo.s:15     .text.GPIO_init:0000000000000014 .L2
+C:\Users\tecchio\AppData\Local\Temp\cckpPPNo.s:33     .text.GPIO_init:000000000000004e .L3
+C:\Users\tecchio\AppData\Local\Temp\cckpPPNo.s:44     .text.GPIO_init:0000000000000076 .L4
+C:\Users\tecchio\AppData\Local\Temp\cckpPPNo.s:31     .text.GPIO_init:0000000000000046 .L1
+C:\Users\tecchio\AppData\Local\Temp\cckpPPNo.s:78     .text.GPIO_config:0000000000000028 .L11
+C:\Users\tecchio\AppData\Local\Temp\cckpPPNo.s:100    .text.GPIO_set_outputs:0000000000000032 .L15
+C:\Users\tecchio\AppData\Local\Temp\cckpPPNo.s:111    .text.GPIO_set_outputs:0000000000000058 .L16
+C:\Users\tecchio\AppData\Local\Temp\cckpPPNo.s:98     .text.GPIO_set_outputs:000000000000002a .L14
+C:\Users\tecchio\AppData\Local\Temp\cckpPPNo.s:151    .text.GPIO_get_inputs:0000000000000032 .L20
+C:\Users\tecchio\AppData\Local\Temp\cckpPPNo.s:163    .text.GPIO_get_inputs:0000000000000056 .L21
+C:\Users\tecchio\AppData\Local\Temp\cckpPPNo.s:149    .text.GPIO_get_inputs:000000000000002a .L19
+C:\Users\tecchio\AppData\Local\Temp\cckpPPNo.s:160    .text.GPIO_get_inputs:0000000000000052 .L25
+C:\Users\tecchio\AppData\Local\Temp\cckpPPNo.s:204    .text.GPIO_get_outputs:0000000000000032 .L27
+C:\Users\tecchio\AppData\Local\Temp\cckpPPNo.s:216    .text.GPIO_get_outputs:0000000000000056 .L28
+C:\Users\tecchio\AppData\Local\Temp\cckpPPNo.s:202    .text.GPIO_get_outputs:000000000000002a .L26
+C:\Users\tecchio\AppData\Local\Temp\cckpPPNo.s:213    .text.GPIO_get_outputs:0000000000000052 .L32
+C:\Users\tecchio\AppData\Local\Temp\cckpPPNo.s:267    .text.GPIO_set_output:0000000000000058 .L34
+C:\Users\tecchio\AppData\Local\Temp\cckpPPNo.s:291    .text.GPIO_set_output:000000000000009c .L35
+C:\Users\tecchio\AppData\Local\Temp\cckpPPNo.s:265    .text.GPIO_set_output:0000000000000050 .L33
+C:\Users\tecchio\AppData\Local\Temp\cckpPPNo.s:261    .text.GPIO_set_output:0000000000000040 .L38
+C:\Users\tecchio\AppData\Local\Temp\cckpPPNo.s:288    .text.GPIO_set_output:0000000000000098 .L39
+C:\Users\tecchio\AppData\Local\Temp\cckpPPNo.s:282    .text.GPIO_set_output:0000000000000086 .L44
+C:\Users\tecchio\AppData\Local\Temp\cckpPPNo.s:311    .text.GPIO_set_output:00000000000000da .L41
+C:\Users\tecchio\AppData\Local\Temp\cckpPPNo.s:306    .text.GPIO_set_output:00000000000000ca .L45
+C:\Users\tecchio\AppData\Local\Temp\cckpPPNo.s:330    .text.GPIO_drive_inout:0000000000000022 .L48
+C:\Users\tecchio\AppData\Local\Temp\cckpPPNo.s:343    .text.GPIO_drive_inout:000000000000004e .L49
+C:\Users\tecchio\AppData\Local\Temp\cckpPPNo.s:328    .text.GPIO_drive_inout:000000000000001a .L46
+C:\Users\tecchio\AppData\Local\Temp\cckpPPNo.s:339    .text.GPIO_drive_inout:0000000000000042 .L52
+C:\Users\tecchio\AppData\Local\Temp\cckpPPNo.s:370    .text.GPIO_enable_irq:0000000000000038 .L56
+C:\Users\tecchio\AppData\Local\Temp\cckpPPNo.s:390    .text.GPIO_disable_irq:0000000000000034 .L62
+C:\Users\tecchio\AppData\Local\Temp\cckpPPNo.s:413    .text.GPIO_clear_irq:0000000000000036 .L66
+C:\Users\tecchio\AppData\Local\Temp\cckpPPNo.s:423    .text.GPIO_clear_irq:000000000000005a .L67
+C:\Users\tecchio\AppData\Local\Temp\cckpPPNo.s:411    .text.GPIO_clear_irq:000000000000002e .L65
+C:\Users\tecchio\AppData\Local\Temp\cckpPPNo.s:461    .text.GPIO_get_irq_sources:0000000000000032 .L71
+C:\Users\tecchio\AppData\Local\Temp\cckpPPNo.s:473    .text.GPIO_get_irq_sources:0000000000000056 .L72
+C:\Users\tecchio\AppData\Local\Temp\cckpPPNo.s:459    .text.GPIO_get_irq_sources:000000000000002a .L70
+C:\Users\tecchio\AppData\Local\Temp\cckpPPNo.s:470    .text.GPIO_get_irq_sources:0000000000000052 .L76
+C:\Users\tecchio\AppData\Local\Temp\cckpPPNo.s:514    .text.GPIO_clear_all_irq_sources:0000000000000032 .L78
+C:\Users\tecchio\AppData\Local\Temp\cckpPPNo.s:523    .text.GPIO_clear_all_irq_sources:0000000000000054 .L79
+C:\Users\tecchio\AppData\Local\Temp\cckpPPNo.s:512    .text.GPIO_clear_all_irq_sources:000000000000002a .L77
+
+UNDEFINED SYMBOLS
+__riscv_save_3
+HW_set_8bit_reg
+HW_set_32bit_reg
+__riscv_restore_3
+HW_set_16bit_reg
+__riscv_save_0
+__riscv_restore_0
+__riscv_save_2
+__riscv_restore_2
+HW_get_32bit_reg
+HW_get_16bit_reg
+HW_get_8bit_reg
+__riscv_save_6
+__riscv_restore_6
+__riscv_save_1
+__riscv_restore_1
